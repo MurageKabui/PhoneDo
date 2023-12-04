@@ -1,12 +1,15 @@
+<!--
 > [!NOTE]  
 This project is a work in progress and not yet production-level quality.  
 See : https://github.com/MurageKabui?tab=projects
 
-<!--
+
 ## PhoneDo
+-->
+
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo.png?raw=true" alt="PhoneDo Logo" width="128" height="103">
+  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="PhoneDo Logo" width="128" height="103">
 </p>
 
 <p align="center">
@@ -15,7 +18,6 @@ See : https://github.com/MurageKabui?tab=projects
 
 </p>
 
--->
 <hr>
 
 ### TL;DR 
