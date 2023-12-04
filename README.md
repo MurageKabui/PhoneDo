@@ -1,10 +1,10 @@
 ## This project is a work in progress and not yet production-level quality.
 
 <!--
-## N8VShell
+## PhoneDo
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/N8VShell.png?raw=true" alt="N8VShell Logo" width="128" height="103">
+  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo.png?raw=true" alt="PhoneDo Logo" width="128" height="103">
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@
 
 
 ## Installation
-Follow the steps to install N8VShell in your device.
+Follow the steps to install PhoneDo in your device.
 > Make sure that your device allows installations from unknown sources. If not, go to **Settings > Security** (or **Settings > Apps > Security**) and enable the "Unknown Sources" option.
 > 
  > You might receive a warning about the installation of apps from unknown sources. Make sure to download the APK file only from a trusted repository to ensure its authenticity.
