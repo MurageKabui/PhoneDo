@@ -1,4 +1,6 @@
-## This project is a work in progress and not yet production-level quality.
+> [!NOTE]  
+This project is a work in progress and not yet production-level quality.  
+See : https://github.com/MurageKabui?tab=projects
 
 <!--
 ## PhoneDo
