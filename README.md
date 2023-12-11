@@ -24,10 +24,6 @@ See : https://github.com/MurageKabui?tab=projects
 ### TL;DR 
 > This project is an attempt to revolutionize the way we interact with a devices native APIs, by offering a scripting interface that easily integrates JavaScript with Android's core functions.
 
-<p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">
-</p>
-
 ## Table of Contents 
 - [About](#Tech-Stack)
 - [Introduction](#introduction)
@@ -39,7 +35,6 @@ See : https://github.com/MurageKabui?tab=projects
 ## Installation
 Follow these steps to install PhoneDo and Sample scripts:
 
-> [!NOTE] : 
 You may need to permit installations from unknown sources.<br>To do this, navigate ``Settings > Security (or Settings > Apps > Security)`` and activate the "Unknown Sources" option. 
 
 At the Releases page of this repository, identify the .apk file associated with the latest release version. Once downloaded, locate the file on your device and follow the on-screen instructions to install. 
@@ -50,7 +45,6 @@ Consider loading sampled demo scripts from a bundled .ab backup file.<br>To do t
 adb install -r "releaseRootPath/PhoneDo.apk" && adb restore "releaseRootPath/PhoneDoExamples.ab"
 ```
 > This process will restore the backup file and make the demo scripts available for you to experiment with. These scripts serve as valuable examples to help you get started.
-
 
 
 
