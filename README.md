@@ -7,26 +7,19 @@ See : https://github.com/MurageKabui?tab=projects
 ## PhoneDo
 -->
 
-
- 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_logo_dark.png?raw=true" alt="PhoneDo Logo" width="250" height="250">
+  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo1.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
 </p>
 
-<p align="center">
-<i>PhoneDo<i><br>
-<b>Script Android the JS way.<b>
-
-</p>
-
-<hr>
+<!--<hr>-->
 
 ### TL;DR 
 > This project is an attempt to revolutionize the way we interact with a devices native APIs, by offering a scripting interface that easily integrates JavaScript with Android's core functions.
 
-<p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">
-</p>
+<!--<p align="center">-->
+<!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">-->
+<!--</p>-->
+<hr>
 
 ## Table of Contents 
 - [About](#Tech-Stack)
@@ -37,13 +30,12 @@ See : https://github.com/MurageKabui?tab=projects
 ## About
 
 ## Installation
-Follow these steps to install PhoneDo and Sample scripts:
 
-You may need to permit installations from unknown sources.<br>To do this, navigate ``Settings > Security (or Settings > Apps > Security)`` and activate the "Unknown Sources" option. 
+You may need to permit installations from unknown sources.<br>To do this, navigate ``Settings > Security (or Settings > Apps > Security)``<br> and activate the "Unknown Sources" option. 
 
 At the Releases page of this repository, identify the .apk file associated with the latest release version. Once downloaded, locate the file on your device and follow the on-screen instructions to install. 
 
-Consider loading sampled demo scripts from a bundled .ab backup file.<br>To do this, locate the associated .ab file within the release, and restore it using adb.
+Consider loading sampled demo scripts from a bundled .ab backup file.<br>To do this, locate the associated .ab file within the release then restore it using adb.
 
 ```batch
 adb install -r "releaseRootPath/PhoneDo.apk" && adb restore "releaseRootPath/PhoneDoExamples.ab"
