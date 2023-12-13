@@ -14,7 +14,7 @@ See : https://github.com/MurageKabui?tab=projects
 <!--<hr>-->
 
 ### TL;DR 
-> This project is an attempt to revolutionize the way we interact with a device's native APIs by offering a scripting interface that easily integrates JavaScript with Android's core functions.
+> PhoneDo is an attempt to revolutionize the way we interact with a device's native APIs by offering a scripting interface that easily integrates JavaScript with Android's core functions.
 
 <!--<p align="center">-->
 <!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">-->
