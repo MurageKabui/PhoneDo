@@ -55,23 +55,41 @@ See : https://github.com/MurageKabui?tab=projects
 |>1.3.2| [fs](https://github.com/apache/cordova-plugin-file/tree/master/src/android) (file system) | [cordova-plugin-file](https://github.com/apache/cordova-plugin-file/tree/master/src/android) |
 |>1.3.2|️️️browser||
 
+---
+
 ## Installation
 
-You may need to permit installations from unknown sources.<br>To do this, navigate ``Settings > Security (or Settings > Apps > Security)`` and activate the "Unknown Sources" option. 
+You may need to permit installations from unknown sources. To do this, navigate to your device's settings:
 
-Download the latest release, locate and unzip the file.
-
-```batch
-:: Install the apk file
-adb install -r "releaseRootPath/PhoneDo.apk"
-
-:: Restore the sampled demo scripts from a bundled .ab (adb backup file)
-adb restore "releaseRootPath/PhoneDoExamples.ab"
 ```
-> The second command will restore a prepared backup file to make the sampled scripts available to experiment with.
+Settings > Security (or Settings > Apps > Security)
+```
+
+and activate the "<b><i>Unknown Sources</i></b>" option.
+
+
+1. **Download:**
+   - Download and Extract the latest release to your desired path.
+
+3. **Install the APK:**
+   - Open a terminal or command prompt and run the following commands:
+
+     ```batch
+     :: Install the APK file
+     adb install -r "path/PhoneDo.apk"
+     ```
+
+4. **Restore Sampled Demo Scripts (Optional)**
+
+To make the sampled scripts available for experimentation Run the following command to restore the prepared backup file:
+```batch
+adb restore "path/PhoneDoExamples.ab"
+```
+
 
 ## Contributing
 Your help is more than welcome, I would be very honored to have you on my side.
+
 
 ## License
 
