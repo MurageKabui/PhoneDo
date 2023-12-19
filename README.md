@@ -14,7 +14,7 @@ See : https://github.com/MurageKabui?tab=projects
 <!--<hr>-->
 
 ### TL;DR 
-> PhoneDo is a scripting application for <b><i>Android</i></b> that blends JavaScript methods with native Android actions to enable headless interaction.
+> PhoneDo is a scripting application for <b><i>Android</i></b> that blends JavaScript methods with native Android actions to enable a headless interaction.
 
 <!--<p align="center">-->
 <!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">-->
