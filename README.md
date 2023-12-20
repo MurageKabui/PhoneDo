@@ -85,7 +85,7 @@ PhoneDo features an interactive terminal user interface with commands designed t
 | Command | Description |
 |---------|-------------|
 |slist| Script management utility.|
-|run|Runs a script. <br>```run -i "Scriptname.pds"```|
+|run|Runs a script.|
 |runwait|Runs a script and pauses script execution until the program finishes.|
 |beep| Plays a beep sound for an audible audio feedback.|
 |ipconfig| Retrieves the IP address information for the active connection. |
