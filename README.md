@@ -70,7 +70,7 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
         ```
 4. **Allow All App Permissions (Optional)**
 
-   While permissions can be requested at runtime by a script , you can pre grant all necessaruy app permissions.
+   If you want an uninterrupted experience, you can pregrant all of the wanted permissions, even though a script has the ability to request them at runtime.
 
    - Open your device's Settings.
      Navigate to "Apps" or "Application Manager," depending on your device.
@@ -80,7 +80,7 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
    - Enable or grant all the permissions listed to ensure a seamless experience.
    
 ## PhoneDo Terminal
-PhoneDo features an interactive terminal user interface with commands designed to help you script your way easily.
+PhoneDo also features an interactive Terminal User Interface with purpose-built commands designed to help you script your way easily.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Terminal Preview" width="320" height="480">
