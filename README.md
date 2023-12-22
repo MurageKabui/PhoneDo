@@ -77,13 +77,13 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
      
    - Find and select <b><i>PhoneDo</i></b> from the list of installed apps.
    - Look for the <b><i>Permissions</i></b> or <b><i>App Permissions</i></b> section.
-   - Enable or grant all the permissions listed to ensure a seamless experience.
+   - Enable or grant all the permissions listed under PhoneDo.
    
 ## PhoneDo Terminal
-PhoneDo also features an interactive Terminal User Interface with purpose-built commands designed to help you script your way easily.
+PhoneDo also features an interactive Terminal User Interface with purpose-built commands designed to help you script easily.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Terminal Preview" width="320" height="480">
+  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/TUI-Preview.jpg?raw=true" alt="Terminal Preview" width="270" height="600">
 </p>
 
 
