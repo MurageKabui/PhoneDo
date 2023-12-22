@@ -38,7 +38,7 @@ See : https://github.com/MurageKabui?tab=projects
 </details>
 
 ## About
-About info here..
+About information here..
 
 ## Installation
 
@@ -54,7 +54,7 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
 1. **Download:**
    - Download and Extract the latest release to your desired path.
 
-3. **Install the APK:**
+2. **Install the APK:**
    - Open a terminal or command prompt and run the following commands:
 
      ```batch
@@ -62,13 +62,23 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
      adb install -r "path/PhoneDo.apk"
      ```
 
-4. **Restore Sampled Demo Scripts (Optional)**
+3. **Restore Sampled Demo Scripts (Optional)**
 
-To make the sampled scripts available for experimentation Run the following command to restore the prepared backup file:
-```batch
-adb restore "path/PhoneDoExamples.ab"
-```
+    - To make the sampled scripts available for experimentation Run the following command to restore the prepared backup file:
+        ```batch
+        adb restore "path/PhoneDoExamples.ab"
+        ```
+4. **Allow All App Permissions (Optional)**
 
+   While permissions can be requested at runtime by a script , you can pre grant all necessaruy app permissions.
+
+   - Open your device's Settings.
+     Navigate to "Apps" or "Application Manager," depending on your device.
+     
+   - Find and select <b><i>PhoneDo</i></b> from the list of installed apps.
+   - Look for the <b><i>Permissions</i></b> or <b><i>App Permissions</i></b> section.
+   - Enable or grant all the permissions listed to ensure a seamless experience.
+   
 ## PhoneDo Terminal
 PhoneDo features an interactive terminal user interface with commands designed to help you script your way easily.
 
