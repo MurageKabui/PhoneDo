@@ -16,10 +16,10 @@ Let's think of it like a scripting enviroment that integrates a programming api
 <!--<hr>-->
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript and headless methods for handling native Android ops.
+> PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript with methods for handling native actions in a headless way.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/HelloWorldDemo.gif?raw=true" alt="Stack" width="360" height="640">
+  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">
 </p>
 <br>
 
@@ -124,8 +124,6 @@ PhoneDo features an interactive Terminal User Interface with purpose-built comma
 |>1.3.2|️️️browser||
 
 ---
-
-![Hello world Example](Previews/HelloWorldDemo.gif)
 
 ## Contributing
 Your assistance is much appreciated. There are various ways you can help make the project better :
