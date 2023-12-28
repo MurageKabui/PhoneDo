@@ -125,6 +125,8 @@ PhoneDo features an interactive Terminal User Interface with purpose-built comma
 
 ---
 
+![Hello world Example](Previews/HelloWorldDemo.gif)
+
 ## Contributing
 Your assistance is much appreciated. There are various ways you can help make the project better :
 
@@ -149,7 +151,7 @@ Help improve the overall user experience by:
 
 #### 4. **Testing and Bug Reporting**
 
-Contribute to the stability of PhoneDo by:
+Contribute to the stability of thia app by:
 
 - **Testing:** Try out new features and report any issues you encounter.
   
@@ -159,15 +161,12 @@ Contribute to the stability of PhoneDo by:
 
 Contribute to the PhoneDo community by:
 
-- **Answering Questions:** Help fellow users by answering questions on forums or other community channels.
+- **Answering Questions:** Help fellow users by answering questions on forums.
 
-
-Check out our [Contribution Guidelines](link-to-guidelines) for detailed information on how to contribute in each of the areas mentioned above.
-
-Before making substantial contributions, we recommend joining our [Community Forum](link-to-forum) to connect with other contributors and get a sense of ongoing discussions.
+> Before making substantial contributions, we recommend joining our [Community Forum](link-to-forum) to connect with other contributors and get a sense of ongoing discussions.
 
 ---
 
-<div style="text-align: center; font-family: Arial;">
-  Made with <span style="color: red;">❤</span> by <strong>Dennisk</strong>
+<div style="text-align: center;">
+  Made with <span style="color: red;">❤</span> by <strong>Murage Kabui</strong>
 </div>
