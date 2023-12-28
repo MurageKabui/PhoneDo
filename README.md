@@ -56,7 +56,7 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
 1. **Download:**
    - Download and Extract the latest release to your desired path.
 
-2. **Install the APK:**
+2. **Install the <b><i>APK</i></b>:**
    - Open a terminal or command prompt and run the following commands:
 
      ```batch
@@ -95,7 +95,7 @@ PhoneDo features an interactive Terminal User Interface with purpose-built comma
 |---------|-------------|
 |slist| Script management utility.|
 |run|Runs a script.|
-|runwait|Runs a script and pauses script execution until the program finishes.|
+|~~runwait~~|~~Runs a script and pauses script execution until the program finishes.~~|
 |beep| Plays a beep sound for an audible audio feedback.|
 |ipconfig| Retrieves the IP address information for the active connection.|
 |ifconfig| Retrieves the IP address information for the active connection.|
