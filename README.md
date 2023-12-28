@@ -16,7 +16,7 @@ Let's think of it like a scripting enviroment that integrates a programming api
 <!--<hr>-->
 
 ### TL;DR 
-> PhoneDo is an application for <b><i>Android</i></b> that provides a JavaScript based scripting environment along with  methods that control native Android actions in a headless way.
+> PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript and headless methods for handling native Android ops.
 
 <!--<p align="center">-->
 <!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">-->
