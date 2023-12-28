@@ -16,7 +16,7 @@ Let's think of it like a scripting enviroment that integrates a programming api
 <!--<hr>-->
 
 ### TL;DR 
-> PhoneDo is a scripting application for <b><i>Android</i></b> that provides JavaScript methods that control native Android actions in a headless way.
+> PhoneDo is an application for <b><i>Android</i></b> that provides a JavaScript based scripting environment along with  methods that control native Android actions in a headless way.
 
 <!--<p align="center">-->
 <!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo_icon.png?raw=true" alt="Stack" width="128" height="103">-->
@@ -82,17 +82,14 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
    - Enable or grant all the permissions listed under PhoneDo.
    
 ## PhoneDo Terminal
-PhoneDo also features an interactive Terminal User Interface with purpose-built commands designed to help you script easily.
+PhoneDo features an interactive Terminal User Interface with purpose-built commands designed to help you script easily.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/TUI-Preview.jpg?raw=true" alt="Terminal Preview" width="270" height="600">
 </p>
 
 
-
-
 > Typing a command with no parameters dumps its help information.
-
 
 | Command | Description |
 |---------|-------------|
@@ -100,7 +97,7 @@ PhoneDo also features an interactive Terminal User Interface with purpose-built 
 |run|Runs a script.|
 |runwait|Runs a script and pauses script execution until the program finishes.|
 |beep| Plays a beep sound for an audible audio feedback.|
-|ipconfig| Retrieves the IP address information for the active connection. |
+|ipconfig| Retrieves the IP address information for the active connection.|
 |ifconfig| Retrieves the IP address information for the active connection.|
 |cls|Clears the terminal screen.|
 |clear|Clears the terminal screen.|
@@ -135,7 +132,7 @@ Your assistance is much appreciated. There are various ways you can help make th
 
 If you're a dev, you can contribute by:
 
-- **Filing Issues:** Report bugs or suggest new features by opening an issue. Be clear and concise in your descriptions.
+- **Filing Issues:** Report bugs or suggest new features by opening an issue.
   
 - **Pull Requests:** Implement new features or fix existing issues by submitting a pull request.
 
