@@ -1,0 +1,128 @@
+/*
+ * Script Name      : UtterNumberGuess.nts
+ * Date             : Mon Jul 03 2023 18:31:38 GMT+0300 (East Africa Time)
+ * PhoneDo Version  : 1.0.1
+ * Description      : Simple interactive text-based number guessing game using Utter.
+ * Author           : DennisK
+ * License          : none
+ */
+
+// request to use the microphone..
+await utter.requestPermission();
+
+if (!await utter.canListen()) {
+	console.log(' permissions missing.. the script will exit.');
+	exit(1);
+}
+
+// Define ranges for the random number (from 1 to 79)
+// For some reason, the listening api doesn't
+// hear the numbers 30, 80 - 89 accurately 
+const minNumber = 1;
+const maxNumber = 70;
+
+// Generate a random number between minNumber and maxNumber (inclusive).
+let randomNumber = Math.floor(Math.random() * (maxNumber - minNumber + 1)) +
+	minNumber;
+
+// Initialize the number of attempts and maximum number of attempts allowed.
+const maxAttempts = 10;
+let attempts = 0;
+
+// Function to print & speak a message with Utter.
+async function speakMessage(message) {
+	console.log(' >', message);
+	await utter.speak(message, 0.95, 1.0, 'en-au-x-auc-local');
+}
+
+// Function to listen for user input using Utter.listen()
+async function getUserInput() {
+	const options = {
+		language: 'en-US',
+		matches: 1,
+		prompt: '😃 PhoneDo: Your guess 👉',
+		showPopup: false,
+		showPartial: false
+	};
+
+	const results = await utter.listen(options);
+	return results[0];
+}
+
+// Start the game and give the player instructions.
+async function startGame() {
+	let sWelcomeMsg, sNumberChoose, sNumberAttempts;
+
+	sWelcomeMsg = 'Welcome to Guess the number game with utter!';
+	sNumberChoose =
+		`I have chosen a random number between ${minNumber} and ${maxNumber}.`;
+	sNumberAttempts =
+		`You have ${maxAttempts} attempts to guess the number. Good luck!`;
+
+	await speakMessage(sWelcomeMsg);
+	await speakMessage(sNumberChoose);
+	await speakMessage(sNumberAttempts);
+
+	let guess;
+	let won = false;
+
+	// Loop until the player guesses the correct number or runs out of attempts.
+	while (attempts < maxAttempts) {
+		guess = parseInt(await getUserInput(), 10);
+
+		if (isNaN(guess)) {
+			await speakMessage(
+				'Invalid input. Please Utter a valid number.');
+		} else {
+			attempts++;
+			console.log(' Utter Heard : ' + guess);
+			if (guess === randomNumber) {
+				console.log(' Attempt ' + attempts +
+					' : Congratulations!');
+				won = true;
+				break;
+			} else if (guess < randomNumber) {
+				device.vibrate(100);
+				console.log(' Attempt ' + attempts + ' : Too low');
+				await speakMessage('Your guess is too low. Try again.');
+
+
+			} else {
+				device.vibrate(100);
+				console.log(' Attempt ' + attempts + ' : Too High');
+				await speakMessage('Your guess is too high. Try again.');
+			}
+		}
+	}
+
+	// Display the result. 
+	if (won) {
+		await speakMessage(
+			`Congratulations! You guessed the correct number :${randomNumber} in ${attempts} attempts.`
+		);
+	} else {
+		device.vibrate(1000);
+		await speakMessage(
+			`Sorry, you did not guess the number ${randomNumber}. The correct number was ${randomNumber}.`
+		);
+	}
+
+	// Ask the player if they want to play again.
+	await speakMessage('Would you like to play again?');
+	const playAgain = (await getUserInput()).toLowerCase();
+
+	if (playAgain === 'yes' || playAgain === 'yeah') {
+		attempts = 0;
+		randomNumber = Math.floor(Math.random() * (maxNumber - minNumber +
+				1)) +
+			minNumber;
+		startGame();
+	} else {
+		await speakMessage(
+			'Thank you for playing Guess the Number. Goodbye!');
+		exit(0);
+	}
+}
+
+// Start the game when the script is executed.
+startGame();

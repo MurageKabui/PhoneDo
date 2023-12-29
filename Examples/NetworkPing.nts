@@ -1,0 +1,53 @@
+/*
+ * Script Name      : NetworkPing.nts
+ * Date             : Sat Sep 30 2023 07:24:55 GMT+0300 (East Africa Time)
+ * PhoneDo Version  : 1.2.1
+ * Description      : Ping IPs or Domains
+ * Author           : PhoneDo
+ * License          : None
+ */
+
+const ipList = [{
+		query: 'www.google.com', // Home server
+		timeout: 1,
+		retry: 3,
+		version: 'v4',
+	},
+	{
+		query: 'www.github.com',
+		timeout: 2,
+		retry: 3,
+		version: 'v4',
+	},
+];
+
+console.clear();
+
+const pingResult = await network.ping(ipList);
+
+// console.info(JSON.stringify(pingResult, null, 2));
+
+console.log("====================");
+
+pingResult.forEach((result, index) => {
+	const ipListItem = ipList[index];
+	const response = result.response.result ||
+	{}; // Ensure there's a result object
+
+	console.log(`Ping ${ipListItem.query} (${ipListItem.version})`);
+	if (result.response.status === 'success') {
+		console.log(`Status: Success`);
+		console.log(
+			`Packets Sent = ${ipListItem.retry + 1}, Received = ${response.pctReceived}, Lost = ${response.pctLoss}`
+		);
+		console.log(
+			`RTT (ms): Min = ${response.minRtt}, Max = ${response.maxRtt}, Avg = ${response.avgRtt}`
+		);
+	} else {
+		console.log(`Status: Error`);
+		console.log(`Error Message: ${result.response.status}`);
+	}
+
+	console.log("--------------------");
+});
+

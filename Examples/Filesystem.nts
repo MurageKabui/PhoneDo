@@ -1,0 +1,29 @@
+/*
+ * Script Name      : Filesystem.nts
+ * Date             : Sun Nov 05 2023 15:11:55 GMT+0300 (East Africa Time)
+ * PhoneDo Version  : 1.3.2
+ * Description      : Reading a text file from file system.
+ * Author           : PhoneDo
+ * License          : None
+ */
+
+// Define the target file base path
+const sPath = 'file:///storage/emulated/0/Documents/';
+
+// Define the target filename
+const sFileName = 'DOS.txt';
+
+const sContents =
+	await fs.readTextFile(sPath, sFileName);
+
+// Print the file content to stdout
+console.log(sContents + '\n');
+
+// Or read the text aloud using utter
+// etc..
+await utter.speak(
+	sContents,
+	0.95,
+	1.0,
+	'en-us-x-iol-network'
+);

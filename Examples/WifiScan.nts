@@ -1,0 +1,25 @@
+/*
+ * Script Name      : WifiScan.nts
+ * Date             : Tue Nov 21 2023 12:17:43 GMT+0300 (East Africa Time)
+ * PhoneDo Version  : 1.3.2
+ * Description      : WiFi interface demo.
+ * Author           : PhoneDo
+ * License          : None
+ */
+
+
+// This is a demonstration of using the 
+// wifi interface programmatically
+// the code is self explanatory.
+
+const net = await WIFI.getConnectedSSID();
+console.log(' Currently connected to : ' + net);
+
+const res = await WIFI.scan();
+
+if (res.length !== 0 || res.length !== -1) {
+	console.log(' Found ' + res.length + ' wireless network(s)');
+	console.log(JSON.stringify(res, null, 2));
+} else {
+	console.error(' Could not Find any broadcasting WIFI networks');
+}

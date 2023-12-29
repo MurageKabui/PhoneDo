@@ -1,0 +1,34 @@
+/*
+ * Script Name      : GetCarrierIP.nts
+ * Date             : Sun Nov 05 2023 15:33:31 GMT+0300 (East Africa Time)
+ * PhoneDo Version  : 1.3.2
+ * Description      : Retrieve IP information for the network Carrier / MSP
+ * Author           : PhoneDo
+ * License          : None
+ */
+
+
+const
+	currentConnection =
+	network.getConnectionType().toLowerCase();
+
+
+console.info(' Current Connection : ' + currentConnection);
+let info = null;
+
+switch (currentConnection) {
+	case 'wifi':
+	case 'none':
+		console.warn(
+			' Connect via Cellular to view IP configuration');
+
+		break;
+	default:
+		info = await network.getCarrierIPAddress();
+		console.log(
+			' IP Address         : ' + info.ip + '\n' +
+			' Subnet Address     : ' + info.subnet + '\n'
+		);
+
+		break;
+}

@@ -1,0 +1,81 @@
+/*
+ * Script Name     : Flashlight.nts
+ * Date            : Mon Aug 07 2023 04:49:00 GMT+0300 (East Africa Time)
+ * PhoneDo Version : 1.0.1
+ * Description     : Controls the flashlight state with user interaction.
+ * Author          : PhoneDo
+ * License         : None
+ */
+ 
+
+// Turn off the flashlight initially
+await flashlight.switchOff();
+console.log(" -------------------------------");
+console.log("    TIME    |  FLASHLIGHT STATE");
+console.log(" -------------------------------");
+
+const toggleMessage = "Toggle the flashlight state.";
+let prompt = true;
+let userChoice;
+let count = 1;
+
+while (prompt) {
+	userChoice = await dialog.alert(
+		toggleMessage + '<br> Toggles : ' + count, 'Flashlight Demo',
+		'none',
+		[{
+				'text': 'Turn On',
+				'kind': 'primary',
+				'size': 'sm'
+			},
+			{
+				'text': 'Turn Off',
+				'kind': 'warning',
+				'size': 'sm'
+			},
+			{
+				'text': 'Toggle',
+				'kind': 'info',
+				'size': 'sm'
+			},
+			{
+				'text': 'Exit',
+				'kind': 'danger',
+				'size': 'sm'
+			}
+		]
+	);
+
+
+	if (userChoice == 0) {
+		if (flashlight.switchOn()) {
+			Write("  | ON");
+		}
+	} else if (userChoice == 1) {
+		if (flashlight.switchOff()) {
+			Write("  | OFF");
+		}
+	} else if (userChoice == 2) {
+		if (flashlight.toggleState()) {
+			Write("  | TOGGLED");
+		}
+	} else if (userChoice == 3) {
+		flashlight.switchOff();
+		prompt = false;
+	}
+
+}
+
+Write('  | Complete\n');
+
+function Write(sText) {
+	let timestamp = new Date();
+	let hours = timestamp.getHours().toString().padStart(2, '0');
+	let minutes = timestamp.getMinutes().toString().padStart(2, '0');
+	let seconds = timestamp.getSeconds().toString().padStart(2, '0');
+	let formattedTimestamp = hours + ':' + minutes + ':' + seconds;
+
+	console.log(' ' + formattedTimestamp + ' ' + sText);
+	count++;
+	return formattedTimestamp;
+}
