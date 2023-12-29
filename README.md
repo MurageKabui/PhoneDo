@@ -1,6 +1,6 @@
 
 > [!WARNING]  
-This project is a work in progress and almost production-level quality. See in [Projects](https://github.com/MurageKabui?tab=projects)
+This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/MurageKabui?tab=projects)
 
 <!--PhoneDo has been my personal scripting wizard for Android.-->
 
