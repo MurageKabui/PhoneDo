@@ -1,26 +1,23 @@
-<!--
-> [!NOTE]  
-This project is a work in progress and not yet production-level quality.  
-See : https://github.com/MurageKabui?tab=projects
-PhoneDo has been my personal scripting wizard for Android. Imagine being able to whip up your own custom scripts effortlessly using JavaScript. It's not just scripting; it's an art form. PhoneDo seamlessly blends JavaScript magic with native Android actions, giving you the power to script your Android interactions with ease. It's your ticket to a world of personalized, headless wizardry.
 
-🚀 Introducing PhoneDo, my latest project for Android scripting. It lets you use JS with methods tailored with native Android actions. It's all about headless interactions made easy. 
+> [!WARNING]  
+This project is a work in progress and almost production-level quality. See in [Projects](https://github.com/MurageKabui?tab=projects)
 
-Meet PhoneDo , its an app that lets you script andorid with JS. 
+<!--PhoneDo has been my personal scripting wizard for Android.-->
 
-Let's think of it like a scripting enviroment that integrates a programming api 
+---
+<br>
+
 <p align="center">
   <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo1.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
- </p>
-
-<!--<hr>-->
+</p>
+ 
 
 ### TL;DR 
 > PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript with methods for handling native actions in a headless way.
 
-<p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">
-</p>
+<!--<p align="center">-->
+<!--  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">-->
+<!--</p>-->
 <br>
 
 
@@ -39,8 +36,8 @@ Let's think of it like a scripting enviroment that integrates a programming api
 
 </details>
 
-## About
-About information here..
+<!--## About-->
+<!--About information here..-->
 
 ## Installation
 
