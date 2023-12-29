@@ -1,6 +1,6 @@
 
 > [!WARNING]  
-This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/MurageKabui?tab=projects)
+This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/users/MurageKabui/projects/13).
 
 <!--PhoneDo has been my personal scripting wizard for Android.-->
 
@@ -159,7 +159,7 @@ Contribute to the PhoneDo community by:
 
 - **Answering Questions:** Help fellow users by answering questions on forums.
 
-> Before making substantial contributions, we recommend joining our [Community Forum](link-to-forum) to connect with other contributors and get a sense of ongoing discussions.
+> Before making substantial contributions, we recommend joining our [Community Group](https://groups.google.com/g/phonedo) to connect with other contributors and get a sense of ongoing discussions.
 
 ---
 
