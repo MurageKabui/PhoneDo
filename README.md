@@ -9,7 +9,7 @@ This project is a work in progress and not yet production-level quality. See in 
 <br>
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo1.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
 </p>
  
 
@@ -17,7 +17,7 @@ This project is a work in progress and not yet production-level quality. See in 
 > PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript with methods for handling native actions in a headless way.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">
 </p>
 
 <br>
@@ -165,5 +165,5 @@ Contribute to the PhoneDo community by:
 ---
 
 <div style="text-align: center;">
-  Made with <span style="color: red;">❤</span> by <strong>Murage Kabui</strong>
+  Made with <span style="color: red;">❤</span> by <strong>MurageKabui</strong>
 </div>
