@@ -2,7 +2,10 @@
 > [!WARNING]  
 This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/users/MurageKabui/projects/13).
 
-<!--PhoneDo has been my personal scripting wizard for Android.-->
+<!--
+PhoneDo has been my personal scripting wizard for Android.
+https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
+-->
 
 ---
 
@@ -14,13 +17,11 @@ This project is a work in progress and not yet production-level quality. See in 
  
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> app that provides a scripting environment based on JavaScript with methods for handling native actions in a headless way.
+> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native actions in a headless way.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world example" alt="Hello World Preview" width="360" height="640">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360" height="640">
 </p>
-
-<br>
 
 
 <details>
@@ -39,7 +40,9 @@ This project is a work in progress and not yet production-level quality. See in 
 </details>
 
 <!--## About-->
-<!--About information here..-->
+
+<!--The idea is providing an enviroment to locally write and save JS code (scripts) that can be executed on demand.-->
+
 
 ## Installation
 
