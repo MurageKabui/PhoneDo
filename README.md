@@ -55,7 +55,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 
 PhoneDo's goal is to offer users with a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which can be created and executed at a users convenience.
 
-These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's file system, text-to-speech, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other built-in Android device functions. You may find documentation for these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
+These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's file system, text-to-speech, speech-to-text, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other built-in native functions. You may find documentation for these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
 
 An example of how to control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
@@ -120,7 +120,7 @@ run -i "Flashlight.nts"
 
 **OutPut** :
 ```
-Flashlight turned on Successfully.
+ Flashlight successfully turned on.
 ```
 
 
