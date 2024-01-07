@@ -75,7 +75,7 @@ An example of how to control a device's flashlight would be to navigate to `Scri
 we can then use a provided <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp/methods/flashlight/turnon" target="_blank">flashlight method</a> to control it programmatically :
 
 ```Javascript
-if (await flashlight.turnOn()) {
+if (await flashlight.switchOn()) {
     console.log(' Flashlight successfully turned on.');
 } else {
     console.warn(' Failed to turn on the flashlight.');
@@ -98,7 +98,7 @@ if (await flashlight.turnOn()) {
  * License         : None
  */
  
-if (await flashlight.turnOn()) {
+if (await flashlight.switchOn()) {
     console.log(' Flashlight successfully turned on.');
 } else {
     console.warn(' Failed to turn on the flashlight.');
