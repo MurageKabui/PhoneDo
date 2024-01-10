@@ -17,7 +17,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
  
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way...
+> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360" height="640">
@@ -79,8 +79,8 @@ if (await flashlight.switchOn()) {
     console.log(' Flashlight successfully turned on.');
 } else {
     console.warn(' Failed to turn on the flashlight.');
-    exit();
 }
+exit();
 ```
 
 <br>
@@ -102,8 +102,8 @@ if (await flashlight.switchOn()) {
     console.log(' Flashlight successfully turned on.');
 } else {
     console.warn(' Failed to turn on the flashlight.');
-    exit();
 }
+exit();
 ```
 
 ---
@@ -113,7 +113,8 @@ if (await flashlight.switchOn()) {
 
 <br>
 
-To execute the script , we click `Run` > `Run Script` or manually navigate back at the terminal view, type in the following commandline and press enter : 
+To execute the script , we navigate `Run` > `Run Script` or
+manually navigate back at the terminal view, type in the following command line and press enter : 
 ```bash
 run -i "Flashlight.nts"
 ```
