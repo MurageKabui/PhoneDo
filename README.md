@@ -146,14 +146,14 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
 
      ```batch
      :: Install the APK file
-     adb install -r "path/PhoneDo.apk"
+     adb install -r "basePath/PhoneDo.apk"
      ```
 
 3. **Restore Sampled Demo Scripts (<b><i>Optional</i></b>)**
 
     - To make the sampled scripts available for experimenting with, run the following command to restore a prepared adb backup file:
         ```batch
-        adb restore "path/PhoneDoExamples.ab"
+        adb restore "basePath/PhoneDoExamples.ab"
         ```
 4. **Allow All App Permissions (<b><i>Optional</i></b>)**
 

@@ -17,7 +17,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
  
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way..
+> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360" height="640">
@@ -31,8 +31,9 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 - [About](#Tech+Stack)
 - [Installation](#Installation)
 - [PhoneDo Terminal](#PhoneDo+Terminal)
-- [Scriptable Interfaces](#Interfaces)
+<!--- [Scriptable Interfaces](#Interfaces)-->
 - [Contributing](#Contributing)
+- [Credits](#Credits)
 
 
 <br/>
@@ -41,22 +42,89 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 
 ## About
 
-PhoneDo is an idea  to provide an env area in a SQLite database for simple code composition and  storage. Scripts, denoted by the extensions <b><i>.nts</i></b> and <b><i>.pds</i></b>, are stored by users and can be run whenever they'd want.
-
-where users can create scripts, which are identified by the `.nts` and `.pds` extensions, and run them whenever it is convenient for them.
-
-This project delivers a comprehensive solution for users to effortlessly manage and execute JavaScript code in a user-friendly environment, supported by powerful tools and integrated features.
-
-
-**TechStack** :
 
 | Technology |Use Case |License |
 |----------|----------------------------|-|
+|<a href="https://github.com/vuejs/core" target="_blank">Vue</a>| Front end | MIT|
 | [SQLite](https://github.com/sqlite/sqlite) | For local storage CRUD OPs. | None|
 |[Bootstrap](https://github.com/twbs/bootstrap)| For styling in the context of script evaluation. | MIT |
 |[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal-like UI. | MIT | 
-|JQuery | For manipulation of the DOM, also serving as a dependency for JQConsole.| MIT |
-|ACE.js | For an integrated scripting development environment (Users' reading and writing code inside of the app).| [License](https://github.com/ajaxorg/ace?tab=License-1-ov-file)|
+|<a href="https://github.com/jquery/jquery" target="_blank">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.| MIT |
+|<a href="https://github.com/ajaxorg/ace" target="_blank">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).| [License](https://github.com/ajaxorg/ace?tab=License-1-ov-file)|
+
+
+PhoneDo's goal is to offer users with a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which can be created and executed at a users convenience.
+
+These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's file system, text-to-speech, speech-to-text, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other built-in native functions. You may find documentation for these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
+
+An example of how to control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
+
+> On creating the script, a header is automatically generated, allowing you to provide additional details for it.
+```
+/*
+ * Script Name     : FlashControl.nts
+ * Date            : Mon Aug 07 2023 04:49:00 GMT+0300 (East Africa Time)
+ * PhoneDo Version : 1.3.2
+ * Description     : 
+ * Author          : 
+ * License         : 
+ */
+```
+<br>
+
+we can then use a provided <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp/methods/flashlight/turnon" target="_blank">flashlight method</a> to control it programmatically :
+
+```Javascript
+if (await flashlight.switchOn()) {
+    console.log(' Flashlight successfully turned on.');
+} else {
+    console.warn(' Failed to turn on the flashlight.');
+    exit();
+}
+```
+
+<br>
+
+<details>
+<summary><kbd>Expand full script</kbd></summary>
+
+```JavaScript
+/*
+ * Script Name     : FlashControl.nts
+ * Date            : Mon Aug 07 2023 04:49:00 GMT+0300 (East Africa Time)
+ * PhoneDo Version : 1.3.2
+ * Description     : Turns on the flashlight.
+ * Author          : PhoneDo
+ * License         : None
+ */
+ 
+if (await flashlight.switchOn()) {
+    console.log(' Flashlight successfully turned on.');
+} else {
+    console.warn(' Failed to turn on the flashlight.');
+    exit();
+}
+```
+
+---
+
+</details>
+
+
+<br>
+
+To execute the script , we navigate `Run` > `Run Script` or
+manually navigate back at the terminal view, type in the following command line and press enter : 
+```bash
+run -i "Flashlight.nts"
+```
+
+**OutPut** :
+```
+ Flashlight successfully turned on.
+```
+
+
 
 ## Installation
 
@@ -181,6 +249,9 @@ Contribute to the PhoneDo community by:
 > Checkout our [Community Group](https://groups.google.com/g/phonedo) before making substantial contributions to connect with other contributors and get a sense of ongoing discussions.
 
 ---
+## Credits
+
+PhoneDo Logo : https://linktr.ee/namishkashyap
 
 <div style="text-align: center;">
   Made with <span style="color: red;">❤</span> by <strong>MurageKabui</strong>

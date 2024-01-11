@@ -1,4 +1,2 @@
-
-<p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/PhoneDo1.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
-</p>
+> [!INFO]  
+On PhoneDo, if you navigate to `Help` > `Demo Scripts`, it will open this directory in an in-app browser. Clicking on a script will then prompt the opening of PhoneDo's IDE.
