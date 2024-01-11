@@ -1,1 +1,1 @@
-On PhoneDo, if you navigate to `Script Editor` > `Help` > `Demo Scripts`, it will open this directory in an in-app browser. Clicking on a script will prompt opening in PhoneDo's IDE.
+On PhoneDo, if you navigate to `Script Editor` > `Help` > `Demo Scripts`, it will open this directory in an in-app browser. Clicking on a script will prompt opening it in PhoneDo's IDE.
