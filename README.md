@@ -1,7 +1,4 @@
 
-<!--> [!WARNING]  -->
-<!--This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/users/MurageKabui/projects/13).-->
-
 <!--
 PhoneDo has been my personal scripting wizard for Android.
 https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
@@ -9,7 +6,6 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 -->
 
 <br>
-
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" title="PhoneDo Logo" alt="PhoneDo Logo" width="440" height="77">
 </p>
