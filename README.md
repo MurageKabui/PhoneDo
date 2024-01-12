@@ -1,13 +1,12 @@
 
-> [!WARNING]  
-This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/users/MurageKabui/projects/13).
+<!--> [!WARNING]  -->
+<!--This project is a work in progress and not yet production-level quality. See in [Projects](https://github.com/users/MurageKabui/projects/13).-->
 
 <!--
 PhoneDo has been my personal scripting wizard for Android.
 https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
--->
-
 ---
+-->
 
 <br>
 
@@ -42,6 +41,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 
 ## About
 
+The following technologies are employed in the development of this application :
 
 | Technology |Use Case |License |
 |----------|----------------------------|-|
