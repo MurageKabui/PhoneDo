@@ -1,0 +1,127 @@
+.content,
+.content ul {
+    margin: 0;
+    scroll-behavior: smooth;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+}
+/*
+.content ul li.active,
+
+*/
+.menubar {
+    position: fixed;
+/*    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
+font-family: "kanitr";
+/*    font-family: 'Ubuntu', sans-serif;*/
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 35.2px;
+    background: var(--menu-bgcolor);
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .4);
+    z-index: 99;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    /*animation: fadeInDown;
+    animation-duration: 0.6s;*/
+    /*border-radius: 0*/
+    
+}
+/*.content ul li.active,*/
+
+.content,
+.content ul,
+.content ul li,
+.menu_item {
+    border-radius: 10px
+}
+
+.menubar div {
+    display: inline-block
+}
+
+.menu_item {
+    display: block;
+    color: var(--menu-color);
+    padding: .4em;
+/*    scale: 0.9;*/
+}
+
+.menu_item.active {
+    background: var(--body-bg);
+    box-shadow: inset -33px -33px 29px #676464;
+    color: #adff2f;
+/*    font-weight: bold;*/
+    border-radius: 10px;
+    scale: 1;
+
+}
+
+.content {
+    position: absolute;
+    top: 36px;
+    visibility: hidden;
+    max-height: 80vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.content ul {
+    list-style-type: none;
+    padding-left: .2em;
+    padding-right: .2em;
+    width: auto;
+    background: #333;
+    animation-name: fadeInDown;
+    animation-duration: .6s;
+    /*    scroll-snap-type: y mandatory*/
+}
+
+.content ul li {
+    padding: .5em;
+    max-width: 45vw;
+    text-align: left;
+    overflow-x: scroll;
+    box-shadow: inset 0 -1px 2px #00000066
+}
+
+.content ul li.spaced {
+    margin-bottom: .3em
+}
+
+.content ul li span {
+    color: var(--menu-color);
+    font-size: .80em;
+    word-wrap: break-word
+}
+
+.content ul li span.danger {
+    color: var(--jqc-error);
+}
+
+.content ul li span.warn {
+    color: #e9950d;
+}
+
+.content ul li.active,
+.content ul li:active,
+.content ul li:focus {
+    background: var(--body-bg);
+    box-shadow: inset -33px -33px 29px #676464;
+    text-align: center;
+}
+
+
+.content ul li.active span {
+    color: #adff2f;
+/*    font-weight: bold;*/
+}
+
+.content ul li.special {
+    /*    background: var(--body-bg);*/
+    background: #333;
+    border: 1px solid #252525 ;
+    border-radius: 10px;
+    text-align: center;
+}

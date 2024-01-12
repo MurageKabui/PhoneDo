@@ -1,0 +1,208 @@
+#console_wrapper,
+* {
+    padding: 0;
+    margin: 0
+}
+
+/* .debug { color: Snow; }
+.info  { color: LawnGreen; }
+.warn  { color: GoldenRod; }
+.error { color: LightCoral; } */
+
+#editor,
+.jqconsole {
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0
+}
+
+@font-face {
+    font-family: "kanitr";
+    src: url("../files/KanitReg.woff") format('woff')
+}
+
+:root {
+    --body-bg: #191919;
+    --font-family-base: Menlo, Monaco, "Consolas", "Courier New", "Courier";
+    --bs-body-line-height: 1.2;
+
+    /*  -- JQConsole --   */
+    --jqc-caretColor: #f0eaea;
+    --jqc-caretBlinkRate: 2s;
+    --jqc-fontSize: 12.8px;
+    --jqc-promptLabelColor: pink;
+    --jqc-promptTextColor: #baa4e5;
+    --jqc-compositionColor: #f5f5f5;
+
+    --jqc-oldInputColor: #09b;
+    --jqc-oldInputColor: #baa4e5;
+
+    --jqc-oldPromptColor: #baa4e5;
+    --jqc-oldPromptFontsize: 13.5px;
+
+    /* JQConsole Output Colors   */
+    --jqc-headerColor: #f5eda2;
+    --jqc-headerFontSize: 12px;
+
+
+    --jqc-error: #b54136;
+    --jqc-info: #f5eda2;
+    --jqc-success: #22e58a;
+    --jqc-debug: #00bfff;
+    --jqc-warning: gold;
+
+
+    --body-color:  #9fa9b5;
+
+    --menuitm-active: #333;
+    --menuitm-activecol: #22e58a;
+    --menu-bgcolor: #333;
+    --menu-color: #c4bebe;
+
+}
+
+/*3a404e*/
+* {
+    box-sizing: content-box
+}
+
+body {
+    background: var(--body-bg);
+    
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+#htmlAceEditor {
+    animation-name: fadeIn;
+    animation-duration: 0.6s;
+}
+
+#editor {
+    height: 100%;
+    z-index: 10;
+/*    transition: background .5s ease-in-out;*/
+
+    border-radius: 10px;
+}
+
+
+.jqconsole {
+    margin: 0;
+    padding: 10px 10px 15px;
+    font-family: var(--font-family-base);    
+    font-size: var(--jqc-fontSize);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-scrolling: touch;
+}
+
+.successStyle
+.errorStyle,
+.debugStyle,
+.infoStyle,
+.warningStyle {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.debugStyle {
+    color: var(--jqc-debug);
+}
+
+.infoStyle {
+    color: var(--jqc-info);
+}
+
+.warningStyle {
+    color: var(--jqc-warning);
+}
+
+.successStyle {
+    color: var(--jqc-success);
+}
+
+.errorStyle {
+    color: var(--jqc-error);
+    font-weight: 700;
+}
+
+
+.selectabletxt {
+    user-select: text;
+    -webkit-user-select: text
+}
+
+.selectabletxt::selection {
+    filter: invert()
+}
+
+.jqconsole-cursor {
+    background-color: #f0eaea;
+    animation: 2s step-end infinite blink
+}
+
+/*.jqconsole-blurred .jqconsole-cursor {
+    background: #4607f2
+}*/
+
+.jqconsole-prompt {
+    color: #baa4e5;
+/*    padding-bottom: 10px;*/
+    padding-top: 5px;
+    font-size: var(--jqc-oldPromptFontsize);
+/*    user-select: none;*/
+/*    -webkit-user-select: none*/
+}
+
+.jqconsole-old-prompt {
+    color: #f5f5f5;
+    font-size: var(--jqc-oldPromptFontsize);
+/*    font-style: italic;*/
+}
+
+.jqconsole-old-input {
+    color: #21af90;
+/*    font-style: italic*/
+}
+
+.jqconsole-composition {
+    /*    background-color: rgba(53, 53, 73, 0.637)*/
+    color: #f5f5f5;
+    /*    pointer-events: none;*/
+}
+
+.jqconsole-prompt-text {
+    color: #c1e1ff
+}
+
+.jqconsole-header {
+    text-align: center;
+    align-items: center;
+    display: block;
+    margin: 0;
+    font-size: var(--jqc-headerFontSize);
+    font-weight: 700;
+    color: #f5eda2;
+    /* var(--menuitm-activecol) font-weight: 700;*/
+    /*background: linear-gradient(to top, #e6bd37bd, #e9950d);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent*/
+}
+
+
+@keyframes blink {
+
+    0%,
+    100% {
+        background-color: var(--jqc-caretColor);
+    }
+
+    50% {
+        background-color: transparent
+    }
+}

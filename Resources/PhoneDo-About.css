@@ -1,0 +1,16 @@
+.about-section {
+  font-family: "ubuntu-mono-reg"; 
+  margin: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  scale: 0.9;
+}
+
+.about-section p {
+  margin-bottom: 10px;
+}
+
+.about-section p:last-child {
+  margin-bottom: 0;
+}

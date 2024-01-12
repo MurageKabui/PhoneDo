@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<widget id="com.phonedopro.muragekabui" version="1.3.2" android-versionCode="1" ios-CFBundleVersion="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android">
+  <name short="PhoneDo">PhoneDo (PRO)</name>
+  <description>Script Android the JS Way</description>
+  <author href="https://github.com/MurageKabui/PhoneDo" email="dennisk@zainahtech.com">Dennis Kabui</author>
+  <access origin="*" />
+  <allow-intent href="*" />
+  <allow-navigation href="*" />
+  <content src="index.html" />
+  <preference name="fullscreen" value="false" />
+  <preference name="disallowOverscroll" value="true" />
+  <preference name="orientation" value="default" />
+  <preference name="StatusBarOverlaysWebView" value="false" />
+  <preference name="StatusBarBackgroundColor" value="#333333" />
+  <preference name="StatusBarStyle" value="default" />
+  <preference name="deployment-target" value="11.0" />
+  <preference name="target-device" value="universal" />
+  <preference name="KeepRunning" value="true" />
+  <preference name="ShowTitle" value="false" />
+  <preference name="android-minSdkVersion" value="24" />
+  <preference name="android-targetSdkVersion" value="33" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="windows-target-version" value="10.0" />
+  <preference name="SplashScreenDelay" value="1500" />
+  <preference name="FadeSplashScreen" value="true" />
+  <preference name="ShowSplashScreenSpinner" value="true" />
+  <preference name="SplashScreenSpinnerColor" value="#ffffff" />
+  <preference name="SplashScreenWidth" value="1024" />
+  <preference name="SplashScreenHeight" value="1024" />
+  <preference name="SplashScreenBackgroundColor" value="#333333" />
+  <icon src="res/icon.png" />
+  <platform name="electron">
+    <splash src="res/splash.png" />
+    <icon src="res/icons/electron/icon.png" target="app" />
+    <icon src="res/icons/electron/installer.png" target="installer" />
+    <preference name="ElectronSettingsFilePath" value="electron_settings.json" />
+  </platform>
+  <platform name="android">
+    <icon src="res/icons/android/ldpi.png" background="res/icons/android/ldpi_bg.png" foreground="res/icons/android/ldpi_fg.png" density="ldpi" />
+    <icon src="res/icons/android/mdpi.png" background="res/icons/android/mdpi_bg.png" foreground="res/icons/android/mdpi_fg.png" density="mdpi" />
+    <icon src="res/icons/android/hdpi.png" background="res/icons/android/hdpi_bg.png" foreground="res/icons/android/hdpi_fg.png" density="hdpi" />
+    <icon src="res/icons/android/xhdpi.png" background="res/icons/android/xhdpi_bg.png" foreground="res/icons/android/xhdpi_fg.png" density="xhdpi" />
+    <icon src="res/icons/android/xxhdpi.png" background="res/icons/android/xxhdpi_bg.png" foreground="res/icons/android/xxhdpi_fg.png" density="xxhdpi" />
+    <icon src="res/icons/android/xxxhdpi.png" background="res/icons/android/xxxhdpi_bg.png" foreground="res/icons/android/xxxhdpi_fg.png" density="xxxhdpi" />
+  </platform>
+  <platform name="amazon-fireos">
+    <icon src="res/icons/android/ldpi.png" background="res/icons/android/ldpi_bg.png" foreground="res/icons/android/ldpi_fg.png" density="ldpi" />
+    <icon src="res/icons/android/mdpi.png" background="res/icons/android/mdpi_bg.png" foreground="res/icons/android/mdpi_fg.png" density="mdpi" />
+    <icon src="res/icons/android/hdpi.png" background="res/icons/android/hdpi_bg.png" foreground="res/icons/android/hdpi_fg.png" density="hdpi" />
+    <icon src="res/icons/android/xhdpi.png" background="res/icons/android/xhdpi_bg.png" foreground="res/icons/android/xhdpi_fg.png" density="xhdpi" />
+    <icon src="res/icons/android/xxhdpi.png" background="res/icons/android/xxhdpi_bg.png" foreground="res/icons/android/xxhdpi_fg.png" density="xxhdpi" />
+    <icon src="res/icons/android/xxxhdpi.png" background="res/icons/android/xxxhdpi_bg.png" foreground="res/icons/android/xxxhdpi_fg.png" density="xxxhdpi" />
+  </platform>
+  <platform name="blackberry10">
+    <icon src="res/icons/bb10/icon-86.png" />
+    <icon src="res/icons/bb10/icon-90.png" />
+    <icon src="res/icons/bb10/icon-114.png" />
+    <icon src="res/icons/bb10/icon-150.png" />
+  </platform>
+  <platform name="firefoxos">
+    <icon src="res/icons/ff/logo.png" width="60" height="60" />
+  </platform>
+  <platform name="tizen">
+    <icon src="res/icons/tizen/icon-128.png" width="128" height="128" />
+  </platform>
+  <platform name="wp8">
+    <icon src="res/icons/wp/ApplicationIcon.png" width="99" height="99" />
+    <icon src="res/icons/wp/Background.png" width="159" height="159" />
+  </platform>
+  <platform name="windows">
+    <icon src="res/icons/windows/storelogo.png" target="StoreLogo" />
+    <icon src="res/icons/windows/smalllogo.png" target="Square30x30Logo" />
+    <icon src="res/icons/windows/StoreLogo.scale-240.png" target="StoreLogo.scale-240" />
+    <icon src="res/icons/windows/Square44x44Logo.png" target="Square44x44Logo" />
+    <icon src="res/icons/windows/Square70x70Logo.png" target="Square70x70Logo" />
+    <icon src="res/icons/windows/Square71x71Logo.png" target="Square71x71Logo" />
+    <icon src="res/icons/windows/Square150x150Logo.png" target="Square150x150Logo" />
+    <icon src="res/icons/windows/Square310x310Logo.png" target="Square310x310Logo" />
+    <icon src="res/icons/windows/Wide310x150Logo.png" target="Wide310x150Logo" />
+  </platform>
+  <platform name="ios">
+    <preference name="WKWebViewOnly" value="true" />
+    <preference name="scheme" value="app" />
+    <preference name="hostname" value="localhost" />
+    <icon src="res/icons/ios/icon-60@3x.png" width="180" height="180" />
+    <icon src="res/icons/ios/icon-60.png" width="60" height="60" />
+    <icon src="res/icons/ios/icon-60@2x.png" width="120" height="120" />
+    <icon src="res/icons/ios/icon-76.png" width="76" height="76" />
+    <icon src="res/icons/ios/icon-76@2x.png" width="152" height="152" />
+    <icon src="res/icons/ios/icon-40.png" width="40" height="40" />
+    <icon src="res/icons/ios/icon-40@2x.png" width="80" height="80" />
+    <icon src="res/icons/ios/icon.png" width="57" height="57" />
+    <icon src="res/icons/ios/icon@2x.png" width="114" height="114" />
+    <icon src="res/icons/ios/icon-72.png" width="72" height="72" />
+    <icon src="res/icons/ios/icon-72@2x.png" width="144" height="144" />
+    <icon src="res/icons/ios/icon-small.png" width="29" height="29" />
+    <icon src="res/icons/ios/icon-small@2x.png" width="58" height="58" />
+    <icon src="res/icons/ios/icon-small@3x.png" width="87" height="87" />
+    <icon src="res/icons/ios/icon-50.png" width="50" height="50" />
+    <icon src="res/icons/ios/icon-50@2x.png" width="100" height="100" />
+    <icon src="res/icons/ios/icon-83.5@2x.png" width="167" height="167" />
+    <icon src="res/icons/ios/icon-1024.png" width="1024" height="1024" />
+  </platform>
+  <platform name="browser">
+    <splash src="res/screens/browser/splashscreen.png" />
+  </platform>
+  <platform name="ios">
+    <splash src="res/screens/ios/Default@2x~universal~anyany.png" />
+    <splash src="res/screens/ios/Default@2x~universal~comany.png" />
+    <splash src="res/screens/ios/Default@2x~universal~comcom.png" />
+    <splash src="res/screens/ios/Default@3x~universal~anyany.png" />
+    <splash src="res/screens/ios/Default@3x~universal~anycom.png" />
+    <splash src="res/screens/ios/Default@3x~universal~comany.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~anyany.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~comany.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~comcom.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~anyany.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~anycom.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~comany.png" />
+    <splash src="res/screens/ios/Default@2x~ipad~anyany.png" />
+    <splash src="res/screens/ios/Default@2x~ipad~comany.png" />
+    <splash src="res/screens/ios/Default@2x~universal~anyany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~universal~comany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~universal~comcom~dark.png" />
+    <splash src="res/screens/ios/Default@3x~universal~anyany~dark.png" />
+    <splash src="res/screens/ios/Default@3x~universal~anycom~dark.png" />
+    <splash src="res/screens/ios/Default@3x~universal~comany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~anyany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~comany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~iphone~comcom~dark.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~anyany~dark.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~anycom~dark.png" />
+    <splash src="res/screens/ios/Default@3x~iphone~comany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~ipad~anyany~dark.png" />
+    <splash src="res/screens/ios/Default@2x~ipad~comany~dark.png" />
+  </platform>
+  <platform name="wp8">
+    <splash src="res/screens/wp8/splashscreen.jpg" width="620" height="300" />
+    <splash src="res/screens/wp8/SplashScreenImage.jpg" width="480" height="800" />
+  </platform>
+  <platform name="windows">
+    <splash src="res/screens/windows/splashscreen.png" width="620" height="300" />
+    <splash src="res/screens/windows/splashscreenphone.png" width="1152" height="1920" />
+    <splash src="res/screens/windows/SplashScreen.scale-100.png" width="620" height="300" />
+    <splash src="res/screens/windows/SplashScreen.scale-240.png" width="1152" height="1920" />
+    <splash src="res/screens/windows/SplashScreenPhone.scale-240.png" width="1152" height="1920" />
+  </platform>
+  <platform name="blackberry10">
+    <splash src="res/screens/blackberry10/splashscreen.png" />
+  </platform>
+  <platform name="android">
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/splash.png" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#333333" />
+  </platform>
+<platform name="android">
+    <!-- Preferences -->
+    <preference name="android-targetSdkVersion" value="33" />
+    <preference name="NavigationBarBackgroundColor" value="#191919" />
+    <preference name="NavigationBarLight" value="true" />
+    <preference name="InAppBrowserStatusBarStyle" value="lightcontent" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+    <!-- Permissions -->
+    <config-file parent="/*" target="AndroidManifest.xml">
+        <uses-permission android:name="android.permission.SEND_SMS" />
+        <uses-permission android:name="android.permission.READ_SMS" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.CAMERA" />
+        <uses-permission android:name="android.permission.FLASHLIGHT" />
+    </config-file>
+    
+    <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application">
+        <application android:usesCleartextTraffic="true" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+            <queries>
+                <intent>
+                    <action android:name="android.speech.RecognitionService" />
+                </intent>
+            </queries>
+        </application>
+    </edit-config>
+
+</platform>
+
+</widget>

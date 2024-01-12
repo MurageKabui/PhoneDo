@@ -1,0 +1,26 @@
+﻿
+/*!
+This file is part of DecSoft App Builder.
+Visit our website for license information.
+Copyright ©2024 DecSoft. All rights reserved.
+Visit our website at: https://www.decsoftutils.com/
+
+*/
+
+html, body { width: 320px; height: 480px; }
+
+#viewConsole #console_wrapper { position: absolute; top: 5.00%; left: 2.50%; width: 95.00%; height: 95.00%; }
+#viewConsole #console_wrapper {overflow-y: scroll;}
+
+#viewConsole #consolemenu { position: absolute; top: 0.00%; left: 0.00%; width: 100.00%; height: 6.67%; }
+
+#viewEditScript #htmlAceEditor { position: absolute; top: 5.00%; left: 2.50%; width: 95.00%; height: 95.00%; }
+#viewEditScript #htmlAceEditor {border-right: 10px;}
+
+#viewEditScript #acemenu { position: absolute; top: 0.00%; left: 0.00%; width: 100.00%; height: 6.67%; }
+
+#dlgSettings #idHTMLSettingsCnt { position: absolute; top: 1.67%; left: 0.00%; width: 100.00%; height: 98.33%; }
+#dlgSettings #idHTMLSettingsCnt {overflow-y: scroll;}
+
+#dlgTidyOptions #htmlOptions { position: absolute; top: 1.67%; left: 2.50%; width: 95.00%; height: 98.33%; }
+#dlgTidyOptions #htmlOptions {overflow-y: scroll;}

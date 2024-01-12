@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="" dir="" data-bs-theme="dark">
+ <head>
+  <title></title>
+  <meta charset="utf-8"><meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+   <meta http-equiv="Content-Security-Policy"
+    content="default-src * app: file: data: mediastream: blob: filesystem: cdvfile: ws: ms-appdata: ms-appx-web: gap: 'unsafe-inline' 'unsafe-eval';"><meta name="generator" content="DecSoft App Builder 2023.43 - https://www.decsoftutils.com/">
+   <meta name="description" content="PhoneDo (PRO) - Script Android the JS Way">
+   <meta name="author" content="Dennis Kabui - dennisk@zainahtech.com - https://github.com/MurageKabui/PhoneDo">
+  <link rel="apple-touch-icon" href="app/images/icon.png">
+  <link rel="icon" type="image/png" href="app/images/icon.png">
+  <link rel="shortcut icon" href="app/images/icon.png" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" id="app-theme" href="app/styles/darkly.css">
+  <link rel="stylesheet" type="text/css" id="app-style" href="app/styles/scaled.css">
+  <link rel="stylesheet" type="text/css" href="app/styles/shared.css">
+  <link rel="stylesheet" type="text/css" href="app/styles/pluginscomps.css"><link rel="stylesheet" type="text/css" href="app/styles/ansi.css">
+<link rel="stylesheet" type="text/css" href="app/styles/PhoneDo-Style.css">
+<link rel="stylesheet" type="text/css" href="app/styles/PhoneDo-About.css">
+<link rel="stylesheet" type="text/css" href="app/styles/PhoneDo-MenuToolbar.css">
+<link rel="stylesheet" type="text/css" href="app/styles/PhoneDo-Settings.css">
+
+ </head>
+ <body>
+  <div id="app">
+   <router-view v-slot="{Component}">
+    <keep-alive>
+     <component :is="Component"></component>
+    </keep-alive>
+   </router-view>
+   <dlg-settings ref="dlgSettings"></dlg-settings>
+   <dlg-tidy-options ref="dlgTidyOptions"></dlg-tidy-options>
+   <dab-alert ref="DabAlert"></dab-alert>
+   <dab-toast ref="DabToast"></dab-toast>
+   <div id="dab-sidebar-overlay"></div>
+  </div>
+  <script src="app/scripts/builder.min.js"></script><script src="app/files/ace/ace.js"></script>
+<script src="app/scripts/jqconsole.min.js"></script>
+<script src="app/scripts/solo-alert.js"></script>
+<script src="app/scripts/beautify.min.js"></script>
+<script src="app/scripts/evalfunc.js"></script>
+<script src="app/scripts/asciiMorph.min.js"></script>
+<script src="app/plugins/DecSoft/Clipboard/scripts/clipboard.min.js"></script>
+
+  <script src="app/scripts/pluginscomps.js"></script>
+  <script src="app/scripts/applangs.js"></script>
+  <script src="app/scripts/app.js"></script>
+  <script src="cordova.js"></script>
+ </body>
+</html>

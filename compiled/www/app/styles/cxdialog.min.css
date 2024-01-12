@@ -1,0 +1,76 @@
+/*!
+ * cxDialog
+ * ------------------------------ */
+.cxdialog{--cxdialog-text-color:#333;--cxdialog-btn-bg:#666;--cxdialog-ok-bg:#4a89dc;--cxdialog-no-bg:#666;--cxdialog-text-size:14px;--cxdialog-title-size:16px;position:fixed;z-index:99999;top:-100%;bottom:100%;left:0;right:0;color:var(--cxdialog-text-color);font-size:var(--cxdialog-text-size);display:flex;align-items:center}
+.cxdialog_mask{position:absolute;top:0;bottom:0;left:0;right:0;background-color:rgba(0,0,0,0);cursor:default;transition-property:background-color;transition-duration:.3s}
+.cxdialog_box{overflow:auto;min-width:280px;max-width:80%;max-height:90vh;margin:0 auto;border-radius:6px;background-color:#fff;box-shadow:0 1px 5px rgba(0,0,0,.5);animation-duration:.3s;animation-fill-mode:both}
+.cxdialog_close{position:absolute;top:0;right:0;overflow:hidden;width:40px;height:40px;text-decoration:none;cursor:pointer;transition-property:opacity;transition-duration:.2s}
+.cxdialog_close:after,.cxdialog_close:before{content:'';position:absolute;top:50%;left:50%;width:12px;height:2px;margin:-1px 0 0 -6px;background-color:#da4453;transform:rotate(45deg)}
+.cxdialog_close:after{transform:rotate(-45deg)}
+.cxdialog_close:hover{opacity:.8}
+.cxdialog_title{position:relative;border-radius:5px 5px 0 0;background-color:rgba(0,0,0,.1);font-weight:700;font-size:var(--cxdialog-title-size);line-height:40px;text-indent:1em}
+.cxdialog_info{position:relative;overflow:auto;min-height:40px;max-height:calc(90vh - 160px);padding:12px 1em;word-break:break-word}
+.cxdialog_btns{overflow:hidden;position:relative;padding:12px 1em;line-height:30px;display:flex;flex-wrap:wrap;justify-content:flex-end;row-gap:10px}
+.cxdialog_btns:before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background-color:rgba(0,0,0,.1)}
+.cxdialog_btns a{position:relative;padding:0 1em;border-radius:3px;background-color:var(--cxdialog-btn-bg);color:#fff;text-decoration:none;cursor:pointer;flex:none;transition-property:opacity;transition-duration:.2s}
+.cxdialog_btns a+a{margin-left:1em}
+.cxdialog_btns a.ok{background-color:var(--cxdialog-ok-bg)}
+.cxdialog_btns a.no{background-color:var(--cxdialog-no-bg)}
+.cxdialog_btns a:hover{color:#fff;opacity:.8}
+@keyframes cxDialogIn{
+0%{opacity:0;transform:translate(0,10%)}
+100%{opacity:1;transform:translate(0,0)}
+}
+@keyframes cxDialogOut{
+0%{opacity:1;transform:translate(0,0)}
+100%{opacity:0;transform:translate(0,10%)}
+}
+.cxdialog.in{top:0;bottom:0}
+.cxdialog.in .cxdialog_mask{background-color:rgba(0,0,0,.4)}
+.cxdialog.in .cxdialog_box{animation-name:cxDialogIn}
+.cxdialog.out{transition-property:top,bottom;transition-duration:0s;transition-delay:0.3s}
+.cxdialog.out .cxdialog_box{animation-name:cxDialogOut}
+.cxdialog.light_mask.in .cxdialog_mask{background:rgba(255,255,255,.4)}
+.cxdialog.ios .cxdialog_box{border-radius:6px;background-color:#f9f9f9;box-shadow:none}
+.cxdialog.ios .cxdialog_close{display:none}
+.cxdialog.ios .cxdialog_title{padding-top:12px;border-radius:0;background-color:transparent;line-height:1.5;text-align:center;text-indent:0}
+.cxdialog.ios .cxdialog_info{min-height:inherit;max-height:50vh;text-align:center}
+.cxdialog.ios .cxdialog_title+.cxdialog_info{padding-top:4px}
+.cxdialog.ios .cxdialog_btns{padding:0;font-size:var(--cxdialog-title-size);line-height:44px;text-align:center;row-gap:0}
+.cxdialog.ios .cxdialog_btns:before{background-color:rgba(0,0,0,.1)}
+.cxdialog.ios .cxdialog_btns a{padding:0;border-radius:0;background-color:transparent;color:#007aff;opacity:1;cursor:pointer;flex:0 0 100%;transition-property:background-color}
+.cxdialog.ios .cxdialog_btns a+a{margin:0;border-top:1px solid rgba(0,0,0,.1)}
+.cxdialog.ios .cxdialog_btns a.no,.cxdialog.ios .cxdialog_btns a.ok{flex:1;border-top:none}
+.cxdialog.ios .cxdialog_btns a.ok{border-radius:0 0 0 6px}
+.cxdialog.ios .cxdialog_btns a.no{border-radius:0 0 6px 0}
+.cxdialog.ios .cxdialog_btns a.ok+a.no:before{content:'';position:absolute;top:1px;bottom:0;left:0;width:1px;background-color:rgba(0,0,0,.1)}
+.cxdialog.ios .cxdialog_btns a:last-child,.cxdialog.ios .cxdialog_btns a:only-child{border-radius:0 0 6px 6px}
+.cxdialog.ios .cxdialog_btns a:hover{background-color:rgba(0,0,0,.1)}
+@keyframes cxDialogIosIn{
+0%{opacity:0;transform:scale(1.1)}
+100%{opacity:1;transform:scale(1)}
+}
+@keyframes cxDialogIosOut{
+0%{opacity:1;transform:scale(1)}
+100%{opacity:0;transform:scale(.9)}
+}
+.cxdialog.ios.in .cxdialog_box{animation:cxDialogIosIn .2s both}
+.cxdialog.ios.out .cxdialog_box{animation:cxDialogIosOut .2s both}
+@media (prefers-color-scheme:dark){
+.cxdialog{color:#eee}
+.cxdialog_box{background-color:#222}
+.cxdialog_title{background-color:rgba(255,255,255,.1)}
+.cxdialog_btns{border-top-color:#444}
+.cxdialog_btns a{background-color:rgba(255,255,255,.2)}
+.cxdialog_btns a:hover{background-color:rgba(255,255,255,.3)}
+.cxdialog.ios{color:#eee}
+.cxdialog.ios .cxdialog_box{background-color:#222}
+.cxdialog.ios .cxdialog_btns{border-top-color:#444}
+.cxdialog.ios .cxdialog_btns a{color:#4b8afe}
+.cxdialog.ios .cxdialog_btns a+a{border-top-color:#444}
+.cxdialog.ios .cxdialog_btns a:hover{background-color:rgba(255,255,255,.1)}
+.cxdialog.ios .cxdialog_btns a.ok+a.no:before{background-color:#444}
+}
+@media (min-width:640px){
+.cxdialog.ios .cxdialog_box{max-width:512px}
+}
