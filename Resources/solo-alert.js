@@ -1,34 +1,31 @@
 ﻿((root, factory) => {
-  if (typeof exports === 'object' && typeof module === 'object') {
-    module.exports = factory();
-  }
-  else if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  }
-  else if (typeof exports === 'object') {
-    exports["SA"] = factory();
-  }
-  else {
-    root["SA"] = factory();
-  }
+    if (typeof exports === 'object' && typeof module === 'object') {
+        module.exports = factory();
+    } else if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof exports === 'object') {
+        exports["SA"] = factory();
+    } else {
+        root["SA"] = factory();
+    }
 
 })(this, () => {
-  const SA = {
-    defaults: {
-      title: "Title",
-      body: "",
-      icon: "",
-      theme: "auto",
-      html: "",
-      type: "text",
-      textLimit: 100,
-      useTransparency: false,
-      onOk: function () { },
-      onCancel: function () { },
-      onInput: function () { },
-    },
-    styles: (themer, wrapper_bg) => {
-      return `
+    const SA = {
+        defaults: {
+            title: "Title",
+            body: "",
+            icon: "",
+            theme: "auto",
+            html: "",
+            type: "text",
+            textLimit: 100,
+            useTransparency: false,
+            onOk: function() {},
+            onCancel: function() {},
+            onInput: function() {},
+        },
+        styles: (themer, wrapper_bg) => {
+            return `
   
   
   
@@ -205,10 +202,11 @@
   }
   .do-not-flow{
     overflow: hidden;
-  }`},
-    themes: ["light", "dark"],
-    data_icons: {
-      success: `
+  }`
+        },
+        themes: ["light", "dark"],
+        data_icons: {
+            success: `
   <div class="SA-svg-box">
                   <svg class="SA-circular SA-green-stroke">
                       <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
@@ -220,7 +218,7 @@
                   </svg>
               </div>
   `,
-      error: `
+            error: `
   <div class="SA-svg-box">
                   <svg class="SA-circular SA-red-stroke">
                       <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
@@ -235,7 +233,7 @@
                   </svg>
               </div>
   `,
-      warning: `
+            warning: `
   <div class="SA-svg-box">
                   <svg class="SA-circular SA-yellow-stroke">
                       <circle class="path" cx="75" cy="75" r="50" fill="none" stroke-width="5" stroke-miterlimit="10"/>
@@ -252,401 +250,397 @@
                   </svg>
               </div>
   `
-    },
-    data_theme: {
-      light: {
-        color: "#212121",
-        background: "#ffffff",
-        blue: "#3f51b5",
-        wrapperBg: "#cccccc",
-        transparentWrapperBg: "rgba(0, 0, 0, 0.5)",
-        textGrey: "#757575",
-        darkGrey: "#9e9e9e",
-        borderGrey: "#757575",
-        shadowGrey: "rgba(0,0,0,0.24)",
-        shadowLightGrey: "rgba(0,0,0,0.12)"
-      },
-      dark: {
-        color: "var(--body-color)",
-        background: "var(--menu-bgcolor)",
-        blue: "var(--jqc-info)",
-        wrapperBg: "#cccccc",
-        transparentWrapperBg: "rgba(0, 0, 0, 0.5)",
-        textGrey: "#c5c8ca",
-        darkGrey: "#9e9e9e",
-        borderGrey: "#888888",
-        shadowGrey: "rgba(0,0,0,0.24)",
-        shadowLightGrey: "rgba(0,0,0,0.12)"
-      }
-    },
-    _characterCounter: (q, m, l) => {
-      var max = parseInt(l);
-      var input = q
-      var counter = m;
-      if (input.value.length > max) {
-        input.value = input.value.substring(0, max);
-        return false;
-      } else { counter.textContent = `${input.value.length} / ${max}`; }
-    },
-    changeTheme: (n) => {
-      SA.currentTheme = n;
-    },
-    currentTheme: "light",
-    alert: (options) => {
-      if (typeof (options) !== "object" || Array.isArray(options)) {
-        throw new TypeError("SA Alert: provided argument must be an Object!")
-      }
-      var inp_title = (/string|number/).test(typeof (options.title)) ? options.title : SA.defaults.title || "Title";
-      var inp_body = (/string|number/).test(typeof (options.body)) ? options.body : SA.defaults.body || "";
-      var inp_icon = typeof (options.icon) === "string" && Object.keys(SA.data_icons).includes(options.icon) ? options.icon : SA.defaults.icon || "";
-      var inp_html = typeof (options.html) === "string" ? options.html : SA.defaults.html || "";
-      var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
-      var inp_onOk = typeof (options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function () { };
-      var inp_useTransparency = typeof (options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
-      if (inp_theme === "auto") {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          SA.currentTheme = "light";
+        },
+        data_theme: {
+            light: {
+                color: "#212121",
+                background: "#ffffff",
+                blue: "#3f51b5",
+                wrapperBg: "#cccccc",
+                transparentWrapperBg: "rgba(0, 0, 0, 0.5)",
+                textGrey: "#757575",
+                darkGrey: "#9e9e9e",
+                borderGrey: "#757575",
+                shadowGrey: "rgba(0,0,0,0.24)",
+                shadowLightGrey: "rgba(0,0,0,0.12)"
+            },
+            dark: {
+                color: "var(--body-color)",
+                background: "var(--menu-bgcolor)",
+                blue: "var(--jqc-info)",
+                wrapperBg: "#cccccc",
+                transparentWrapperBg: "rgba(0, 0, 0, 0.5)",
+                textGrey: "#c5c8ca",
+                darkGrey: "#9e9e9e",
+                borderGrey: "#888888",
+                shadowGrey: "rgba(0,0,0,0.24)",
+                shadowLightGrey: "rgba(0,0,0,0.12)"
+            }
+        },
+        _characterCounter: (q, m, l) => {
+            var max = parseInt(l);
+            var input = q
+            var counter = m;
+            if (input.value.length > max) {
+                input.value = input.value.substring(0, max);
+                return false;
+            } else { counter.textContent = `${input.value.length} / ${max}`; }
+        },
+        changeTheme: (n) => {
+            SA.currentTheme = n;
+        },
+        currentTheme: "light",
+        alert: (options) => {
+            if (typeof(options) !== "object" || Array.isArray(options)) {
+                throw new TypeError("SA Alert: provided argument must be an Object!")
+            }
+            var inp_title = (/string|number/).test(typeof(options.title)) ? options.title : SA.defaults.title || "Title";
+            var inp_body = (/string|number/).test(typeof(options.body)) ? options.body : SA.defaults.body || "";
+            var inp_icon = typeof(options.icon) === "string" && Object.keys(SA.data_icons).includes(options.icon) ? options.icon : SA.defaults.icon || "";
+            var inp_html = typeof(options.html) === "string" ? options.html : SA.defaults.html || "";
+            var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
+            var inp_onOk = typeof(options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function() {};
+            var inp_useTransparency = typeof(options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
+            if (inp_theme === "auto") {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    SA.currentTheme = "light";
+                } else { SA.currentTheme = "dark"; }
+            } else {
+                SA.changeTheme(inp_theme);
+            }
+            const themer = SA.data_theme[SA.currentTheme];
+            var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
+            var bWrapper = document.createElement("div");
+            var style = document.createElement("style");
+            style.textContent = SA.styles(themer, wrapper_bg);
+            var wrapper = document.createElement("div");
+            wrapper.classList.add("SA-wrapper");
+            var s_a = document.createElement("div");
+            s_a.classList.add("SA");
+            var title = document.createElement("h3");
+            title.textContent = inp_title;
+            var content = document.createElement("div");
+            content.classList.add("SA-content");
+            var otherContent = document.createElement("div");
+            var icon = document.createElement("div");
+            if (inp_icon !== null) {
+                icon.classList.add("SA-icon");
+                otherContent.style.maxHeight = "calc(70vh - 18rem)";
+                icon.innerHTML = SA.data_icons[inp_icon];
+            }
+            otherContent.classList.add("SA-other-content");
+            otherContent.innerHTML += inp_html;
+            if (inp_html !== "" || inp_icon !== "") {
+                otherContent.style.marginTop = ".5rem";
+            }
+            var alertBody = document.createElement("p");
+            alertBody.classList.add("SA-body-text");
+            alertBody.textContent = inp_body;
+            //alertBody.classList.add("SA-prompt-input-heading");
+            var actions = document.createElement("div");
+            actions.classList.add("SA-actions");
+            var okBtn = document.createElement("button");
+            okBtn.classList.add("SA-action-button");
+            okBtn.textContent = "OK";
+            okBtn.addEventListener("click", inp_onOk);
+
+
+            bWrapper.appendChild(style);
+            bWrapper.appendChild(wrapper)
+            wrapper.appendChild(s_a);
+            s_a.appendChild(title);
+            s_a.appendChild(content);
+            content.appendChild(alertBody);
+            if (inp_icon !== "") {
+                content.appendChild(icon);
+            }
+            content.appendChild(otherContent);
+            actions.appendChild(okBtn);
+            s_a.appendChild(actions);
+            document.body.appendChild(bWrapper);
+            document.body.classList.add("do-not-flow");
+
+
+            return new Promise((resolve, reject) => {
+
+                okBtn.addEventListener("click", () => {
+                    wrapper.style.animation = "SA_fade_out .1s ease-out";
+                    setTimeout(() => {
+
+                        document.body.removeChild(bWrapper);
+                        document.body.classList.remove("do-not-flow");
+
+                    }, 90);
+                    resolve(true);
+                });
+
+                bWrapper.addEventListener("click", (event) => {
+                    if (event.target.className == "SA-wrapper") {
+                        wrapper.style.animation = "SA_fade_out .1s ease-out";
+                        setTimeout(() => {
+
+                            document.body.removeChild(bWrapper);
+                            document.body.classList.remove("do-not-flow");
+
+                        }, 90);
+                        resolve(false);
+                    }
+                });
+            });
+        },
+        prompt: (options) => {
+            if (typeof(options) !== "object" || Array.isArray(options)) {
+                throw new TypeError("SA Prompt: provided argument must be an Object!")
+            }
+            var inp_title = (/string|number/).test(typeof(options.title)) ? options.title : SA.defaults.title || "Title";
+            var inp_body = (/string|number/).test(typeof(options.body)) ? options.body : SA.defaults.body || "";
+            var inp_textLimit = typeof(options.textLimit) === "number" ? Math.round(parseInt(options.textLimit)) : SA.defaults.textLimit || 100;
+            var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
+            var inp_type = typeof(options.type) == "string" ? options.type : SA.defaults.type || "text";
+            var inp_attributes = typeof(options.attributes) == "object" && !Array.isArray(options.attributes) ? options.attributes : SA.defaults.attributes || {};
+            var inp_onOk = typeof(options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function() {};
+            var inp_onCancel = typeof(options.onCancel) === "function" ? options.onCancel : SA.defaults.onCancel || function() {};
+            var inp_onInput = typeof(options.onInput) === "function" ? options.onInput : SA.defaults.onInput || function() {};
+            var inp_useTransparency = typeof(options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
+
+            if (inp_theme === "auto") {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    SA.currentTheme = "light";
+                } else { SA.currentTheme = "dark"; }
+            } else {
+                SA.changeTheme(inp_theme);
+            }
+            const themer = SA.data_theme[SA.currentTheme];
+            var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
+            var bWrapper = document.createElement("div");
+            var style = document.createElement("style");
+            style.textContent = SA.styles(themer, wrapper_bg);
+            var wrapper = document.createElement("div");
+            wrapper.classList.add("SA-wrapper");
+            var s_a = document.createElement("div");
+            s_a.classList.add("SA");
+            var title = document.createElement("h3");
+            title.textContent = inp_title;
+            var content = document.createElement("div");
+            content.classList.add("SA-content");
+            var promptHeading = document.createElement("p");
+            promptHeading.textContent = inp_body;
+            promptHeading.classList.add("SA-prompt-input-heading");
+            var promptInputWrapper = document.createElement("div");
+            promptInputWrapper.classList.add("SA-prompt-input-wrapper");
+            var promptLabelWrapper = document.createElement("div");
+            var promptLabel = document.createElement("label");
+            promptLabel.setAttribute("for", "SA-prompt-input");
+            promptLabel.textContent = "Input";
+            var promptInput = document.createElement("input");
+            promptInput.type = inp_type;
+            for (attr in inp_attributes) {
+                if (attr == "class" || attr == "className") {
+                    promptInput.className += inp_attributes[attr];
+                } else {
+                    promptInput.setAttribute(attr, inp_attributes[attr]);
+                }
+            }
+            promptInput.classList.add("SA-prompt-input");
+            promptInput.setAttribute("max-limit", inp_textLimit)
+            var promptCharacterCounter = document.createElement("span");
+            promptCharacterCounter.textContent = `0 / ${inp_textLimit}`;
+            promptInput.addEventListener("keydown", () => { SA._characterCounter(promptInput, promptCharacterCounter, inp_textLimit) });
+            promptInput.addEventListener("input", inp_onInput);
+            var actions = document.createElement("div");
+            actions.classList.add("SA-actions");
+            var cancelBtn = document.createElement("button");
+            cancelBtn.classList.add("SA-action-button");
+            cancelBtn.textContent = "CANCEL";
+            cancelBtn.addEventListener("click", inp_onCancel);
+            var okBtn = document.createElement("button");
+            okBtn.classList.add("SA-action-button");
+            okBtn.textContent = "OK";
+            okBtn.addEventListener("click", inp_onOk);
+
+
+            bWrapper.appendChild(style);
+            bWrapper.appendChild(wrapper)
+            wrapper.appendChild(s_a);
+            s_a.appendChild(title);
+            s_a.appendChild(content);
+            content.appendChild(promptHeading);
+            content.appendChild(promptInputWrapper);
+            promptInputWrapper.appendChild(promptLabelWrapper);
+            promptLabelWrapper.appendChild(promptLabel);
+            promptInputWrapper.appendChild(promptInput);
+            promptInputWrapper.appendChild(promptCharacterCounter);
+            actions.appendChild(cancelBtn);
+            actions.appendChild(okBtn);
+            s_a.appendChild(actions);
+            document.body.appendChild(bWrapper);
+            document.body.classList.add("do-not-flow");
+
+
+            return new Promise((resolve, reject) => {
+
+
+                okBtn.addEventListener("click", () => {
+                    wrapper.style.animation = "SA_fade_out .1s ease-out";
+                    setTimeout(() => {
+
+                        document.body.removeChild(bWrapper);
+                        document.body.classList.remove("do-not-flow");
+
+                    }, 90);
+                    resolve(promptInput.value);
+                });
+
+                cancelBtn.addEventListener("click", () => {
+                    wrapper.style.animation = "SA_fade_out .1s ease-out";
+                    setTimeout(() => {
+
+                        document.body.removeChild(bWrapper);
+                        document.body.classList.remove("do-not-flow");
+
+                    }, 90);
+                    resolve(null);
+                });
+
+                bWrapper.addEventListener("click", (event) => {
+                    if (event.target.className == "SA-wrapper") {
+                        wrapper.style.animation = "SA_fade_out .1s ease-out";
+                        setTimeout(() => {
+
+                            document.body.removeChild(bWrapper);
+                            document.body.classList.remove("do-not-flow");
+
+                        }, 90);
+                        resolve(null);
+                    }
+                });
+
+            });
+        },
+        confirm: (options) => {
+            if (typeof(options) !== "object" || Array.isArray(options)) {
+                throw new TypeError("SA Confirm: provided argument must be an Object!")
+            }
+            var inp_title = (/string|number/).test(typeof(options.title)) ? options.title : SA.defaults.title || "Title";
+            var inp_body = (/string|number/).test(typeof(options.body)) ? options.body : SA.defaults.body || "";
+            var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
+            var inp_onOk = typeof(options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function() {};
+            var inp_onCancel = typeof(options.onCancel) === "function" ? options.onCancel : SA.defaults.onCancel || function() {};
+            var inp_useTransparency = typeof(options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
+
+            if (inp_theme === "auto") {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    SA.currentTheme = "light";
+                } else { SA.currentTheme = "dark"; }
+            } else {
+                SA.changeTheme(inp_theme);
+            }
+            const themer = SA.data_theme[SA.currentTheme];
+            var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
+            var bWrapper = document.createElement("div");
+            var style = document.createElement("style");
+            style.textContent = SA.styles(themer, wrapper_bg);
+            var wrapper = document.createElement("div");
+            wrapper.classList.add("SA-wrapper");
+            var s_a = document.createElement("div");
+            s_a.classList.add("SA");
+            var title = document.createElement("h3");
+            title.textContent = inp_title;
+            var content = document.createElement("div");
+            content.classList.add("SA-content");
+            var alertBody = document.createElement("p");
+            alertBody.classList.add("SA-body-text");
+            alertBody.textContent = inp_body;
+            //alertBody.classList.add("SA-prompt-input-heading");
+            var actions = document.createElement("div");
+            actions.classList.add("SA-actions");
+            var cancelBtn = document.createElement("button");
+            cancelBtn.classList.add("SA-action-button");
+            cancelBtn.textContent = "CANCEL";
+            cancelBtn.addEventListener("click", inp_onCancel);
+            var okBtn = document.createElement("button");
+            okBtn.classList.add("SA-action-button");
+            okBtn.textContent = "OK";
+            okBtn.addEventListener("click", inp_onOk);
+
+
+            bWrapper.appendChild(style);
+            bWrapper.appendChild(wrapper)
+            wrapper.appendChild(s_a);
+            s_a.appendChild(title);
+            s_a.appendChild(content);
+            content.appendChild(alertBody);
+            actions.appendChild(cancelBtn);
+            actions.appendChild(okBtn);
+            s_a.appendChild(actions);
+            document.body.appendChild(bWrapper);
+            document.body.classList.add("do-not-flow");
+
+
+            return new Promise((resolve, reject) => {
+                okBtn.addEventListener("click", () => {
+                    wrapper.style.animation = "SA_fade_out .1s ease-out";
+                    setTimeout(() => {
+
+                        document.body.removeChild(bWrapper);
+                        document.body.classList.remove("do-not-flow");
+
+                    }, 90);
+                    resolve(true);
+                });
+
+                cancelBtn.addEventListener("click", () => {
+                    wrapper.style.animation = "SA_fade_out .1s ease-out";
+                    setTimeout(() => {
+
+                        document.body.removeChild(bWrapper);
+                        document.body.classList.remove("do-not-flow");
+
+                    }, 90);
+                    resolve(false);
+                });
+
+                bWrapper.addEventListener("click", (event) => {
+                    if (event.target.className == "SA-wrapper") {
+                        wrapper.style.animation = "SA_fade_out .1s ease-out";
+                        setTimeout(() => {
+
+                            document.body.removeChild(bWrapper);
+                            document.body.classList.remove("do-not-flow");
+
+                        }, 90);
+                        resolve(false);
+                    }
+                });
+
+            });
+        },
+        backup: {
+            alert: window.alert,
+            prompt: window.prompt,
+            confirm: window.confirm
+        },
+        prettyAlert: {
+            alert(text, options = {}) {
+                return SA.alert({ body: text, ...options });
+            },
+            prompt(text, options = {}) {
+                return SA.prompt({ body: text, ...options });
+            },
+            confirm(text, options = {}) {
+                return SA.confirm({ body: text, ...options });
+            }
+        },
+        setAsDefault() {
+            window.alert = SA.prettyAlert.alert;
+            window.prompt = SA.prettyAlert.prompt;
+            window.confirm = SA.prettyAlert.confirm;
+        },
+        resetDefaults() {
+            window.alert = SA.backup.alert;
+            window.prompt = SA.backup.prompt;
+            window.confirm = SA.backup.confirm;
         }
-        else { SA.currentTheme = "dark"; }
-      } else {
-        SA.changeTheme(inp_theme);
-      }
-      const themer = SA.data_theme[SA.currentTheme];
-      var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
-      var bWrapper = document.createElement("div");
-      var style = document.createElement("style");
-      style.textContent = SA.styles(themer, wrapper_bg);
-      var wrapper = document.createElement("div");
-      wrapper.classList.add("SA-wrapper");
-      var s_a = document.createElement("div");
-      s_a.classList.add("SA");
-      var title = document.createElement("h3");
-      title.textContent = inp_title;
-      var content = document.createElement("div");
-      content.classList.add("SA-content");
-      var otherContent = document.createElement("div");
-      var icon = document.createElement("div");
-      if (inp_icon !== null) {
-        icon.classList.add("SA-icon");
-        otherContent.style.maxHeight = "calc(70vh - 18rem)";
-        icon.innerHTML = SA.data_icons[inp_icon];
-      }
-      otherContent.classList.add("SA-other-content");
-      otherContent.innerHTML += inp_html;
-      if (inp_html !== "" || inp_icon !== "") {
-        otherContent.style.marginTop = ".5rem";
-      }
-      var alertBody = document.createElement("p");
-      alertBody.classList.add("SA-body-text");
-      alertBody.textContent = inp_body;
-      //alertBody.classList.add("SA-prompt-input-heading");
-      var actions = document.createElement("div");
-      actions.classList.add("SA-actions");
-      var okBtn = document.createElement("button");
-      okBtn.classList.add("SA-action-button");
-      okBtn.textContent = "OK";
-      okBtn.addEventListener("click", inp_onOk);
-
-
-      bWrapper.appendChild(style);
-      bWrapper.appendChild(wrapper)
-      wrapper.appendChild(s_a);
-      s_a.appendChild(title);
-      s_a.appendChild(content);
-      content.appendChild(alertBody);
-      if (inp_icon !== "") {
-        content.appendChild(icon);
-      }
-      content.appendChild(otherContent);
-      actions.appendChild(okBtn);
-      s_a.appendChild(actions);
-      document.body.appendChild(bWrapper);
-      document.body.classList.add("do-not-flow");
-
-
-      return new Promise((resolve, reject) => {
-
-        okBtn.addEventListener("click", () => {
-          wrapper.style.animation = "SA_fade_out .1s ease-out";
-          setTimeout(() => {
-
-            document.body.removeChild(bWrapper);
-            document.body.classList.remove("do-not-flow");
-
-          }, 90);
-          resolve(true);
-        });
-
-        bWrapper.addEventListener("click", (event) => {
-          if (event.target.className == "SA-wrapper") {
-            wrapper.style.animation = "SA_fade_out .1s ease-out";
-            setTimeout(() => {
-
-              document.body.removeChild(bWrapper);
-              document.body.classList.remove("do-not-flow");
-
-            }, 90);
-            resolve(false);
-          }
-        });
-      });
-    },
-    prompt: (options) => {
-      if (typeof (options) !== "object" || Array.isArray(options)) {
-        throw new TypeError("SA Prompt: provided argument must be an Object!")
-      }
-      var inp_title = (/string|number/).test(typeof (options.title)) ? options.title : SA.defaults.title || "Title";
-      var inp_body = (/string|number/).test(typeof (options.body)) ? options.body : SA.defaults.body || "";
-      var inp_textLimit = typeof (options.textLimit) === "number" ? Math.round(parseInt(options.textLimit)) : SA.defaults.textLimit || 100;
-      var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
-      var inp_type = typeof (options.type) == "string" ? options.type : SA.defaults.type || "text";
-      var inp_attributes = typeof (options.attributes) == "object" && !Array.isArray(options.attributes) ? options.attributes : SA.defaults.attributes || {};
-      var inp_onOk = typeof (options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function () { };
-      var inp_onCancel = typeof (options.onCancel) === "function" ? options.onCancel : SA.defaults.onCancel || function () { };
-      var inp_onInput = typeof (options.onInput) === "function" ? options.onInput : SA.defaults.onInput || function () { };
-      var inp_useTransparency = typeof (options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
-
-      if (inp_theme === "auto") {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          SA.currentTheme = "light";
-        }
-        else { SA.currentTheme = "dark"; }
-      } else {
-        SA.changeTheme(inp_theme);
-      }
-      const themer = SA.data_theme[SA.currentTheme];
-      var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
-      var bWrapper = document.createElement("div");
-      var style = document.createElement("style");
-      style.textContent = SA.styles(themer, wrapper_bg);
-      var wrapper = document.createElement("div");
-      wrapper.classList.add("SA-wrapper");
-      var s_a = document.createElement("div");
-      s_a.classList.add("SA");
-      var title = document.createElement("h3");
-      title.textContent = inp_title;
-      var content = document.createElement("div");
-      content.classList.add("SA-content");
-      var promptHeading = document.createElement("p");
-      promptHeading.textContent = inp_body;
-      promptHeading.classList.add("SA-prompt-input-heading");
-      var promptInputWrapper = document.createElement("div");
-      promptInputWrapper.classList.add("SA-prompt-input-wrapper");
-      var promptLabelWrapper = document.createElement("div");
-      var promptLabel = document.createElement("label");
-      promptLabel.setAttribute("for", "SA-prompt-input");
-      promptLabel.textContent = "Input";
-      var promptInput = document.createElement("input");
-      promptInput.type = inp_type;
-      for (attr in inp_attributes) {
-        if (attr == "class" || attr == "className") {
-          promptInput.className += inp_attributes[attr];
-        }
-        else {
-          promptInput.setAttribute(attr, inp_attributes[attr]);
-        }
-      }
-      promptInput.classList.add("SA-prompt-input");
-      promptInput.setAttribute("max-limit", inp_textLimit)
-      var promptCharacterCounter = document.createElement("span");
-      promptCharacterCounter.textContent = `0 / ${inp_textLimit}`;
-      promptInput.addEventListener("keydown", () => { SA._characterCounter(promptInput, promptCharacterCounter, inp_textLimit) });
-      promptInput.addEventListener("input", inp_onInput);
-      var actions = document.createElement("div");
-      actions.classList.add("SA-actions");
-      var cancelBtn = document.createElement("button");
-      cancelBtn.classList.add("SA-action-button");
-      cancelBtn.textContent = "CANCEL";
-      cancelBtn.addEventListener("click", inp_onCancel);
-      var okBtn = document.createElement("button");
-      okBtn.classList.add("SA-action-button");
-      okBtn.textContent = "OK";
-      okBtn.addEventListener("click", inp_onOk);
-
-
-      bWrapper.appendChild(style);
-      bWrapper.appendChild(wrapper)
-      wrapper.appendChild(s_a);
-      s_a.appendChild(title);
-      s_a.appendChild(content);
-      content.appendChild(promptHeading);
-      content.appendChild(promptInputWrapper);
-      promptInputWrapper.appendChild(promptLabelWrapper);
-      promptLabelWrapper.appendChild(promptLabel);
-      promptInputWrapper.appendChild(promptInput);
-      promptInputWrapper.appendChild(promptCharacterCounter);
-      actions.appendChild(cancelBtn);
-      actions.appendChild(okBtn);
-      s_a.appendChild(actions);
-      document.body.appendChild(bWrapper);
-      document.body.classList.add("do-not-flow");
-
-
-      return new Promise((resolve, reject) => {
-
-
-        okBtn.addEventListener("click", () => {
-          wrapper.style.animation = "SA_fade_out .1s ease-out";
-          setTimeout(() => {
-
-            document.body.removeChild(bWrapper);
-            document.body.classList.remove("do-not-flow");
-
-          }, 90);
-          resolve(promptInput.value);
-        });
-
-        cancelBtn.addEventListener("click", () => {
-          wrapper.style.animation = "SA_fade_out .1s ease-out";
-          setTimeout(() => {
-
-            document.body.removeChild(bWrapper);
-            document.body.classList.remove("do-not-flow");
-
-          }, 90);
-          resolve(null);
-        });
-
-        bWrapper.addEventListener("click", (event) => {
-          if (event.target.className == "SA-wrapper") {
-            wrapper.style.animation = "SA_fade_out .1s ease-out";
-            setTimeout(() => {
-
-              document.body.removeChild(bWrapper);
-              document.body.classList.remove("do-not-flow");
-
-            }, 90);
-            resolve(null);
-          }
-        });
-
-      });
-    },
-    confirm: (options) => {
-      if (typeof (options) !== "object" || Array.isArray(options)) {
-        throw new TypeError("SA Confirm: provided argument must be an Object!")
-      }
-      var inp_title = (/string|number/).test(typeof (options.title)) ? options.title : SA.defaults.title || "Title";
-      var inp_body = (/string|number/).test(typeof (options.body)) ? options.body : SA.defaults.body || "";
-      var inp_theme = (/dark|light|auto/).test(options.theme) ? options.theme : SA.defaults.theme || "auto";
-      var inp_onOk = typeof (options.onOk) === "function" ? options.onOk : SA.defaults.onOk || function () { };
-      var inp_onCancel = typeof (options.onCancel) === "function" ? options.onCancel : SA.defaults.onCancel || function () { };
-      var inp_useTransparency = typeof (options.useTransparency) === "boolean" ? options.useTransparency : SA.defaults.useTransparency || false;
-
-      if (inp_theme === "auto") {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          SA.currentTheme = "light";
-        }
-        else { SA.currentTheme = "dark"; }
-      } else {
-        SA.changeTheme(inp_theme);
-      }
-      const themer = SA.data_theme[SA.currentTheme];
-      var wrapper_bg = inp_useTransparency ? themer.transparentWrapperBg : themer.wrapperBg;
-      var bWrapper = document.createElement("div");
-      var style = document.createElement("style");
-      style.textContent = SA.styles(themer, wrapper_bg);
-      var wrapper = document.createElement("div");
-      wrapper.classList.add("SA-wrapper");
-      var s_a = document.createElement("div");
-      s_a.classList.add("SA");
-      var title = document.createElement("h3");
-      title.textContent = inp_title;
-      var content = document.createElement("div");
-      content.classList.add("SA-content");
-      var alertBody = document.createElement("p");
-      alertBody.classList.add("SA-body-text");
-      alertBody.textContent = inp_body;
-      //alertBody.classList.add("SA-prompt-input-heading");
-      var actions = document.createElement("div");
-      actions.classList.add("SA-actions");
-      var cancelBtn = document.createElement("button");
-      cancelBtn.classList.add("SA-action-button");
-      cancelBtn.textContent = "CANCEL";
-      cancelBtn.addEventListener("click", inp_onCancel);
-      var okBtn = document.createElement("button");
-      okBtn.classList.add("SA-action-button");
-      okBtn.textContent = "OK";
-      okBtn.addEventListener("click", inp_onOk);
-
-
-      bWrapper.appendChild(style);
-      bWrapper.appendChild(wrapper)
-      wrapper.appendChild(s_a);
-      s_a.appendChild(title);
-      s_a.appendChild(content);
-      content.appendChild(alertBody);
-      actions.appendChild(cancelBtn);
-      actions.appendChild(okBtn);
-      s_a.appendChild(actions);
-      document.body.appendChild(bWrapper);
-      document.body.classList.add("do-not-flow");
-
-
-      return new Promise((resolve, reject) => {
-        okBtn.addEventListener("click", () => {
-          wrapper.style.animation = "SA_fade_out .1s ease-out";
-          setTimeout(() => {
-
-            document.body.removeChild(bWrapper);
-            document.body.classList.remove("do-not-flow");
-
-          }, 90);
-          resolve(true);
-        });
-
-        cancelBtn.addEventListener("click", () => {
-          wrapper.style.animation = "SA_fade_out .1s ease-out";
-          setTimeout(() => {
-
-            document.body.removeChild(bWrapper);
-            document.body.classList.remove("do-not-flow");
-
-          }, 90);
-          resolve(false);
-        });
-
-        bWrapper.addEventListener("click", (event) => {
-          if (event.target.className == "SA-wrapper") {
-            wrapper.style.animation = "SA_fade_out .1s ease-out";
-            setTimeout(() => {
-
-              document.body.removeChild(bWrapper);
-              document.body.classList.remove("do-not-flow");
-
-            }, 90);
-            resolve(false);
-          }
-        });
-
-      });
-    },
-    backup: {
-      alert: window.alert,
-      prompt: window.prompt,
-      confirm: window.confirm
-    },
-    prettyAlert: {
-      alert(text, options = {}) {
-        return SA.alert({ body: text, ...options });
-      },
-      prompt(text, options = {}) {
-        return SA.prompt({ body: text, ...options });
-      },
-      confirm(text, options = {}) {
-        return SA.confirm({ body: text, ...options });
-      }
-    },
-    setAsDefault() {
-      window.alert = SA.prettyAlert.alert;
-      window.prompt = SA.prettyAlert.prompt;
-      window.confirm = SA.prettyAlert.confirm;
-    },
-    resetDefaults() {
-      window.alert = SA.backup.alert;
-      window.prompt = SA.backup.prompt;
-      window.confirm = SA.backup.confirm;
-    }
-  };
-  return SA;
+    };
+    return SA;
 });
