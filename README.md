@@ -12,7 +12,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
  
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> automation tool that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way.
+> PhoneDo is an <b><i>Android</i></b> automation application that provides a scripting environment based on JavaScript with methods for handling native device actions in a headless way.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360" height="640">
@@ -56,7 +56,7 @@ These scripts are stored locally in a SQLite database, and can include ways for 
 ## Let's try this out.
 An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
-> On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for your script.
+> On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for the script.
 ```
 /*
  * Script Name     : FlashControl.nts
