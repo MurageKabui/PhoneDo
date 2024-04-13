@@ -37,25 +37,26 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 
 ## About
 
-The following technologies are employed in the development of this application :
+The tech stack for this application :
 
-| Technology |Use Case |License |
+| Technology |Use Case |
 |----------|----------------------------|-|
-|<a href="https://github.com/vuejs/core" target="_blank">Vue</a>| Front end | MIT|
-| [SQLite](https://github.com/sqlite/sqlite) | For local storage CRUD OPs. | None|
-|[Bootstrap](https://github.com/twbs/bootstrap)| For styling in the context of script evaluation. | MIT |
-|[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal-like UI. | MIT | 
-|<a href="https://github.com/jquery/jquery" target="_blank">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.| MIT |
-|<a href="https://github.com/ajaxorg/ace" target="_blank">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).| [License](https://github.com/ajaxorg/ace?tab=License-1-ov-file)|
+|<a href="https://github.com/vuejs/core" target="_blank">Vue</a>| Front end |
+| [SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations. |
+|[Bootstrap](https://github.com/twbs/bootstrap)| For styling in the context of script evaluation. | 
+|[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal-like UI. | 
+|<a href="https://github.com/jquery/jquery" target="_blank">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
+|<a href="https://github.com/ajaxorg/ace" target="_blank">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
 
 
-PhoneDo's goal is to offer users with a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which can be created and executed at a users convenience.
+I wanted to offer a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which a user can create and execute at their convenience.
 
-These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's file system, text-to-speech, speech-to-text, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other built-in native functions. You may find documentation for these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
+These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's native features like the file system, text-to-speech, speech-to-text, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other.. I attempted to document these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
 
-An example of how to control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
+## Let's try this out.
+An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
-> On creating the script, a header is automatically generated, allowing you to provide additional details for it.
+> On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for your script.
 ```
 /*
  * Script Name     : FlashControl.nts
@@ -82,7 +83,7 @@ exit();
 <br>
 
 <details>
-<summary><kbd>Expand full script</kbd></summary>
+<summary><kbd>Expand the full script</kbd></summary>
 
 ```JavaScript
 /*
@@ -105,12 +106,11 @@ exit();
 ---
 
 </details>
-
-
 <br>
 
-To execute the script , we navigate `Run` > `Run Script` or
-manually navigate back at the terminal view, type in the following command line and press enter : 
+Congrats! You just made your first PhoneDo Script! Now let's figure out how to execute it. 
+
+To simply execute ``FlashControl.nts`` , we navigate `Run` > `Run Script` and press Enter , or we can also manually navigate back at the PhoneDo terminal view and type in the following command line and press enter : 
 ```bash
 run -i "Flashlight.nts"
 ```
@@ -162,11 +162,11 @@ and activate the "<b><i>Unknown Sources</i></b>" option.
    - Look for the <b><i>Permissions</i></b> or <b><i>App Permissions</i></b> section.
    - Enable or grant all the permissions listed under PhoneDo.
    
-## PhoneDo Terminal
+## PhoneDo Terminal (In Progress)
 PhoneDo features an interactive Terminal User Interface with purpose-built commands designed to help you script easily.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/N8VShell/blob/main/Preview/TUI-Preview.jpg?raw=true" alt="Terminal Preview" width="270" height="600">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="PhoneDo Terminal Preview" width="270" height="600">
 </p>
 
 
