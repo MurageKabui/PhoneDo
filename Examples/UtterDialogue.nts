@@ -2,79 +2,62 @@
  * Script Name      : UtterDialogue.nts
  * Date             : Sat April 13 2024 07:24:55 GMT+0300 (East Africa Time)
  * PhoneDo Version  : 1.2.1
- * Description      : Simulate a dialogue between two people with different accents.
+ * Description      : Simulate a dialogue between an indian and australian accent.
  * Author           : PhoneDo
  * License          : None
  */
 
+const pitch = 0.95;
+const speed = 1.1;
+
 // Dialogue data in JSON format
 var dialogueJSON = [{
         "text": "Hey there, how's it going?",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "en-au-x-auc-local"
     },
     {
         "text": "Oh, just the usual rollercoaster ride of life!",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "kn-in-x-knm-network"
     },
     {
         "text": "Haha, I feel you! Life's like a box of chocolates, you never know what you're gonna get.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "en-au-x-auc-local"
     },
     {
         "text": "Exactly! Sometimes it's a delicious chocolate truffle, and other times it's a surprise coconut filling.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "kn-in-x-knm-network"
     },
     {
         "text": "Oh, I hate those coconut fillings! They always ruin the whole experience.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "en-au-x-auc-local"
     },
     {
         "text": "Tell me about it! It's like biting into a dream only to find out it's a nightmare.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "kn-in-x-knm-network"
     },
     {
         "text": "Haha, well said! But hey, at least we can laugh about it together.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "en-au-x-auc-local"
     },
     {
         "text": "Absolutely! Laughter is the best medicine, especially when life gives you those coconut-filled chocolates.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "kn-in-x-knm-network"
     },
     {
         "text": "Agreed! So, ready to tackle whatever life throws at us next?",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "en-au-x-auc-local"
     },
     {
         "text": "Bring it on! We'll handle it like champs, with a side of laughter and a pinch of sarcasm.",
-        "pitch": 0.95,
-        "rate": 1.0,
         "locale": "kn-in-x-knm-network"
     }
 ];
 
 // Function to simulate the dialogue
-async function simulateDialogue(dialogue) {
+async function simulateDialogue(dialogue, pitch, speed) {
     for (let i = 0; i < dialogue.length; i++) {
         let utterance = dialogue[i];
-        await utter.speak(utterance.text, utterance.pitch, utterance.rate, utterance.locale);
+        await utter.speak(utterance.text, pitch, rate, utterance.locale);
     }
 }
 
