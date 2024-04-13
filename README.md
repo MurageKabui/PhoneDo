@@ -41,9 +41,9 @@ The tech stack for this application :
 
 
 | Technology |Use Case |
-|----------|----------------------------|
+|------------|---------|
 |<a href="https://github.com/vuejs/core">Vue</a>| Front end |
-|[SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations. |
+|[SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations.|
 |[Bootstrap](https://github.com/twbs/bootstrap)| For styling (in the context of script evaluation) | 
 |[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal UI. | 
 |<a href="https://github.com/jquery/jquery">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
