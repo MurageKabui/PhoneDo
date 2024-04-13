@@ -169,7 +169,6 @@ PhoneDo features an interactive Terminal User Interface with purpose-built comma
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="PhoneDo Terminal Preview" width="270" height="600">
 </p>
 
-
 > Typing a command with no parameters dumps its help information.
 
 | Command | Description |
