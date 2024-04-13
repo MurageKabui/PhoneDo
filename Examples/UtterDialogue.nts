@@ -12,46 +12,47 @@ const speed = 1.1;
 
 // Dialogue data in JSON format
 var dialogueJSON = [{
-        "text": "Hey there, how's it going?",
+        "text": "Hey there, how can I assist you today?",
         "locale": "en-au-x-auc-local"
     },
     {
-        "text": "Oh, just the usual rollercoaster ride of life!",
+        "text": "Oh, just dealing with the usual printer woes.",
         "locale": "kn-in-x-knm-network"
     },
     {
-        "text": "Haha, I feel you! Life's like a box of chocolates, you never know what you're gonna get.",
+        "text": "Printers, huh? They can be quite finicky sometimes.",
         "locale": "en-au-x-auc-local"
     },
     {
-        "text": "Exactly! Sometimes it's a delicious chocolate truffle, and other times it's a surprise coconut filling.",
+        "text": "Tell me about it! This one seems to have a mind of its own.",
         "locale": "kn-in-x-knm-network"
     },
     {
-        "text": "Oh, I hate those coconut fillings! They always ruin the whole experience.",
+        "text": "Have you tried turning it off and on again? It's the IT equivalent of magic!",
         "locale": "en-au-x-auc-local"
     },
     {
-        "text": "Tell me about it! It's like biting into a dream only to find out it's a nightmare.",
+        "text": "I've lost count of how many times I've tried that. No luck so far.",
         "locale": "kn-in-x-knm-network"
     },
     {
-        "text": "Haha, well said! But hey, at least we can laugh about it together.",
+        "text": "Hmm, sounds like a stubborn printer. Let's try a few troubleshooting steps.",
         "locale": "en-au-x-auc-local"
     },
     {
-        "text": "Absolutely! Laughter is the best medicine, especially when life gives you those coconut-filled chocolates.",
+        "text": "Alright, I'm all ears. Anything to tame this beast!",
         "locale": "kn-in-x-knm-network"
     },
     {
-        "text": "Agreed! So, ready to tackle whatever life throws at us next?",
+        "text": "First, let's check if there are any paper jams. They're notorious for causing issues.",
         "locale": "en-au-x-auc-local"
     },
     {
-        "text": "Bring it on! We'll handle it like champs, with a side of laughter and a pinch of sarcasm.",
+        "text": "Paper jams, the bane of every printer's existence. I'll take a look.",
         "locale": "kn-in-x-knm-network"
     }
 ];
+
 
 // Function to simulate the dialogue
 async function simulateDialogue(dialogue, pitch, speed) {
