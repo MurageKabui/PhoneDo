@@ -41,13 +41,13 @@ The tech stack for this application :
 
 
 | Technology |Use Case |
-|----------|----------------------------|-|
-|<a href="https://github.com/vuejs/core" target="_blank">Vue</a>| Front end |
-| [SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations. |
-|[Bootstrap](https://github.com/twbs/bootstrap)| For styling in the context of script evaluation. | 
-|[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal-like UI. | 
-|<a href="https://github.com/jquery/jquery" target="_blank">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
-|<a href="https://github.com/ajaxorg/ace" target="_blank">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
+|----------|----------------------------|
+|<a href="https://github.com/vuejs/core">Vue</a>| Front end |
+|[SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations. |
+|[Bootstrap](https://github.com/twbs/bootstrap)| For styling (in the context of script evaluation) | 
+|[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal UI. | 
+|<a href="https://github.com/jquery/jquery">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
+|<a href="https://github.com/ajaxorg/ace">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
 
 
 
