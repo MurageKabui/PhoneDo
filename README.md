@@ -39,6 +39,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 
 The tech stack for this application :
 
+
 | Technology |Use Case |
 |----------|----------------------------|-|
 |<a href="https://github.com/vuejs/core" target="_blank">Vue</a>| Front end |
@@ -47,6 +48,7 @@ The tech stack for this application :
 |[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal-like UI. | 
 |<a href="https://github.com/jquery/jquery" target="_blank">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
 |<a href="https://github.com/ajaxorg/ace" target="_blank">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
+
 
 
 I wanted to offer a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which a user can create and execute at their convenience.
