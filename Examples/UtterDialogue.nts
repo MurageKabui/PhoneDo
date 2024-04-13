@@ -10,46 +10,49 @@
 const pitch = 0.95;
 const speed = 1.1;
 
+const indianAccent = "kn-in-x-knm-network";
+const australianAccent = "en-au-x-auc-local";
+
 // Dialogue data in JSON format
 var dialogueJSON = [{
         "text": "Hey there, how can I assist you today?",
-        "locale": "en-au-x-auc-local"
+        "locale": indianAccent
     },
     {
         "text": "Oh, just dealing with the usual printer woes.",
-        "locale": "kn-in-x-knm-network"
+        "locale": australianAccent
     },
     {
-        "text": "Printers, huh? They can be quite finicky sometimes.",
-        "locale": "en-au-x-auc-local"
+        "text": "Oh yeah ..they can be quite finicky sometimes! What's up with your printer?",
+        "locale": indianAccent
     },
     {
-        "text": "Tell me about it! This one seems to have a mind of its own.",
-        "locale": "kn-in-x-knm-network"
+        "text": "This one seems to have a mind of its own.",
+        "locale": australianAccent
     },
     {
-        "text": "Have you tried turning it off and on again? It's the IT equivalent of magic!",
-        "locale": "en-au-x-auc-local"
+        "text": "Have you tried turning it off and on again?",
+        "locale": indianAccent
     },
     {
         "text": "I've lost count of how many times I've tried that. No luck so far.",
-        "locale": "kn-in-x-knm-network"
+        "locale": australianAccent
     },
     {
         "text": "Hmm, sounds like a stubborn printer. Let's try a few troubleshooting steps.",
-        "locale": "en-au-x-auc-local"
+        "locale": indianAccent
     },
     {
-        "text": "Alright, I'm all ears. Anything to tame this beast!",
-        "locale": "kn-in-x-knm-network"
+        "text": "Alright, Anything to tame this beast!",
+        "locale": australianAccent
     },
     {
         "text": "First, let's check if there are any paper jams. They're notorious for causing issues.",
-        "locale": "en-au-x-auc-local"
+        "locale": indianAccent
     },
     {
-        "text": "Paper jams, the bane of every printer's existence. I'll take a look.",
-        "locale": "kn-in-x-knm-network"
+        "text": "Okay..lemme take a look.",
+        "locale": australianAccent
     }
 ];
 
