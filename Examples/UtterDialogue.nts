@@ -8,7 +8,7 @@
  */
 
 const pitch = 0.95;
-const speed = 1.1; // Rename speed from rate
+const speed = 1.1;
 
 // Dialogue data in JSON format
 var dialogueJSON = [{
@@ -55,10 +55,10 @@ var dialogueJSON = [{
 
 
 // Function to simulate the dialogue
-async function simulateDialogue(dialogue, pitch, speed) {
+async function simulateDialogue(dialogue) {
     for (let i = 0; i < dialogue.length; i++) {
         let utterance = dialogue[i];
-        await utter.speak(utterance.text, pitch, speed, utterance.locale); // Change rate to speed
+        await utter.speak(utterance.text, pitch, speed, utterance.locale);
     }
 }
 
