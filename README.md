@@ -47,15 +47,12 @@ The tech stack for this application :
 |[Bootstrap](https://github.com/twbs/bootstrap)| For styling (in the context of script evaluation) | 
 |[JQConsole](https://github.com/replit-archive/jq-console/tree/master) | For a terminal UI. | 
 |<a href="https://github.com/jquery/jquery">JQuery</a> | For manipulation of the DOM, also serving as a dependency for JQConsole.|
-|<a href="https://github.com/ajaxorg/ace">ACE</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
+|<a href="https://github.com/ajaxorg/ace">ACE.js</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
 
 
+I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are kept on their device in a SQLite database and can integrate with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I tried my best to document these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
 
-I wanted to offer a straightforward scripting approach, using scripts identified by the extension <b><i>.nts</i></b>, which a user can create and execute at their convenience.
-
-These scripts are stored locally in a SQLite database, and can include ways for interacting with Android's native features like the file system, text-to-speech, speech-to-text, SMS, Bluetooth, Wi-Fi, NFC, IR, network, SIM card, flashlight, and battery, among other.. I attempted to document these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
-
-## Let's try this out.
+## Let's try it.
 An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
 > On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for the script.
@@ -117,7 +114,7 @@ To simply execute ``FlashControl.nts`` , we navigate `Run` > `Run Script` and pr
 run -i "Flashlight.nts"
 ```
 
-**OutPut** :
+**OutPut on success** :
 ```
  Flashlight successfully turned on.
 ```
