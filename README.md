@@ -50,7 +50,7 @@ The tech stack for this application :
 |<a href="https://github.com/ajaxorg/ace">ACE.js</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
 
 
-I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I tried my best to document these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
+I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I documented these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
 
 ## Let's try it.
 An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
@@ -109,7 +109,7 @@ exit();
 
 Congrats! You just made your first PhoneDo Script! Now let's figure out how to execute it. 
 
-To simply execute ``FlashControl.nts`` , we navigate `Run` > `Run Script` and press Enter , or we can also manually navigate back at the PhoneDo terminal view and type in the following command line and press enter : 
+To simply execute ``FlashControl.nts`` , we navigate `Run` > `Run Script` and press Enter , or we can also manually navigate back at the PhoneDo terminal view and type in the following command line and press Enter : 
 ```bash
 run -i "Flashlight.nts"
 ```
