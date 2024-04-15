@@ -40,7 +40,7 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
 The tech stack for this application :
 
 
-| Technology |Use Case |
+| Technology |Usage |
 |------------|---------|
 |<a href="https://github.com/vuejs/core">Vue</a>| Front end |
 |[SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations.|
