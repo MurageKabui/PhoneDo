@@ -49,14 +49,14 @@ Scripts get ready-made global objects that map to native Android services:
 
 | Category | Bridges |
 | :--- | :--- |
-| Connectivity | WiFi (`WIFI`), Bluetooth LE, network diagnostics (`network`), HTTP client (`http`) |
+| Connectivity | WiFi (`WIFI`), Bluetooth LE, network diagnostics (`network`), Advanced HTTP client (`http`) + Standard fetch works |
 | Telephony | SMS sending and inbox access (`SMS`), phone dialing (`sim.callNumber`), SIM metadata (`sim`) |
 | Hardware | Flashlight (`flashlight`), vibration and beep (`device`), battery status, device metadata |
 | Speech | Text-to-speech (`utter.speak`), speech recognition (`utter.listen`) |
 | Storage & System | File system (`fs`), Android permissions (`permission`), clipboard (`clipboard`), in-app browser (`browser`) |
 | Interface | Native dialogs (`alert`, `confirm`, `dialog`), spinner (`spinner`), interactive terminal input (`console.prompt`), ANSI colors |
 
-The environment is asynchronous, so hardware calls are awaited with standard `async/await`. Everything else is the JavaScript you already know: `Array` methods, `JSON`, template literals, classes.
+The environment is asynchronous, so hardware calls are awaited with standard `async/await`. Everything else is the JavaScript you already know: `Array` methods, `JSON`, template literals, classes etc.
 
 ## Tech Stack
 
@@ -79,10 +79,10 @@ The environment is asynchronous, so hardware calls are awaited with standard `as
 
 Download the latest APK (and the optional demo backup) from the [Releases](../../releases) section, then:
 
-1. Launch PhoneDo and open the side navigation drawer.
-2. Go to **Script Editor**, then **File > New Script** to create a workspace (e.g. `notify_team.js`).
-3. Write your JavaScript and select **Run > Run Script**.
-4. Check output and hardware logs in the **Terminal** tab.
+1. Launch PhoneDo and open the top navigation drawer.
+2. Go to **Script Editor**, then **File > New Script** to create a workspace (e.g. `NotifyTeam.js`).
+3. Write your JavaScript and select **Run > Run Script** and press Enter.
+4. Check output and hardware logs in the **Terminal**.
 
 Here is a complete, working script. It texts the same message to a list of contacts, confirms each send in the terminal, and announces when it is done:
 
@@ -97,6 +97,7 @@ for (const number of contacts) {
 }
 
 await utter.speak(`Done. ${contacts.length} messages sent.`);
+exit();
 ```
 
 That is the whole thing. No project setup, no manifest, no build. The same pattern applies to any bridge: loop over data, call the hardware, log the result.
@@ -388,7 +389,7 @@ await sleep(2000);
 
 ## Terminal
 
-A built-in terminal for diagnostics and script execution.
+A simple built-in terminal for diagnostics and script execution.
 
 | Command | Description |
 |:---|:---|
