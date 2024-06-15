@@ -3,13 +3,13 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/release/MurageKabui/PhoneDo?label=version&style=flat-square&color=blue" alt="Version">
+  <img src="https://img.shields.io/github/v/release/MurageKabui/PhoneDo?include_prereleases&style=flat-square" alt="Version">
   <img src="https://img.shields.io/badge/platform-Android-green?style=flat-square" alt="Platform">
   <img src="https://img.shields.io/github/license/MurageKabui/PhoneDo?style=flat-square&color=orange" alt="License">
 </p>
 
 <p align="center">
-  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using JavaScript coding patterns in a mobile environment.
+  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using JavaScript coding patterns in an Android environment.
 </p>
 
 <p align="center">
