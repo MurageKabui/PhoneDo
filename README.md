@@ -301,14 +301,20 @@ console.log(`Carrier: ${simData.carrierName} | Country: ${simData.countryCode}`)
 BLE scanning is callback based: each discovered device fires the first callback, and the scan stops itself after the timeout. Beyond discovery, the bridge covers connecting to peripherals and reading, writing, and subscribing to characteristics.
 
 ```javascript
-// Callback-based scan; stops automatically after the timeout (seconds)
-await _scanBT(
+// create an array of permissions to request
+const a_Permissions = [permission.BLUETOOTH, permission.BLUETOOTH_ADMIN, permission.BLUETOOTH_CONNECT, permission.BLUETOOTH_SCAN, permission.BLUETOOTH_ADVERTISE];
+
+// Request the permissions on runtime
+await permission.requestPermissions(a_Permissions);
+
+// Callback-based scan; stops automatically after the timeout (10 seconds)
+await bluetooth.scan(
     d => console.log(`Found: ${d.name || 'Unknown'} (${d.address})`),
     err => console.error(err),
     10
 );
 
-// Also available: _connectBT, _readBTCharacteristic, _writeBTCharacteristic, notifications
+// Also available: connect, getCharacteristic, readCharacteristic, writeCharacteristic
 ```
 </details>
 
