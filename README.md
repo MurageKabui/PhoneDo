@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" alt="PhoneDo Logo" width="440">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/PhoneDo_logo_light%20(Small).png?raw=true" alt="PhoneDo Logo" width="440">
 </p>
 
 <p align="center">
