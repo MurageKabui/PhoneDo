@@ -22,7 +22,7 @@
 
 | Scripting | Terminal | Native Dialogs |
 |:---:|:---:|:---:|
-| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/terminal1.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/Assets/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
+| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/ace.js_themes.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/terminal1.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/Assets/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
 | Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
 
 ## Table of Contents
