@@ -2,9 +2,9 @@
 <p align="center">
 <img width="1000px" alt="DeepSeek Coder" src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" width="440" height="100">
 </p>
-<p align="center"><a href="">[<img src="pictures/home.png" width="20px"> Homepage]</a> | <a href="https://coder.deepseek.com/">[🤖 PhoneDo AI]</a> | <a href="">[🤗 Community]</a> | <a href="https://discord.gg/b4ENrd2FAP">[Discord]</a></p>
+<p align="center"><a href="">[<img src="pictures/home.png" width="20px"> Homepage]</a> | <a href="">[🤖 PhoneDo AI]</a> | <a href="">[🤗 Community]</a> | <a href="https://discord.gg/b4ENrd2FAP">[Discord]</a></p>
 <p align="center">
-  <a href="https://huggingface.co/papers/2401.14196"><b>Download App </b>💾
+  <a href=""><b>Download App </b>💾
 ️</a>
 </p>
 <hr>
