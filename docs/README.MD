@@ -103,119 +103,105 @@ device.vibrate(500);  // Vibrates the device for 500 milliseconds.
 device.beep();        // Emits a single beep.
 ```
 
-## File System
+### File System Operations
 
-### File Access and Manipulation
+The `fs` object provides methods for accessing and managing the device's file system. It includes predefined root directories where you can place directories and files from your scripts. All file operations must use one of these root directories.
 
-The `fs` object provides methods for accessing and managing the device's file system.
+#### Root Directory Constants
 
+| Constant | Description |
+|----------|-------------|
+| `fs.APP_ROOT_DIR` | Base directory for the application |
+| `fs.APP_DIR` | Read-only directory where the application is installed |
+| `fs.APP_STORAGE_DIR` | Root directory of the application's sandbox (private to the app) |
+| `fs.DATA_DIR` | Persistent and private data storage within the application's sandbox |
+| `fs.CACHE_DIR` | Directory for temporary cached data files |
+| `fs.EX_APP_STORAGE_DIR` | Application space on external storage |
+| `fs.EX_DATA_DIR` | App-specific data files on external storage |
+| `fs.EX_CACHE_DIR` | Application cache on external storage |
+| `fs.EX_ROOT_DIR` | External storage (SD card) root |
 
-| CONSTANT | VALUE |
-|------------|---------|
-| DOCUMENTS_DIR |  |
+#### Available Methods
 
 ```javascript
-fs.readTextFile(path);       // Reads the content of a text file.
-fs.dirExist(path);           // Checks if a directory exists.
-fs.makeDir(path);            // Creates a new directory.
-fs.makeFile(path, filename); // Create a new file.
-fs.writeFile(path, filename, content); // Write content to a file, overwriting it if necessary.
-fs.deleteFile(path, filename); // Deletes a file.
-fs.deleteDir(path, directoryName); // Delete a directory.
+fs.readTextFile(path, fileName)               // Read the content of a text file
+fs.writeTextFile(path, fileName, content)     // Write text to a file (creates if doesn't exist)
+fs.appendTextFile(path, fileName, content)    // Append text to an existing file
+fs.createDirectory(path, dirName)             // Create a new directory
+fs.dirExists(path)                            // Check if a directory exists
+fs.fileExists(path, fileName)                 // Check if a file exists
+fs.createFile(path, fileName)                 // Create a new empty file
+fs.deleteFile(path, fileName)                 // Delete a file
+fs.removeDirectory(path, dirName)             // Remove a directory
 ```
 
-*Note: File system paths should be specified according to the operating system's conventions, such as `/sdcard/Documents/file.txt`.*
+#### Important Notes:
+- All methods are asynchronous and return Promises
+- If path parameter is undefined, it defaults to the system's document directory
+- File paths should follow the OS conventions (e.g., `/storage/emulated/0/Documents/`)
+- Common error types: `PERMISSION_DENIED`, `NOT_FOUND`, `FILE_ERROR`
 
-#### Example 1.
-> Example script showcasing basic usage.
-
+#### Basic Usage Example
 ```javascript
 const settings = {
     theme: "dark",
     notifications: true
 };
 
-const filePath = "/sdcard/Documents/";
-const fileName =  "app_settings.json";
-
-try {
-    await fs.writeFile(filePath, fileName ,JSON.stringify(settings));
-    console.log("Settings file created successfully.");
-
-    const fileContent = await fs.readTextFile(filePath);
-    console.log("Retrieved settings: " + fileContent);
-} catch (e) {
-    console.error("File system operation failed:", e);
-}
-```
-#### Example 2
-> Example script showcasing all filesystem methods.
-
-```javascript
-/*
-  Script Name      : FsSandboxDemo.nts
-  Date             : Tue Dec 24 2022 12:30:00 GMT+0300 (East Africa Time)
-  PhoneDo Version  : 1.3.2
-  Description      : Demonstrates File System Operations
-  Author           : PhoneDo
-  License          : None
-*/
-
-async function exampleFileOperations() {
+async function saveSettings() {
     try {
-        // 1. Create a directory
-        console.log("Creating a new directory...");
-        await fs.makeDir(undefined, "SandboxFolder");
-        console.success("Directory created successfully!");
-
-        // 2. Check if directory exists
-        console.log("Checking if directory exists...");
-        const dirExists = await fs.dirExist("/storage/emulated/0/Documents/SandboxFolder/");
-        console.success(`Directory exists: ${dirExists}`);
-
-        // 3. Create a new file
-        console.log("Creating a new text file...");
-        await fs.makeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
-        console.success("File created successfully!");
-
-        // 4. Write content to the file
-        console.log("Writing content to the file...");
-        await fs.writeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt", "This is sandboxed content.");
-        console.success("Content written to file successfully!");
-
-        // 5. Read the file
-        console.log("Reading the file...");
-        const fileContent = await fs.readTextFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
-        console.success("File content:", fileContent);
-
-        // 6. Check if the file exists
-        console.log("Checking if file exists...");
-        const fileExists = await fs.fileExist("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
-        console.success(`File exists: ${fileExists}`);
-
-        // 7. Delete the file
-        console.log("Deleting the file...");
-        await fs.deleteFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
-        console.success("File deleted successfully!");
-
-        // 8. Delete the directory
-        console.log("Deleting the directory...");
-        await fs.deleteDir(undefined, "SandboxFolder");
-        console.success("Directory deleted successfully!");
+        // Using default path
+        await fs.createDirectory(undefined, "AppSettings");
+        await fs.writeTextFile(undefined, "AppSettings/config.json", 
+            JSON.stringify(settings));
+        console.log("Settings saved successfully");
+        
+        // Reading the saved file
+        const content = await fs.readTextFile(undefined, 
+            "AppSettings/config.json");
+        console.log("Retrieved settings:", JSON.parse(content));
     } catch (error) {
-        console.error("An error occurred:", error);
-        exit(1, error);
+        console.error("File operation failed:", error);
     }
 }
-
-await exampleFileOperations();
-exit(0);
-
 ```
 
+#### Comprehensive Example
+```javascript
+async function demonstrateFileOperations() {
+    try {
+        // Create a test directory
+        await fs.createDirectory(undefined, "TestFolder");
+        console.log("Directory created");
 
-*Note: Common file system errors include: `PERMISSION_DENIED`, `NOT_FOUND` and `FILE_ERROR`.*
+        // Verify directory exists
+        const dirExists = await fs.dirExists(undefined);
+        console.log("Directory exists:", dirExists);
 
+        // Create and write to a file
+        await fs.writeTextFile(undefined, "TestFolder/test.txt", 
+            "Hello, World!");
+        console.log("File created and written");
+
+        // Read file contents
+        const content = await fs.readTextFile(undefined, 
+            "TestFolder/test.txt");
+        console.log("File contents:", content);
+
+        // Append to the file
+        await fs.appendTextFile(undefined, "TestFolder/test.txt", 
+            "\nAppended content");
+        console.log("Content appended");
+
+        // Clean up
+        await fs.deleteFile(undefined, "TestFolder/test.txt");
+        await fs.removeDirectory(undefined, "TestFolder");
+        console.log("Cleanup complete");
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+```
 ## Network Operations
 
 ### Network Connectivity Information
