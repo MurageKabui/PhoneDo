@@ -202,6 +202,69 @@ async function demonstrateFileOperations() {
     }
 }
 ```
+### Error Codes
+
+
+## Complete List of Error Codes
+
+| Code | Constant | Description |
+|------|----------|-------------|
+| 1 | `NOT_FOUND_ERR` | The file or directory could not be found |
+| 2 | `SECURITY_ERR` | Security violation occurred |
+| 3 | `ABORT_ERR` | Operation was aborted |
+| 4 | `NOT_READABLE_ERR` | File or directory is not readable |
+| 5 | `ENCODING_ERR` | File encoding error occurred |
+| 6 | `NO_MODIFICATION_ALLOWED_ERR` | Cannot modify the file or directory |
+| 7 | `INVALID_STATE_ERR` | Invalid state for the operation |
+| 8 | `SYNTAX_ERR` | Invalid syntax in file name or path |
+| 9 | `INVALID_MODIFICATION_ERR` | Invalid modification attempted |
+| 10 | `QUOTA_EXCEEDED_ERR` | Storage quota exceeded |
+| 11 | `TYPE_MISMATCH_ERR` | Wrong type for the operation |
+| 12 | `PERMISSION_DENIED` | Insufficient permissions for the operation |
+| 13 | `PATH_EXISTS_ERR` | Path already exists |
+| 14 | `TIMEOUT_ERR` | Operation timed out |
+
+## Common Causes and Solutions
+
+### For Error Code 12 (PERMISSION_DENIED):
+1. App doesn't have required Android permissions
+2. Path is outside app's allowed directories
+3. File is locked by another process
+4. SELinux restrictions
+
+**Solutions:**
+- Request runtime permissions using appropriate permission APIs
+- Use allowed directories (APP_ROOT_DIR, APP_STORAGE_DIR, etc.)
+- Ensure proper file ownership and access rights
+- Check if path is within allowed scope
+
+### Other Common Error Scenarios:
+- `NOT_FOUND_ERR`: Verify path and filename are correct
+- `QUOTA_EXCEEDED_ERR`: Clear cache or unused files
+- `PATH_EXISTS_ERR`: Check if resource exists before creating
+- `TYPE_MISMATCH_ERR`: Ensure correct file/directory operation
+
+### Error Handling Example
+```javascript
+try {
+    await fs.createDirectory(fs.APP_DIR, "TestFolder");
+} catch (error) {
+    switch (error.code) {
+        case 12:
+            console.error("Permission denied. Check app permissions.");
+            break;
+        case 13:
+            console.error("Directory already exists.");
+            break;
+        case 1:
+            console.error("Parent directory not found.");
+            break;
+        default:
+            console.error("Unknown error:", error);
+    }
+}
+```
+
 ## Network Operations
 
 ### Network Connectivity Information
