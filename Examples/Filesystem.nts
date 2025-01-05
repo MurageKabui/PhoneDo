@@ -1,29 +1,58 @@
 /*
- * Script Name      : Filesystem.nts
- * Date             : Sun Nov 05 2023 15:11:55 GMT+0300 (East Africa Time)
- * PhoneDo Version  : 1.3.2
- * Description      : Reading a text file from file system.
- * Author           : PhoneDo
- * License          : None
- */
+  Script Name      : FsSandboxDemo.nts
+  Date             : Tue Dec 24 2022 12:30:00 GMT+0300 (East Africa Time)
+  PhoneDo Version  : 1.3.2
+  Description      : Demonstrates File System Operations
+  Author           : PhoneDo
+  License          : None
+*/
 
-// Define the target file base path
-const sPath = 'file:///storage/emulated/0/Documents/';
+async function exampleFileOperations() {
+    try {
+        // 1. Create a directory
+        console.log("Creating a new directory...");
+        await fs.makeDir(undefined, "SandboxFolder");
+        console.success("Directory created successfully!");
 
-// Define the target filename
-const sFileName = 'DOS.txt';
+        // 2. Check if directory exists
+        console.log("Checking if directory exists...");
+        const dirExists = await fs.dirExist("/storage/emulated/0/Documents/SandboxFolder/");
+        console.success(`Directory exists: ${dirExists}`);
 
-const sContents =
-	await fs.readTextFile(sPath, sFileName);
+        // 3. Create a new file
+        console.log("Creating a new text file...");
+        await fs.makeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File created successfully!");
 
-// Print the file content to stdout
-console.log(sContents + '\n');
+        // 4. Write content to the file
+        console.log("Writing content to the file...");
+        await fs.writeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt", "This is sandboxed content.");
+        console.success("Content written to file successfully!");
 
-// Or read the text aloud using utter
-// etc..
-await utter.speak(
-	sContents,
-	0.95,
-	1.0,
-	'en-us-x-iol-network'
-);
+        // 5. Read the file
+        console.log("Reading the file...");
+        const fileContent = await fs.readTextFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File content:", fileContent);
+
+        // 6. Check if the file exists
+        console.log("Checking if file exists...");
+        const fileExists = await fs.fileExist("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success(`File exists: ${fileExists}`);
+
+        // 7. Delete the file
+        console.log("Deleting the file...");
+        await fs.deleteFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File deleted successfully!");
+
+        // 8. Delete the directory
+        console.log("Deleting the directory...");
+        await fs.deleteDir(undefined, "SandboxFolder");
+        console.success("Directory deleted successfully!");
+    } catch (error) {
+        console.error("An error occurred:", error);
+        exit(1, error);
+    }
+}
+
+await exampleFileOperations();
+exit(0);
