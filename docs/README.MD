@@ -1,10 +1,10 @@
 
 <p align="center">
-<img width="1000px" alt="DeepSeek Coder" src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" width="440" height="100">
+<img alt="PhoneDo" src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" width="440px" height="77px">
 </p>
 <p align="center"><a href="">[<img src="pictures/home.png" width="20px"> Homepage]</a> | <a href="">[🤖 PhoneDo AI]</a> | <a href="">[🤗 Community]</a> | <a href="https://discord.gg/b4ENrd2FAP">[Discord]</a></p>
 <p align="center">
-  <a href=""><b>Download App </b>💾
+  <a href="https://huggingface.co/papers/2401.14196"><b>Download App </b>💾
 ️</a>
 </p>
 <hr>
@@ -12,7 +12,7 @@
 
 # PhoneDo Scripting API Documentation
 
-This document provides comprehensive technical specifications for the PhoneDo Scripting API, which enables developers to interact with various device functionalities through custom scripts. This API facilitates access to hardware resources and system services within a sandboxed environment.
+This document provides comprehensive technical specifications for the PhoneDo Scripting API, which enables developers to interact with various native device functionalities through custom scripts. This API facilitates access to hardware resources and system services within a sandboxed environment.
 
 ## Table of Contents
 
@@ -36,13 +36,13 @@ The `console` object provides a structured interface for logging output within t
 #### Methods
 
 ```javascript
-    console.log(message);      // Logs a general styled message.
-    console.info(message);     // Logs an informational styled message.
-    console.warn(message);     // Logs a warning styled message.
-    console.error(message);    // Logs an error styled message.
-    console.success(message);  // Logs a success styled message.
-    console.clear();           // Clears the console output.
-    console.cls();             // Alias for clear(), for legacy familiarity
+console.log(message);      // Logs a general styled message.
+console.info(message);     // Logs an informational styled message.
+console.warn(message);     // Logs a warning styled message.
+console.error(message);    // Logs an error styled message.
+console.success(message);  // Logs a success styled message.
+console.clear();           // Clears the console output.
+console.cls();             // Alias for clear(), for legacy familiarity
 ```
 *Note: `cls()` is an alias of `clear()`, maintained for familiarity with other console-based interfaces.*
 
@@ -79,18 +79,18 @@ console.log(`Flashlight On : ${bTurnedOn}`);
 
 ### Device Information and Controls
 
-The `device` object provides access to read-only properties containing information about the device. It also includes methods for basic device controls.
+The `device` object provides access to read-only properties containing information about the device. It also includes a few methods for basic device controls..
 
 ```javascript
 const device = {
-    manufacturer: string;      // Device manufacturer.
-    model: string;             // Device model.
-    osVersion: string;         // Device operating system version.
-    sdkVersion: number;        // Device SDK version.
+    manufacturer: string;   // Device manufacturer.
+    model: string;          // Device model.
+    osVersion: string;      // Device operating system version.
+    sdkVersion: number;     // Device SDK version.
 }
 
-device.vibrate(pattern);       // Initiates device vibration with a specified pattern or duration.
-device.beep(duration?);       // Emits an audible beep sound. The duration is optional (ms).
+device.vibrate(pattern);    // Initiates device vibration with a specified pattern or duration.
+device.beep(duration?);     // Emits an audible beep sound. The duration is optional (ms).
 ```
 *Note: The `device` properties are read-only values that cannot be modified via the API. Beep should be used sparingly.*
 
@@ -99,8 +99,8 @@ device.beep(duration?);       // Emits an audible beep sound. The duration is op
 ```javascript
 console.log(`Device Information:\nManufacturer: ${device.manufacturer}\nModel: ${device.model}\nOS Version: ${device.osVersion}`);
 
-device.vibrate(500);       // Vibrates the device for 500 milliseconds.
-device.beep();            // Emits a single beep.
+device.vibrate(500);  // Vibrates the device for 500 milliseconds.
+device.beep();        // Emits a single beep.
 ```
 
 ## File System
@@ -115,15 +115,19 @@ The `fs` object provides methods for accessing and managing the device's file sy
 | DOCUMENTS_DIR |  |
 
 ```javascript
-  fs.readTextFile(path);   // Reads the content of a text file.
-  fs.dirExist(path);      // Checks if a directory exists.
-  fs.makeDir(path);       // Creates a new directory.
-  fs.writeFile(path, content); // Writes the specified text to a file, overwriting it if necessary.
+fs.readTextFile(path);       // Reads the content of a text file.
+fs.dirExist(path);           // Checks if a directory exists.
+fs.makeDir(path);            // Creates a new directory.
+fs.makeFile(path, filename); // Create a new file.
+fs.writeFile(path, filename, content); // Write content to a file, overwriting it if necessary.
+fs.deleteFile(path, filename); // Deletes a file.
+fs.deleteDir(path, directoryName); // Delete a directory.
 ```
 
 *Note: File system paths should be specified according to the operating system's conventions, such as `/sdcard/Documents/file.txt`.*
 
-#### Example Usage
+#### Example 1.
+> Example script showcasing basic usage.
 
 ```javascript
 const settings = {
@@ -141,6 +145,72 @@ try {
     console.error("File system operation failed:", e);
 }
 ```
+#### Example 2
+> Example script showcasing all filesystem methods.
+
+```javascript
+/*
+  Script Name      : FsSandboxDemo.nts
+  Date             : Tue Dec 24 2022 12:30:00 GMT+0300 (East Africa Time)
+  PhoneDo Version  : 1.3.2
+  Description      : Demonstrates File System Operations
+  Author           : PhoneDo
+  License          : None
+*/
+
+async function exampleFileOperations() {
+    try {
+        // 1. Create a directory
+        console.log("Creating a new directory...");
+        await fs.makeDir(undefined, "SandboxFolder");
+        console.success("Directory created successfully!");
+
+        // 2. Check if directory exists
+        console.log("Checking if directory exists...");
+        const dirExists = await fs.dirExist("/storage/emulated/0/Documents/SandboxFolder/");
+        console.success(`Directory exists: ${dirExists}`);
+
+        // 3. Create a new file
+        console.log("Creating a new text file...");
+        await fs.makeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File created successfully!");
+
+        // 4. Write content to the file
+        console.log("Writing content to the file...");
+        await fs.writeFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt", "This is sandboxed content.");
+        console.success("Content written to file successfully!");
+
+        // 5. Read the file
+        console.log("Reading the file...");
+        const fileContent = await fs.readTextFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File content:", fileContent);
+
+        // 6. Check if the file exists
+        console.log("Checking if file exists...");
+        const fileExists = await fs.fileExist("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success(`File exists: ${fileExists}`);
+
+        // 7. Delete the file
+        console.log("Deleting the file...");
+        await fs.deleteFile("/storage/emulated/0/Documents/SandboxFolder/", "example.txt");
+        console.success("File deleted successfully!");
+
+        // 8. Delete the directory
+        console.log("Deleting the directory...");
+        await fs.deleteDir(undefined, "SandboxFolder");
+        console.success("Directory deleted successfully!");
+    } catch (error) {
+        console.error("An error occurred:", error);
+        exit(1, error);
+    }
+}
+
+await exampleFileOperations();
+exit(0);
+
+```
+
+
 *Note: Common file system errors include: `PERMISSION_DENIED`, `NOT_FOUND` and `FILE_ERROR`.*
 
 ## Network Operations
@@ -150,15 +220,15 @@ try {
 The `network` object provides methods to access information about network connectivity.
 
 ```javascript
-  network.getConnectionType();    // Retrieves the current network connection type.
-  network.getWIFIIPInfo();        // Retrieves information regarding the current WiFi connection.
-  network.getCarrierIPInfo();     // Retrieves IP information for cellular connections.
-  network.getHTTPProxyInfo(url);  // Retrieves proxy information for the given URL.
-  network.ping(host);             // Performs a ping operation to the specified host.
-  network.getIPInfo();            // Retrieves IP address information.
-  network.getRouterIP();          // Retrieves the IP of the connected router.
-  network.canConnectToRouter();   // Checks if the device can connect to a router.
-  network.canConnectToInternet(); // Checks if the device has internet connectivity.
+network.getConnectionType();    // Retrieves the current network connection type.
+network.getWIFIIPInfo();        // Retrieves information regarding the current WiFi connection.
+network.getCarrierIPInfo();     // Retrieves IP information for cellular connections.
+network.getHTTPProxyInfo(url);  // Retrieves proxy information for the given URL.
+network.ping(host);             // Performs a ping operation to the specified host.
+network.getIPInfo();            // Retrieves IP address information.
+network.getRouterIP();          // Retrieves the IP of the connected router.
+network.canConnectToRouter();   // Checks if the device can connect to a router.
+network.canConnectToInternet(); // Checks if the device has internet connectivity.
 ```
 
 #### Example Usage
@@ -257,7 +327,7 @@ try {
 The `bluetooth` object allows for scanning nearby Bluetooth Low Energy (BLE) devices.
 
 ```javascript
-    bluetooth.scan(timeout); // Starts a BLE scan for a given timeout period (seconds).
+bluetooth.scan(timeout); // Starts a BLE scan for a given timeout period (seconds).
 ```
 #### Example Usage
 ```javascript
@@ -312,13 +382,13 @@ if (await sim.hasPermission()) {
 The `utter` object offers functions for text-to-speech synthesis and speech recognition.
 
 ```javascript
-  utter.speak(text, options?);       // Synthesizes text into speech.
-  utter.getVoices();               // Retrieves a list of available voices.
-  utter.canListen();              // Checks if speech recognition is supported.
-  utter.listen(options?);          // Initiates speech recognition.
-  utter.stopListening();           // Terminates active speech recognition.
-  utter.requestPermission();     // Requests necessary permissions for speech services.
-  utter.hasPermission();         // Checks speech services permissions.
+  utter.speak(text, options?);  // Synthesizes text into speech.
+  utter.getVoices();            // Retrieves a list of available voices.
+  utter.canListen();            // Checks if speech recognition is supported.
+  utter.listen(options?);       // Initiates speech recognition.
+  utter.stopListening();        // Terminates active speech recognition.
+  utter.requestPermission();    // Requests necessary permissions for speech services.
+  utter.hasPermission();        // Checks speech services permissions.
 ```
 #### Example Usage
 
