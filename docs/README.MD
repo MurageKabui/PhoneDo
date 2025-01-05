@@ -134,9 +134,12 @@ const settings = {
     theme: "dark",
     notifications: true
 };
-const filePath = "/sdcard/Documents/app_settings.json";
+
+const filePath = "/sdcard/Documents/";
+const fileName =  "app_settings.json";
+
 try {
-    await fs.writeFile(filePath, JSON.stringify(settings));
+    await fs.writeFile(filePath, fileName ,JSON.stringify(settings));
     console.log("Settings file created successfully.");
 
     const fileContent = await fs.readTextFile(filePath);
