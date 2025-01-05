@@ -64,9 +64,9 @@ console.cls(); // Equivalent to console.clear();
 The `flashlight` object provides methods for programmatically controlling the device's flashlight.
 
 ```javascript
-    flashlight.switchOn();    // Activates the device's flashlight.
-    flashlight.switchOff();   // Deactivates the device's flashlight.
-    flashlight.toggleState(); // Toggles the current state of the flashlight.
+flashlight.switchOn();    // Activates the device's flashlight.
+flashlight.switchOff();   // Deactivates the device's flashlight.
+flashlight.toggleState(); // Toggles the current state of the flashlight.
 ```
 *Note: These methods return a `Promise<boolean>`, resolving with `true` upon successful execution or `false` if an error happens.*
 
@@ -89,8 +89,8 @@ const device = {
     sdkVersion: number;     // Device SDK version.
 }
 
-device.vibrate(pattern);    // Initiates device vibration with a specified pattern or duration.
-device.beep(duration?);     // Emits an audible beep sound. The duration is optional (ms).
+device.vibrate(duration?);  // Initiates device vibration with a specified duration.
+device.beep();              // Emits an audible beep sound.
 ```
 *Note: The `device` properties are read-only values that cannot be modified via the API. Beep should be used sparingly.*
 
