@@ -4,7 +4,7 @@
 </p>
 <p align="center"><a href="">[<img src="pictures/home.png" width="20px"> Homepage]</a> | <a href="">[🤖 PhoneDo AI]</a> | <a href="">[🤗 Community]</a> | <a href="https://discord.gg/b4ENrd2FAP">[Discord]</a></p>
 <p align="center">
-  <a href="https://huggingface.co/papers/2401.14196"><b>Download App </b>💾
+  <a href="a"><b>Download App </b>💾
 ️</a>
 </p>
 <hr>
