@@ -50,7 +50,7 @@ The tech stack for this application :
 |<a href="https://github.com/ajaxorg/ace">ACE.js</a> | For an integrated scripting development environment (Users' reading and writing code inside of the app).|
 
 
-I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I documented these methods <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp" target="_blank">here</a>.
+I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I documented these methods <a href="docs" target="_blank">here</a>.
 ## Why ?
 This project was inspired by <a href="https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/" target="_blank">this question on reddit</a> Quoted from OP : 
 
@@ -72,7 +72,7 @@ An example of how a user can control a device's flashlight would be to navigate 
 ```
 <br>
 
-Then, we can use a provided <a href="https://app.gitbook.com/o/zerbp4UP4JRfrC37Dcay/s/GGEXXP1PjxGAHb7hakkp/methods/flashlight/turnon" target="_blank">flashlight method</a> to programmatically control it:
+Then, we can use a provided <a href="docs/methods/flashlight/turnon" target="_blank">flashlight method</a> to programmatically control it:
 
 ```Javascript
 if (await flashlight.switchOn()) {
