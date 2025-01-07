@@ -105,7 +105,7 @@ device.beep();        // Emits a single beep.
 
 ### File System Operations
 
-The `fs` object provides methods for accessing and managing the device's file system. It includes predefined root directories where you can place directories and files from your scripts. All file operations must use one of these root directories.
+The `fs` object provides methods for accessing and managing the device's file system. It includes predefined root directories where you can place directories and files from your scripts. File operations can use one of these constants for added convenience.
 
 #### Root Directory Constants
 
