@@ -41,6 +41,97 @@ class SandboxedEnvironment {
             _errorPrint: (...messages) => {
                 app.store.jqconsole.Write(messages.join(" ") + "\n", "errorStyle");
                 app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            assert: (condition, ...messages) => {
+                if (!condition) {
+                    this.bridges.console._errorPrint("Assertion failed:", ...messages);
+                }
+            },
+            clear: () => {
+                app.store.jqconsole.Clear();
+            },
+            count: (label = "default") => {
+                if (!this.consoleCounters) {
+                    this.consoleCounters = {};
+                }
+                if (!this.consoleCounters[label]) {
+                    this.consoleCounters[label] = 0;
+                }
+                this.consoleCounters[label]++;
+                this.bridges.console._infoPrint(`${label}: ${this.consoleCounters[label]}`);
+            },
+            debug: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            dir: (obj, options) => {
+                this.bridges.console._infoPrint(JSON.stringify(obj, null, options?.spaces || 2));
+            },
+            dirxml: (node) => {
+                this.bridges.console._infoPrint((node ? node.outerHTML || node.toString() : 'null')); 
+            },
+            error: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
+            },
+            group: (label) => {
+                this.bridges.console._infoPrint(`--- ${label} ---`); 
+            },
+            groupCollapsed: (label) => {
+                this.bridges.console._infoPrint(`+++ ${label} +++`); 
+            },
+            groupEnd: () => {
+                this.bridges.console._infoPrint('---'); 
+            },
+            info: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            log: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            memory: () => { 
+                this.bridges.console._infoPrint(performance.memory);
+            },
+            profile: (label) => {
+                if (console.profile) { // Check for browser support
+                    console.profile(label);
+                }
+            },
+            profileEnd: (label) => {
+                if (console.profileEnd) {
+                    console.profileEnd(label);
+                }
+            },
+            table: (data, columns) => {
+                this.bridges.console._infoPrint(console.table(data, columns)); 
+            },
+            time: (label = "default") => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                this.consoleTimers[label] = performance.now();
+            },
+            timeEnd: (label = "default") => {
+                if (this.consoleTimers && this.consoleTimers[label]) {
+                    let timeDiff = performance.now() - this.consoleTimers[label];
+                    this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms`);
+                    delete this.consoleTimers[label];
+                }
+            },
+            timeLog: (label = "default", ...messages) => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                if (!this.consoleTimers[label]) {
+                    this.consoleTimers[label] = performance.now();
+                }
+                let timeDiff = performance.now() - this.consoleTimers[label];
+                this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms - ${messages.join(' ')}`);
+            },
+            trace: (...messages) => {
+                const stack = (new Error()).stack.split('\n').slice(2).join('\n');
+                this.bridges.console._infoPrint("Trace:", ...messages, '\n', stack);
+            },
+            warn: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
             }
         };
         // Device Bridge
@@ -112,6 +203,7 @@ class SandboxedEnvironment {
                 });
             }
         };
+
         // Device Info Bridge
         this.bridges.deviceInfo = {
             getInfo: () => ({
@@ -126,6 +218,7 @@ class SandboxedEnvironment {
                 isCharging: app.cordova.battery.isPlugged
             })
         };
+
         // Browser Bridge
         this.bridges.browser = {
             _openBrowser: async (url, target = "_blank") => {
@@ -138,9 +231,37 @@ class SandboxedEnvironment {
         // Utility Bridge
         this.bridges.utils = {
             _exitEval: (exitCode = 0) => {
-                throw new Error(" Script Terminated. ExitCode : " + exitCode + "\n");
+                app.hideAlert();
+                if (exitCode === 0) {
+                    // Ensure the sandboxed iframe exists before attempting to remove it
+                    if (
+                        app.store &&
+                        app.store.sandboxedIframe &&
+                        app.store.sandboxedIframe instanceof HTMLElement
+                    ) {
+                        // Remove iframe from the DOM
+                        document.body.removeChild(app.store.sandboxedIframe);
+                        app.store.sandboxedIframe = null; // Clear sandboxed iframe reference
+                    } else {
+                        console.warn('sandboxedIframe is not defined.');
+                    }
+
+                    // Mark the script as not running
+                    app.store.runningscript = false;
+                    // Re-enable jqconsole if available
+                    if (app.store.jqconsole && typeof app.store.jqconsole.Enable === 'function') {
+                        app.store.jqconsole.Enable();
+                    } else {
+                        console.warn('jqconsole or its Enable method is not defined.');
+                    }
+                    return; // Exit successfully
+                } else {
+                    // Throw an error for non-zero exit codes
+                    throw new Error(`Script Terminated. ExitCode: ${exitCode}`);
+                }
             }
         };
+
         // File System Bridge
         this.bridges.filesystem = {
             // Constants for default directories
@@ -252,8 +373,6 @@ class SandboxedEnvironment {
                 });
             }
         };
-
-
 
         // Network Bridge
         this.bridges.network = {
@@ -546,32 +665,205 @@ class SandboxedEnvironment {
                 });
             }
         };
-        // ANSI colors Constants..
-        this.bridges.ansi = {
-            RESET: '\x1b[0m',
-            BLACK: '\x1b[30m', // Foreground (text) colors
-            RED: '\x1b[31m',
-            GREEN: '\x1b[32m',
-            YELLOW: '\x1b[33m',
-            BLUE: '\x1b[34m',
-            MAGENTA: '\x1b[35m',
-            CYAN: '\x1b[36m',
-            WHITE: '\x1b[37m',
-            BG_BLACK: '\x1b[40m', // Background colors
-            BG_RED: '\x1b[41m',
-            BG_GREEN: '\x1b[42m',
-            BG_YELLOW: '\x1b[43m',
-            BG_BLUE: '\x1b[44m',
-            BG_MAGENTA: '\x1b[45m',
-            BG_CYAN: '\x1b[46m',
-            BG_WHITE: '\x1b[47m',
-            BOLD: '\x1b[1m', // Additional formatting
-            ITALIC: '\x1b[3m',
-            UNDERLINE: '\x1b[4m',
-            BLINK: '\x1b[5m',
-            INVERSE: '\x1b[7m',
-            STRIKETHROUGH: '\x1b[9m'
+        this.bridges.http = {
+            // Default configurations
+            DEFAULT_TIMEOUT: 60.0, // seconds
+
+            // Initialize plugin settings
+            _initializeSettings: async function() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Ensure DEFAULT_TIMEOUT is a number
+                        const timeout = Number(this.DEFAULT_TIMEOUT);
+                        if (isNaN(timeout) || timeout <= 0) {
+                            throw new Error(`Invalid timeout value: ${this.DEFAULT_TIMEOUT}`);
+                        }
+
+                        // Set default serializer to 'urlencoded'
+                        cordova.plugin.http.setDataSerializer('urlencoded');
+
+                        // Set default timeout
+                        cordova.plugin.http.setRequestTimeout(timeout);
+
+                        // Set default follow redirect behavior
+                        cordova.plugin.http.setFollowRedirect(true);
+
+                        // Set default trust mode
+                        cordova.plugin.http.setServerTrustMode('default',
+                            () => {
+                                console.log('Trust mode set to default');
+                                resolve();
+                            },
+                            error => {
+                                console.error('Error setting trust mode:', error);
+                                reject(error);
+                            }
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+           _sendRequest: async function(url, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Input validation
+                        if (!url || typeof url !== 'string') {
+                            throw new Error("The URL must be a non-empty string.");
+                        }
+
+                        if (!options.method) {
+                            options.method = 'get'; // Default method
+                        }
+
+                        const validMethods = [
+                            'get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'upload', 'download'
+                        ];
+                        if (!validMethods.includes(options.method.toLowerCase())) {
+                            throw new Error(`Invalid HTTP method: ${options.method}`);
+                        }
+
+                        if (options.timeout && (isNaN(Number(options.timeout)) || Number(options.timeout) <= 0)) {
+                            throw new Error("Timeout must be a positive number.");
+                        }
+
+                        // Ensure responseType is valid
+                        const validResponseTypes = ['text', 'json', 'arraybuffer', 'blob'];
+                        if (options.responseType && !validResponseTypes.includes(options.responseType.toLowerCase())) {
+                            throw new Error(`Invalid responseType: ${options.responseType}`);
+                        }
+
+                        // Encode the URL if it contains special characters
+                        const encodedUrl = encodeURI(url);
+
+                        // Execute the request
+                        cordova.plugin.http.sendRequest(
+                            encodedUrl,
+                            options,
+                            function(response) {
+                                resolve(response); // Resolve on success
+                            },
+                            function(errorResponse) {
+                                reject(errorResponse); // Reject on failure
+                            }
+                        );
+                    } catch (error) {
+                        reject(error); // Catch synchronous errors
+                    }
+                });
+            },
+
+            // Upload file(s)
+            _uploadFile: async function(url, params = {}, headers = {}, filePath, name) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.uploadFile(url, params, headers, filePath, name,
+                        response => resolve(response),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Download file
+            _downloadFile: async function(url, params = {}, headers = {}, filePath) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.downloadFile(url, params, headers, filePath,
+                        (entry, response) => resolve({ entry, response }),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Set headers for specific host
+            _setHeader: async function(hostname, header, value) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.setHeader(hostname, header, value);
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Set data serializer
+            _setDataSerializer: async function(serializer) {
+                if (['urlencoded', 'json', 'utf8', 'multipart', 'raw'].includes(serializer)) {
+                    cordova.plugin.http.setDataSerializer(serializer);
+                    return true;
+                }
+                throw new Error('Invalid serializer type');
+            },
+
+            // Set request timeout
+            _setTimeout: async function(timeout) {
+                if (typeof timeout === 'number' && timeout > 0) {
+                    cordova.plugin.http.setRequestTimeout(timeout);
+                    return true;
+                }
+                throw new Error('Invalid timeout value');
+            },
+
+            // Set SSL/TLS settings
+            _setServerTrustMode: async function(mode) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.setServerTrustMode(mode,
+                        () => resolve(true),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Cookie management
+            _getCookieString: async function(url) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const cookieString = cordova.plugin.http.getCookieString(url);
+                        resolve(cookieString);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            _setCookie: async function(url, cookie, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.setCookie(url, cookie, options);
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            _clearCookies: async function() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.clearCookies();
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Error codes mapping
+            ERROR_CODES: {
+                PERMISSION_DENIED: -12,
+                NOT_FOUND: -1,
+                SECURITY_ERR: -2,
+                ABORT_ERR: -3,
+                NOT_READABLE_ERR: -4,
+                ENCODING_ERR: -5,
+                NO_MODIFICATION_ALLOWED_ERR: -6,
+                INVALID_STATE_ERR: -7,
+                SYNTAX_ERR: -8,
+                INVALID_MODIFICATION_ERR: -9,
+                QUOTA_EXCEEDED_ERR: -10,
+                TYPE_MISMATCH_ERR: -11
+            }
         };
+
 
     }
     /**
@@ -586,6 +878,117 @@ class SandboxedEnvironment {
         document.body.appendChild(this.iframe);
         this.idSandBox = this.iframe.contentWindow;
         this.isRunning = true;
+        // intercept all console functions.
+        this.idSandBox.console = {
+            _infoPrint: (...messages) => {
+                app.store.jqconsole.Write(messages.join(" ") + "\n", "infoStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            _successPrint: (...messages) => {
+                app.store.jqconsole.Write(messages.join(" ") + "\n", "successStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            _Print: (msg = "", customclass = "successStyle") => {
+                return app.store.jqconsole.Write(msg, customclass);
+            },
+            _consoleclear: () => app.store.jqconsole.Clear(),
+            _errorPrint: (...messages) => {
+                app.store.jqconsole.Write(messages.join(" ") + "\n", "errorStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            assert: (condition, ...messages) => {
+                if (!condition) {
+                    this.bridges.console._errorPrint("Assertion failed:", ...messages);
+                }
+            },
+            clear: () => {
+                app.store.jqconsole.Clear();
+            },
+            count: (label = "default") => {
+                if (!this.consoleCounters) {
+                    this.consoleCounters = {};
+                }
+                if (!this.consoleCounters[label]) {
+                    this.consoleCounters[label] = 0;
+                }
+                this.consoleCounters[label]++;
+                this.bridges.console._infoPrint(`${label}: ${this.consoleCounters[label]}`);
+            },
+            debug: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            dir: (obj, options) => {
+                this.bridges.console._infoPrint(JSON.stringify(obj, null, options?.spaces || 2));
+            },
+            dirxml: (node) => {
+                this.bridges.console._infoPrint((node ? node.outerHTML || node.toString() : 'null')); 
+            },
+            error: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
+            },
+            group: (label) => {
+                this.bridges.console._infoPrint(`--- ${label} ---`); 
+            },
+            groupCollapsed: (label) => {
+                this.bridges.console._infoPrint(`+++ ${label} +++`); 
+            },
+            groupEnd: () => {
+                this.bridges.console._infoPrint('---'); 
+            },
+            info: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            log: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            memory: () => { 
+                this.bridges.console._infoPrint(performance.memory);
+            },
+            profile: (label) => {
+                if (console.profile) { // Check for browser support
+                    console.profile(label);
+                }
+            },
+            profileEnd: (label) => {
+                if (console.profileEnd) {
+                    console.profileEnd(label);
+                }
+            },
+            table: (data, columns) => {
+                this.bridges.console._infoPrint(console.table(data, columns)); 
+            },
+            time: (label = "default") => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                this.consoleTimers[label] = performance.now();
+            },
+            timeEnd: (label = "default") => {
+                if (this.consoleTimers && this.consoleTimers[label]) {
+                    let timeDiff = performance.now() - this.consoleTimers[label];
+                    this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms`);
+                    delete this.consoleTimers[label];
+                }
+            },
+            timeLog: (label = "default", ...messages) => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                if (!this.consoleTimers[label]) {
+                    this.consoleTimers[label] = performance.now();
+                }
+                let timeDiff = performance.now() - this.consoleTimers[label];
+                this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms - ${messages.join(' ')}`);
+            },
+            trace: (...messages) => {
+                const stack = (new Error()).stack.split('\n').slice(2).join('\n');
+                this.bridges.console._infoPrint("Trace:", ...messages, '\n', stack);
+            },
+            warn: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
+            }
+        };
+
         // Inject all bridges into sandbox
         Object.values(this.bridges).forEach(bridge => {
             Object.entries(bridge).forEach(([key, value]) => {
@@ -616,6 +1019,32 @@ class SandboxedEnvironment {
         const exit = _exitEval;
         const log = _Print;
 
+        const ANSI = Object.freeze({
+            RESET: '\x1b[0m',
+            BLACK: '\x1b[30m', // Foreground (text) colors
+            RED: '\x1b[31m',
+            GREEN: '\x1b[32m',
+            YELLOW: '\x1b[33m',
+            BLUE: '\x1b[34m',
+            MAGENTA: '\x1b[35m',
+            CYAN: '\x1b[36m',
+            WHITE: '\x1b[37m',
+            BG_BLACK: '\x1b[40m', // Background colors
+            BG_RED: '\x1b[41m',
+            BG_GREEN: '\x1b[42m',
+            BG_YELLOW: '\x1b[43m',
+            BG_BLUE: '\x1b[44m',
+            BG_MAGENTA: '\x1b[45m',
+            BG_CYAN: '\x1b[46m',
+            BG_WHITE: '\x1b[47m',
+            BOLD: '\x1b[1m', // Additional formatting
+            ITALIC: '\x1b[3m',
+            UNDERLINE: '\x1b[4m',
+            BLINK: '\x1b[5m',
+            INVERSE: '\x1b[7m',
+            STRIKETHROUGH: '\x1b[9m'
+        });
+            
         // Console Interface
         const console = Object.freeze({
             log: _infoPrint,
@@ -762,6 +1191,20 @@ class SandboxedEnvironment {
 
         const clipboard = Object.freeze({
             setText: _clipboardSetText
+        });
+
+        const http = Object.freeze({
+            initializeSettings: _initializeSettings,
+            sendRequest: _sendRequest,
+            uploadFile : _uploadFile,
+            downloadFile : _downloadFile,
+            setHeader : _setHeader,
+            setDataSerializer : _setDataSerializer,
+            setTimeout : _setTimeout,
+            setServerTrustMode : _setServerTrustMode,
+            getCookieString : _getCookieString,
+            setCookie : _setCookie,
+            clearCookies : _clearCookies
         });
        
     `;
