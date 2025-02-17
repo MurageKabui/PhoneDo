@@ -56,7 +56,78 @@ This project was inspired by <a href="https://www.reddit.com/r/lisp/comments/10j
 
 > Is there a Lisp environment for Android that would let me make simple programs to e.g. hit a web API, parse JSON and display the results as text? I'd really like to open an app which shows me a list of all the little scripts I've made, I tap "Weather San Francisco" and see the text output of my program, done. I swear I saw something like this about a decade ago...
 
-## Let's try it.
+## Let's Help OP.
+Navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `WeatherSanFrancisco.nts`.
+> Paste the below script inside the IDE and click `Run` > `Run Script` and press Enter.
+> 
+```JavaScript
+/*
+  Script Name      : WeatherSanFrancisco.nts
+  Date             : Mon Feb 03 2025 12:45:44 GMT+0300 (East Africa Time)
+  PhoneDo Version  : 1.3.2
+  Description      : Get weather conditions in San Francisco
+  Author           : PhoneDo
+  License          : none
+*/
+
+// Configuration object to store API-related constants
+const CONFIG = {
+  WEATHER_API_ENDPOINT: "https://api.open-meteo.com/v1/forecast",
+  DEFAULT_LAT: 37.7749,   // Latitude for San Francisco
+  DEFAULT_LON: -122.4194, // Longitude for San Francisco
+  CURRENT_WEATHER: true
+};
+
+// Create API request options
+function createWeatherRequestOptions (latitude, longitude) {
+  return {
+    method: "GET",
+    url: `${CONFIG.WEATHER_API_ENDPOINT}?latitude=${latitude}&longitude=${longitude}&current_weather=${CONFIG.CURRENT_WEATHER}`,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    serializer: "json"
+  };
+}
+
+// Fetch weather data using http.sendRequest
+async function fetchWeather (latitude = CONFIG.DEFAULT_LAT, longitude = CONFIG.DEFAULT_LON) {
+  try {
+    const options = createWeatherRequestOptions(latitude, longitude);
+    const response = await http.sendRequest(options.url, options);
+    const weatherData = JSON.parse(response.data);
+
+    if (!weatherData || !weatherData.current_weather) {
+      throw new Error("Failed to fetch weather data");
+    }
+
+    // Extract and display weather information
+    const { temperature, windspeed, winddirection } = weatherData.current_weather;
+    console.log("Weather in San Francisco, CA:");
+    console.log(`  Temperature: ${temperature}°C`);
+    console.log(`  Windspeed: ${windspeed} km/h`);
+    console.log(`  Wind Direction: ${winddirection}°`);
+  } catch (error) {
+    console.error("Error fetching weather data:", error.message);
+  }
+}
+
+// Main execution function
+async function main () {
+  console.log("Fetching weather data...");
+  await fetchWeather();
+  console.log("Done!");
+}
+
+// Execute the main function
+await main();
+
+```
+<br>
+
+
+
+## Another Example
 An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
 > On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for the script.
