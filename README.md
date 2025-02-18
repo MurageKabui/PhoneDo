@@ -124,10 +124,7 @@ await main();
 
 ```
 <br>
-
-
-
-## Another Example
+PhoneDo can also access native android APIs.
 An example of how a user can control a device's flashlight would be to navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `FlashControl.nts`
 
 > On clicking OK, the script is created inside an ACE integrated development environment and a header is automatically generated, to allow you to provide additional details for the script.
