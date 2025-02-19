@@ -56,7 +56,7 @@ This project was inspired by <a href="https://www.reddit.com/r/lisp/comments/10j
 
 > Is there a Lisp environment for Android that would let me make simple programs to e.g. hit a web API, parse JSON and display the results as text? I'd really like to open an app which shows me a list of all the little scripts I've made, I tap "Weather San Francisco" and see the text output of my program, done. I swear I saw something like this about a decade ago...
 
-## Let's Help OP.
+## Let's Help OP
 Navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `WeatherSanFrancisco.nts`.
 > Paste the below script inside the IDE and click `Run` > `Run Script` and press Enter.
 > 
