@@ -140,7 +140,7 @@ An example of how a user can control a device's flashlight would be to navigate 
 ```
 <br>
 
-Then, we can use a provided <a href="docs/methods/flashlight/turnon" target="_blank">flashlight method</a> to programmatically control it:
+Then, we can use a provided <a href="https://github.com/MurageKabui/PhoneDo/tree/main/docs#flashlight-control" target="_blank">flashlight method</a> to programmatically control it:
 
 ```Javascript
 if (await flashlight.switchOn()) {
