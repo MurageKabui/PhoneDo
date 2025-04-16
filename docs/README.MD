@@ -34,7 +34,7 @@ The `console` object provides a structured interface for logging output within t
 
 ### Methods
 
-```typescript
+```javascript
 interface Console {
     log(...messages: any[]): void;      // Logs a general styled message
     info(...messages: any[]): void;     // Logs an informational styled message
@@ -54,6 +54,137 @@ Each console method uses specific styling for better visual distinction:
 - `warn`: Yellow text
 - `error`: Red text
 - `success`: Green text
+
+### ANSI Color Support
+
+PhoneDo supports ANSI escape codes for advanced text styling through the `ANSI` object:
+
+```javascript
+interface ANSI {
+    // Text Colors
+    BLACK: string;
+    RED: string;
+    GREEN: string;
+    YELLOW: string;
+    BLUE: string;
+    MAGENTA: string;
+    CYAN: string;
+    WHITE: string;
+    
+    // Background Colors
+    BG_BLACK: string;
+    BG_RED: string;
+    BG_GREEN: string;
+    BG_YELLOW: string;
+    BG_BLUE: string;
+    BG_MAGENTA: string;
+    BG_CYAN: string;
+    BG_WHITE: string;
+    
+    // Text Formatting
+    BOLD: string;
+    ITALIC: string;
+    UNDERLINE: string;
+    BLINK: string;
+    INVERSE: string;
+    STRIKETHROUGH: string;
+    
+    // Reset
+    RESET: string;
+}
+```
+
+#### Example Usage
+
+```javascript
+// Basic color usage
+console.log(`${ANSI.RED}This is red text${ANSI.RESET}`);
+console.log(`${ANSI.GREEN}This is green text${ANSI.RESET}`);
+
+// Combining styles
+console.log(`${ANSI.BOLD}${ANSI.BLUE}This is bold blue text${ANSI.RESET}`);
+
+// Background colors
+console.log(`${ANSI.BG_BLACK}${ANSI.WHITE}White text on black background${ANSI.RESET}`);
+
+// Multiple styles
+console.log(`${ANSI.BOLD}${ANSI.UNDERLINE}${ANSI.YELLOW}Warning: Important message${ANSI.RESET}`);
+
+// Creating styled messages
+const error = `${ANSI.RED}${ANSI.BOLD}Error:${ANSI.RESET} Something went wrong`;
+const success = `${ANSI.GREEN}${ANSI.BOLD}Success:${ANSI.RESET} Operation completed`;
+const info = `${ANSI.BLUE}${ANSI.BOLD}Info:${ANSI.RESET} Processing data`;
+
+console.log(error);
+console.log(success);
+console.log(info);
+
+// Creating a styled table
+console.log(`
+${ANSI.BOLD}User Information:${ANSI.RESET}
+${ANSI.CYAN}Name:${ANSI.RESET} John Doe
+${ANSI.CYAN}Age:${ANSI.RESET} 30
+${ANSI.CYAN}Role:${ANSI.RESET} Admin
+`);
+
+// Progress bar with colors
+function showColoredProgress(progress) {
+    const bar = '='.repeat(Math.floor(progress / 2)) + '>';
+    console.log(`${ANSI.GREEN}[${bar.padEnd(50, ' ')}]${ANSI.RESET} ${ANSI.BOLD}${progress}%${ANSI.RESET}`);
+}
+```
+
+#### Best Practices for ANSI Usage
+
+1. **Always Reset After Styling**
+```javascript
+// Good
+console.log(`${ANSI.RED}Error message${ANSI.RESET}`);
+
+// Bad - styling leaks into next line
+console.log(`${ANSI.RED}Error message`);
+```
+
+2. **Use Template Literals for Complex Styling**
+```javascript
+// Good
+console.log(`${ANSI.BOLD}${ANSI.BLUE}Title${ANSI.RESET}`);
+
+// Avoid
+console.log(ANSI.BOLD + ANSI.BLUE + "Title" + ANSI.RESET);
+```
+
+3. **Create Reusable Style Functions**
+```javascript
+const styles = {
+    error: (text) => `${ANSI.RED}${ANSI.BOLD}${text}${ANSI.RESET}`,
+    success: (text) => `${ANSI.GREEN}${ANSI.BOLD}${text}${ANSI.RESET}`,
+    warning: (text) => `${ANSI.YELLOW}${ANSI.BOLD}${text}${ANSI.RESET}`,
+    info: (text) => `${ANSI.BLUE}${ANSI.BOLD}${text}${ANSI.RESET}`
+};
+
+console.log(styles.error("Critical error occurred!"));
+console.log(styles.success("Operation completed successfully!"));
+```
+
+4. **Create Styled UI Components**
+```javascript
+function showStyledAlert(message, type = 'info') {
+    const styles = {
+        info: ANSI.BLUE,
+        success: ANSI.GREEN,
+        warning: ANSI.YELLOW,
+        error: ANSI.RED
+    };
+    
+    const color = styles[type] || styles.info;
+    console.log(`${color}${ANSI.BOLD}${message}${ANSI.RESET}`);
+}
+
+showStyledAlert("Operation successful!", "success");
+showStyledAlert("Warning: Low memory", "warning");
+showStyledAlert("Error: Connection failed", "error");
+```
 
 ### Example Usage
 
@@ -109,7 +240,7 @@ The `sleep` bridge provides methods for creating delays and timing operations in
 
 ### Methods
 
-```typescript
+```javascript
 interface TimerBridge {
     sleep(ms: number): Promise<void>;
     sleepWithProgress(ms: number, onProgress?: (progress: number) => void): Promise<void>;
@@ -204,7 +335,18 @@ async function showLoadingAnimation() {
     let i = 0;
     
     await sleepWithProgress(5000, () => {
-        process.stdout.write(`\r${frames[i]} Loading...`);
+        console.log(`\r${frames[i]} Loading...`);
+        i = (i + 1) % frames.length;
+    });
+}
+
+// Alternative loading animation using console.log
+async function showSimpleLoadingAnimation() {
+    const frames = ['|', '/', '-', '\\'];
+    let i = 0;
+    
+    await sleepWithProgress(5000, () => {
+        console.log(`Loading ${frames[i]} `);
         i = (i + 1) % frames.length;
     });
 }
@@ -255,7 +397,7 @@ browser.openExternal(url: string): Promise<InAppBrowserObject>
 
 The browser bridge supports various configuration options through the `BrowserConfig` object:
 
-```typescript
+```javascript
 interface BrowserConfig {
     // Basic window features
     zoom?: 'yes' | 'no';
@@ -850,182 +992,4 @@ try {
     console.error("Speech service operation failed:", e);
 }
 ```
-*Note: `getVoices` can be used to customize the voice output. With `partialResults` to `true` you get results as they are being processed.*
-
-## Clipboard Operations
-
-### Clipboard Interaction
-
-The `clipboard` object provides a function for setting text to the device's clipboard.
-
-```javascript
-  clipboard.setText(text);      // Copies the specified text to the device's clipboard.
-```
-#### Example Usage
-
-```javascript
-const textToCopy = "Text copied from the script!";
-await clipboard.setText(textToCopy);
-console.log("Text has been copied to the system clipboard.");
-```
-
-## Dialog Interface
-
-### Dialog Window Functionality
-
-The `dialog` object provides a method for displaying alert dialog windows, useful for showing notifications, prompts, and interactive menus in your scripts.
-
-```javascript
-  dialog.alert(message <string>, title <string>, buttons <object>);
-```
-#### Example Usage
-> Example 1 showing a basic dialog with the default button.
-
-```javascript
-const idButtonClicked = await dialog.alert(
-    "A low battery condition has been detected!",
-    "Important Notification"
-});
-
-// Log the button clicked.
-console.log('You clicked button ID : ' + idButtonClicked);
-```
-
-<p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/dialogDemo1.jpg?raw=true" title="dialogDemo1" alt="dialogDemo1" width="540" height="338">
-</p>
-
-
-> Example 2
-```javascript
-/*
-  Script Name      : DialogsDemo.nts
-  Date             : Sat Dec 28 2024 21:56:03 GMT+0300 (East Africa Time)
-  PhoneDo Version  : 1.3.2
-  Description      : Demonstration for using the dialog object.
-  Author           : PhoneDo
-  License          : None
-*/
-async function dialogDemo() {
-    try {
-        console.clear();
-        console.log("Starting Dialog Demo...");
-        // Simple alert
-        const result1 = await dialog.alert("Welcome to the Dialog Demo!", "Hello");
-        console.log("Basic alert closed with result:", result1);
-        // Alert with some custom buttons
-        const result2 = await dialog.alert("Would you like to continue the demo?", "Question", "primary", // using primary style
-        [ {
-            text: "Yes",
-            kind: "success",
-            size: "sm"
-        }, {
-            text: "No",
-            kind: "danger",
-            size: "sm"
-        } ]);
-        if (result2 === 1) {
-            // User clicked "No"
-            console.log("Demo cancelled by user");
-            return;
-        }
-        
-        // Alert with device info
-        const deviceInfo = `
-Device Information:
-<br> Model: ${device.model}
-<br> Platform: ${device.platform}
-<br> Version: ${device.version}
-<br> Manufacturer: ${device.manufacturer}
-<br> Battery: ${device.batteryLevel}%
-<br> Charging: ${device.isCharging ? "Yes" : "No"}`;
-        await dialog.alert(deviceInfo, "Device Status", "info", [ {
-            text: "Cool!",
-            kind: "info",
-            size: "sm"
-        } ]);
-
-        // Interactive demo with multiple steps
-        const actions = [ "Make device vibrate", "Make device beep", "Exit demo" ];
-        const result3 = await dialog.alert("Choose an action:", "Actions", "primary", actions.map(text => ({
-            text: text,
-            kind: "primary",
-            size: "sm"
-        })));
-        switch (result3) {
-          case 0:
-            // Vibrate
-            device.vibrate(1e3);
-            await dialog.alert("Device vibrated!", "Action Complete");
-            break;
-
-          case 1:
-            // Beep
-            device.beep();
-            await dialog.alert("Device beeped!", "Action Complete");
-            break;
-
-          case 2:
-            // Exit
-            console.log("Demo completed!");
-            break;
-        }
-
-        // Final confirmation with styled message
-        await dialog.alert("Thanks for trying the <div style='color: green;'>dialog</div> demo!", "Goodbye", "success", [ {
-            text: "Close",
-            kind: "danger",
-            size: "sm"
-        } ]);
-    } catch (error) {
-        console.error("An error occurred:", error);
-        await dialog.alert("Something went wrong: " + error, "Error", "danger", [ {
-            text: "OK",
-            kind: "danger",
-            size: "sm"
-        } ]);
-    }
-}
-// Run the demo
-
-await dialogDemo();
-
-exit(0); // Exit gracefully
-```
-
-*Note: The `buttonText` is optional and default to "OK". Multi-line messages are supported.*
-
----
-
-## Error Handling
-
-Most asynchronous operations within this API can throw exceptions that should be handled accordingly. These exceptions are typically encapsulated within an `APIError` object, containing an error `code` and additional `details`:
-
-```javascript
-class APIError extends Error {
-    code: string;
-    details?: any;
-}
-```
-Common error codes include:
-
-- `PERMISSION_DENIED`: Required permissions for the attempted operation were not granted.
-- `TIMEOUT`: The operation timed out before completing.
-- `NETWORK_ERROR`: A network-related issue occurred.
-- `DEVICE_ERROR`: An error occurred with a hardware operation.
-- `INVALID_ARGUMENT`: The passed parameters were invalid.
-
-Use `try-catch` blocks to handle errors and inspect `error.code` for specific error handling.
-
-## Best Practices
-
-1.  **Prioritize permission requests:** Always ensure required permissions are granted before utilizing hardware functions or services.
-2.  **Implement comprehensive error handling:** Utilize `try-catch` blocks to manage asynchronous operation errors effectively.
-3.  **Set timeouts:** Define appropriate timeouts for network operations to prevent indefinite delays.
-4.  **Check compatibility:** Prior to invoking hardware features, check if the device supports them.
-5.  **Manage resources:** For event listeners, and connections, make sure to implement resource release.
-6.  **Avoid UI blocking:** Perform time intensive tasks async to prevent freezing the UI.
-7.  **Use minimal permission set:** Request only the essential permissions required for your intended operations.
-8. **Use appropriate API calls:** Utilize correct API functions for the intended actions to maximize efficiency and performance.
-9. **Provide Feedback to User:** Provide visible feedback to the user of long operations.
-10. **Avoid infinite loops:** Avoid running infinite loop in scripts as there is a time limit before termination.
+*Note: `getVoices`
