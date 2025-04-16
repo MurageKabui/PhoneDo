@@ -17,6 +17,7 @@ This document provides comprehensive technical specifications for the PhoneDo Sc
 ## Table of Contents
 
 - [Console and Output](#console-and-output)
+- [Browser Bridge](#browser-bridge)
 - [Device Hardware](#device-hardware)
 - [File System](#file-system)
 - [Network Operations](#network-operations)
@@ -29,33 +30,410 @@ This document provides comprehensive technical specifications for the PhoneDo Sc
 
 ## Console and Output
 
-### Console Interface
-
 The `console` object provides a structured interface for logging output within the application's "console" (PhoneDo Terminal). This allows for script runtime debugging and monitoring of script execution.
 
-#### Methods
+### Methods
 
-```javascript
-console.log(message);      // Logs a general styled message.
-console.info(message);     // Logs an informational styled message.
-console.warn(message);     // Logs a warning styled message.
-console.error(message);    // Logs an error styled message.
-console.success(message);  // Logs a success styled message.
-console.clear();           // Clears the console output.
-console.cls();             // Alias for clear(), for legacy familiarity
+```typescript
+interface Console {
+    log(...messages: any[]): void;      // Logs a general styled message
+    info(...messages: any[]): void;     // Logs an informational styled message
+    warn(...messages: any[]): void;     // Logs a warning styled message
+    error(...messages: any[]): void;    // Logs an error styled message
+    success(...messages: any[]): void;  // Logs a success styled message
+    clear(): void;                      // Clears the console output
+    cls(): void;                        // Alias for clear()
+}
 ```
-*Note: `cls()` is an alias of `clear()`, maintained for familiarity with other console-based interfaces.*
 
-#### Example Usage
+### Styling Options
+
+Each console method uses specific styling for better visual distinction:
+- `log`: Default style
+- `info`: Blue text
+- `warn`: Yellow text
+- `error`: Red text
+- `success`: Green text
+
+### Example Usage
 
 ```javascript
-const userName = "PhoneDo User";
-console.log("User: " + userName);
-console.warn("Executing test script.");
-console.success("Operation successful.");
+// Basic logging
+console.log("Hello, World!");
+console.info("This is an informational message");
+console.warn("This is a warning message");
+console.error("This is an error message");
+console.success("Operation completed successfully!");
+
+// Logging multiple values
+const user = { name: "John", age: 30 };
+console.log("User details:", user);
+
+// Clearing the console
 console.clear();
-console.cls(); // Equivalent to console.clear();
+// or
+console.cls();
 ```
+
+### Best Practices
+
+1. **Use Appropriate Log Levels**
+   - `log`: General information
+   - `info`: Important but non-critical information
+   - `warn`: Potential issues that don't stop execution
+   - `error`: Critical issues that affect functionality
+   - `success`: Completed operations
+
+2. **Structured Logging**
+```javascript
+// Good
+console.log("User login attempt:", { username: "john", timestamp: new Date() });
+
+// Avoid
+console.log("User " + username + " logged in at " + new Date());
+```
+
+3. **Error Handling**
+```javascript
+try {
+    // Some operation
+} catch (error) {
+    console.error("Operation failed:", error);
+    console.info("Attempting recovery...");
+}
+```
+
+## Sleep/Timer Bridge
+
+The `sleep` bridge provides methods for creating delays and timing operations in your scripts. This is useful for rate limiting, animations, or waiting for operations to complete.
+
+### Methods
+
+```typescript
+interface TimerBridge {
+    sleep(ms: number): Promise<void>;
+    sleepWithProgress(ms: number, onProgress?: (progress: number) => void): Promise<void>;
+}
+```
+
+### Parameters
+
+- `ms`: Time to sleep in milliseconds (must be a positive number)
+- `onProgress`: Optional callback function that receives progress updates (0-100)
+
+### Example Usage
+
+#### Basic Sleep
+```javascript
+// Sleep for 1 second
+await sleep(1000);
+
+// Sleep in a loop
+for (let i = 0; i < 5; i++) {
+    console.log(`Iteration ${i + 1}`);
+    await sleep(500); // Sleep for 500ms between iterations
+}
+```
+
+#### Sleep with Progress
+```javascript
+// Basic progress tracking
+await sleepWithProgress(5000, (progress) => {
+    console.log(`Loading... ${progress.toFixed(1)}%`);
+});
+
+// Progress bar in console
+await sleepWithProgress(3000, (progress) => {
+    const bar = '='.repeat(Math.floor(progress / 2)) + '>';
+    console.log(`[${bar.padEnd(50, ' ')}] ${progress.toFixed(1)}%`);
+});
+```
+
+### Best Practices
+
+1. **Avoid Long Sleeps**
+```javascript
+// Good - Break long operations into smaller chunks
+for (let i = 0; i < 10; i++) {
+    await sleep(1000);
+    console.log(`Progress: ${(i + 1) * 10}%`);
+}
+
+// Avoid
+await sleep(10000); // Long sleep blocks the script
+```
+
+2. **Use Progress for User Feedback**
+```javascript
+async function processWithFeedback() {
+    console.log("Starting process...");
+    await sleepWithProgress(5000, (progress) => {
+        if (progress % 20 === 0) {
+            console.log(`Still working... ${progress}% complete`);
+        }
+    });
+    console.log("Process complete!");
+}
+```
+
+3. **Error Handling**
+```javascript
+try {
+    await sleep(1000);
+} catch (error) {
+    console.error("Sleep operation failed:", error);
+}
+```
+
+### Common Use Cases
+
+1. **Rate Limiting**
+```javascript
+async function processItems(items) {
+    for (const item of items) {
+        await processItem(item);
+        await sleep(100); // Rate limit to 10 items per second
+    }
+}
+```
+
+2. **Loading Animation**
+```javascript
+async function showLoadingAnimation() {
+    const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+    let i = 0;
+    
+    await sleepWithProgress(5000, () => {
+        process.stdout.write(`\r${frames[i]} Loading...`);
+        i = (i + 1) % frames.length;
+    });
+}
+```
+
+3. **Sequential Operations**
+```javascript
+async function sequentialOperations() {
+    console.log("Step 1: Initializing...");
+    await sleep(1000);
+    
+    console.log("Step 2: Processing...");
+    await sleep(2000);
+    
+    console.log("Step 3: Finalizing...");
+    await sleep(1000);
+    
+    console.log("Complete!");
+}
+```
+
+### Notes
+
+- Sleep operations are non-blocking for the main thread
+- Progress updates occur every 100ms
+- Sleep duration must be a positive number
+- Progress callback is optional
+- Sleep operations can be cancelled by script termination
+- Consider using `sleepWithProgress` for operations longer than 1 second
+- Sleep operations are precise to the millisecond
+- Progress updates are rounded to 2 decimal places
+
+## Browser Bridge
+
+The `browser` object provides methods for opening and managing web content within the application using the InAppBrowser plugin. This bridge allows for secure and controlled web content viewing with various configuration options.
+
+### Methods
+
+```javascript
+browser.open(url: string, target?: string, config?: BrowserConfig): Promise<InAppBrowserObject>
+browser.openSafe(url: string): Promise<InAppBrowserObject>
+browser.openFullscreen(url: string): Promise<InAppBrowserObject>
+browser.openMinimal(url: string): Promise<InAppBrowserObject>
+browser.openExternal(url: string): Promise<InAppBrowserObject>
+```
+
+### Configuration Options
+
+The browser bridge supports various configuration options through the `BrowserConfig` object:
+
+```typescript
+interface BrowserConfig {
+    // Basic window features
+    zoom?: 'yes' | 'no';
+    hardwareback?: 'yes' | 'no';
+    footer?: 'yes' | 'no';
+    location?: 'yes' | 'no';
+    hideurlbar?: 'yes' | 'no';
+    hidenavigationbuttons?: 'yes' | 'no';
+    
+    // Colors and appearance
+    toolbarcolor?: string;
+    navigationbuttoncolor?: string;
+    closebuttoncolor?: string;
+    
+    // Toolbar options
+    toolbar?: 'yes' | 'no';
+    enableViewportScale?: 'yes' | 'no';
+    mediaPlaybackRequiresUserAction?: 'yes' | 'no';
+    shouldPauseOnSuspend?: 'yes' | 'no';
+    
+    // Security features
+    clearcache?: 'yes' | 'no';
+    clearsessioncache?: 'yes' | 'no';
+    
+    // Presentation
+    presentationstyle?: 'pagesheet' | 'fullscreen' | 'formsheet';
+    transitionstyle?: 'crossdissolve' | 'curlup' | 'curldown' | 'fliphorizontal' | 'flipvertical';
+    
+    // Hidden by default, can be enabled
+    lefttoright?: 'yes' | 'no';
+    fullscreen?: 'yes' | 'no';
+    
+    // User interaction
+    usewkwebview?: 'yes' | 'no';
+    keyboardDisplayRequiresUserAction?: 'yes' | 'no';
+}
+```
+
+### Target Options
+
+- `_blank`: Opens in a new InAppBrowser window (default)
+- `_self`: Opens in the Cordova WebView
+- `_system`: Opens in the system's default browser
+
+### Example Usage
+
+#### Basic Usage
+```javascript
+// Open a URL in a new InAppBrowser window
+await browser.open('https://example.com');
+
+// Open in safe mode (good for untrusted content)
+await browser.openSafe('https://example.com');
+
+// Open in fullscreen mode
+await browser.openFullscreen('https://example.com');
+
+// Open with minimal UI
+await browser.openMinimal('https://example.com');
+
+// Open in system browser
+await browser.openExternal('https://example.com');
+```
+
+#### Advanced Configuration
+```javascript
+// Open with custom configuration
+await browser.open('https://example.com', '_blank', {
+    fullscreen: 'yes',
+    toolbar: 'no',
+    zoom: 'yes',
+    presentationstyle: 'fullscreen',
+    transitionstyle: 'crossdissolve',
+    clearcache: 'yes',
+    clearsessioncache: 'yes'
+});
+```
+
+#### Event Handling
+```javascript
+const browserInstance = await browser.open('https://example.com');
+
+// Listen for load events
+browserInstance.addEventListener('loadstart', (event) => {
+    console.log('Started loading:', event.url);
+});
+
+browserInstance.addEventListener('loadstop', (event) => {
+    console.log('Finished loading:', event.url);
+});
+
+browserInstance.addEventListener('loaderror', (event) => {
+    console.error('Loading error:', event.message);
+});
+
+browserInstance.addEventListener('exit', () => {
+    console.log('Browser closed');
+});
+```
+
+### Best Practices
+
+1. **Security Considerations**
+   - Use `openSafe()` for untrusted content
+   - Enable `clearcache` and `clearsessioncache` when handling sensitive data
+   - Consider using `hideurlbar` to prevent URL manipulation
+
+2. **User Experience**
+   - Use appropriate presentation styles for different content types
+   - Enable `hardwareback` for better navigation
+   - Consider using `fullscreen` for immersive content
+
+3. **Performance**
+   - Use `usewkwebview: 'yes'` for better performance on iOS
+   - Enable `shouldPauseOnSuspend` to manage resources
+   - Consider using `openMinimal()` for lightweight content
+
+4. **Error Handling**
+```javascript
+try {
+    const browserInstance = await browser.open('https://example.com');
+} catch (error) {
+    console.error('Browser error:', error);
+    // Handle specific error cases
+    if (error.code === 'PERMISSION_DENIED') {
+        console.error('Permission denied to open browser');
+    }
+}
+```
+
+### Common Use Cases
+
+1. **Web Content Viewing**
+```javascript
+async function viewWebContent(url) {
+    try {
+        await browser.open(url, '_blank', {
+            toolbar: 'yes',
+            location: 'yes',
+            zoom: 'yes'
+        });
+    } catch (error) {
+        console.error('Failed to open web content:', error);
+    }
+}
+```
+
+2. **Secure Content Viewing**
+```javascript
+async function viewSecureContent(url) {
+    try {
+        await browser.openSafe(url);
+    } catch (error) {
+        console.error('Failed to open secure content:', error);
+    }
+}
+```
+
+3. **Fullscreen Content**
+```javascript
+async function viewFullscreenContent(url) {
+    try {
+        await browser.openFullscreen(url);
+    } catch (error) {
+        console.error('Failed to open fullscreen content:', error);
+    }
+}
+```
+
+### Notes
+
+- The browser bridge uses the Cordova InAppBrowser plugin
+- All methods return a Promise that resolves to an InAppBrowserObject
+- The InAppBrowserObject provides methods for controlling the browser window
+- Event listeners should be cleaned up when the browser window is closed
+- Some features may be platform-specific (iOS/Android)
+- The bridge supports both HTTP and HTTPS URLs
+- Local file URLs (file://) are supported when appropriate permissions are granted
 
 ## Device Hardware
 
@@ -157,8 +535,7 @@ async function saveSettings() {
         console.log("Settings saved successfully");
         
         // Reading the saved file
-        const content = await fs.readTextFile(undefined, 
-            "AppSettings/config.json");
+        const content = await fs.readTextFile(undefined, "AppSettings/config.json");
         console.log("Retrieved settings:", JSON.parse(content));
     } catch (error) {
         console.error("File operation failed:", error);
