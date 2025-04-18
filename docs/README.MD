@@ -27,6 +27,7 @@ This document provides comprehensive technical specifications for the PhoneDo Sc
 - [Speech and Voice](#speech-and-voice)
 - [Clipboard Operations](#clipboard-operations)
 - [Dialog Interface](#dialog-interface)
+- [Android Permissions](#android-permissions)
 
 ## Console and Output
 
@@ -993,3 +994,286 @@ try {
 }
 ```
 *Note: `getVoices`
+```
+
+## Android Permissions
+
+The `permissions` object provides methods for checking and requesting Android permissions. This is essential for accessing device features that require user authorization, especially on Android 6.0 and above where permissions are requested at runtime.
+
+### Methods
+
+```javascript
+interface PermissionsBridge {
+    checkPermission(permission: string): Promise<{hasPermission: boolean}>;
+    requestPermission(permission: string): Promise<{hasPermission: boolean}>;
+    requestPermissions(permissions: string[]): Promise<{hasPermission: boolean}>;
+    hasPermission(permission: string): Promise<{hasPermission: boolean}>; // Legacy method
+}
+```
+
+### Permission Constants
+
+The `permissions` object includes constants for all standard Android permissions:
+
+```javascript
+// Location permissions
+permissions.ACCESS_COARSE_LOCATION
+permissions.ACCESS_FINE_LOCATION
+
+// Camera
+permissions.CAMERA
+
+// Storage
+permissions.READ_EXTERNAL_STORAGE
+permissions.WRITE_EXTERNAL_STORAGE
+permissions.READ_MEDIA_IMAGES
+permissions.READ_MEDIA_VIDEO
+permissions.READ_MEDIA_AUDIO
+
+// Contacts
+permissions.READ_CONTACTS
+permissions.WRITE_CONTACTS
+
+// Calendar
+permissions.READ_CALENDAR
+permissions.WRITE_CALENDAR
+
+// Phone
+permissions.READ_PHONE_STATE
+permissions.CALL_PHONE
+permissions.READ_CALL_LOG
+permissions.WRITE_CALL_LOG
+permissions.ADD_VOICEMAIL
+permissions.USE_SIP
+permissions.PROCESS_OUTGOING_CALLS
+
+// SMS
+permissions.READ_SMS
+permissions.SEND_SMS
+permissions.RECEIVE_SMS
+permissions.RECEIVE_WAP_PUSH
+permissions.RECEIVE_MMS
+permissions.READ_CELL_BROADCASTS
+
+// Bluetooth
+permissions.BLUETOOTH
+permissions.BLUETOOTH_ADMIN
+permissions.BLUETOOTH_CONNECT
+permissions.BLUETOOTH_SCAN
+permissions.BLUETOOTH_ADVERTISE
+
+// Network
+permissions.ACCESS_NETWORK_STATE
+permissions.ACCESS_WIFI_STATE
+permissions.CHANGE_WIFI_STATE
+permissions.CHANGE_NETWORK_STATE
+permissions.CHANGE_CONFIGURATION
+
+// Accounts
+permissions.GET_ACCOUNTS
+permissions.MANAGE_ACCOUNTS
+
+// Biometrics
+permissions.USE_BIOMETRICS
+permissions.USE_FINGERPRINT
+permissions.USE_IRIS
+permissions.USE_FACE
+
+// Notifications
+permissions.POST_NOTIFICATIONS
+
+// Audio
+permissions.RECORD_AUDIO
+permissions.MODIFY_AUDIO_SETTINGS
+
+// Sensors
+permissions.BODY_SENSORS
+```
+
+### Example Usage
+
+#### Checking a Single Permission
+
+```javascript
+// Check if camera permission is granted
+const cameraStatus = await permissions.checkPermission(permissions.CAMERA);
+if (cameraStatus.hasPermission) {
+    console.log("Camera permission is granted");
+} else {
+    console.log("Camera permission is not granted");
+}
+```
+
+#### Requesting a Single Permission
+
+```javascript
+// Request camera permission
+try {
+    const status = await permissions.requestPermission(permissions.CAMERA);
+    if (status.hasPermission) {
+        console.log("Camera permission granted");
+        // Proceed with camera operations
+    } else {
+        console.log("Camera permission denied");
+    }
+} catch (error) {
+    console.error("Error requesting camera permission:", error);
+}
+```
+
+#### Requesting Multiple Permissions
+
+```javascript
+// Request multiple permissions at once
+try {
+    const permissionList = [
+        permissions.CAMERA,
+        permissions.READ_EXTERNAL_STORAGE,
+        permissions.WRITE_EXTERNAL_STORAGE
+    ];
+    
+    const status = await permissions.requestPermissions(permissionList);
+    if (status.hasPermission) {
+        console.log("All permissions granted");
+        // Proceed with operations
+    } else {
+        console.log("Some permissions were denied");
+    }
+} catch (error) {
+    console.error("Error requesting permissions:", error);
+}
+```
+
+#### Permission Workflow Pattern
+
+```javascript
+async function ensurePermission(permission) {
+    // First check if we already have the permission
+    const status = await permissions.checkPermission(permission);
+    
+    if (status.hasPermission) {
+        return true; // Permission already granted
+    }
+    
+    // Request the permission
+    try {
+        const requestStatus = await permissions.requestPermission(permission);
+        return requestStatus.hasPermission;
+    } catch (error) {
+        console.error(`Error requesting permission: ${error}`);
+        return false;
+    }
+}
+
+// Usage example
+async function takePhoto() {
+    if (await ensurePermission(permissions.CAMERA)) {
+        console.log("Camera permission granted, proceeding to take photo");
+        // Camera operations here
+    } else {
+        console.log("Cannot proceed without camera permission");
+    }
+}
+```
+
+### Best Practices
+
+1. **Check Before Requesting**
+   - Always check if a permission is already granted before requesting it
+   - This avoids unnecessary permission dialogs for the user
+
+2. **Request Permissions When Needed**
+   - Request permissions at the point where they're needed, not at app startup
+   - This helps users understand why the permission is being requested
+
+3. **Handle Permission Denials Gracefully**
+   - Provide fallback functionality when permissions are denied
+   - Explain to users why the permission is important and how to enable it in settings
+
+4. **Group Related Permissions**
+   - Request related permissions together (e.g., READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE)
+   - This reduces the number of permission dialogs shown to the user
+
+5. **Use Appropriate Permission Constants**
+   - Use the predefined constants rather than string literals
+   - This ensures consistency and prevents typos
+
+### Common Use Cases
+
+#### Camera Access
+
+```javascript
+async function setupCamera() {
+    try {
+        const status = await permissions.requestPermission(permissions.CAMERA);
+        if (status.hasPermission) {
+            console.log("Camera permission granted");
+            // Initialize camera
+        } else {
+            console.log("Camera permission denied");
+            // Show alternative UI or instructions
+        }
+    } catch (error) {
+        console.error("Error with camera permission:", error);
+    }
+}
+```
+
+#### Storage Access
+
+```javascript
+async function saveFile() {
+    try {
+        // For Android 10+ (API 29+), use the new media permissions
+        const permission = device.version >= 29 ? 
+            permissions.READ_MEDIA_IMAGES : 
+            permissions.WRITE_EXTERNAL_STORAGE;
+            
+        const status = await permissions.requestPermission(permission);
+        if (status.hasPermission) {
+            console.log("Storage permission granted");
+            // Proceed with file operations
+        } else {
+            console.log("Storage permission denied");
+            // Show alternative storage options
+        }
+    } catch (error) {
+        console.error("Error with storage permission:", error);
+    }
+}
+```
+
+#### Location Services
+
+```javascript
+async function getLocation() {
+    try {
+        // Request fine location permission
+        const status = await permissions.requestPermission(permissions.ACCESS_FINE_LOCATION);
+        if (status.hasPermission) {
+            console.log("Location permission granted");
+            // Get location
+        } else {
+            // Try coarse location as fallback
+            const coarseStatus = await permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION);
+            if (coarseStatus.hasPermission) {
+                console.log("Coarse location permission granted");
+                // Get approximate location
+            } else {
+                console.log("Location permissions denied");
+                // Show map with default location
+            }
+        }
+    } catch (error) {
+        console.error("Error with location permissions:", error);
+    }
+}
+```
+
+### Notes
+
+- The Android Permissions bridge is primarily useful on Android devices
+- On iOS and other platforms, the bridge will return that permissions are granted
+- Some permissions may require additional configuration in the app's manifest file
+- For Android 13+ (API 33+), consider using the new granular media permissions (READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO) instead of the broad READ_EXTERNAL_STORAGE permission
+- The `hasPermission` method is deprecated but still supported for backward compatibility
