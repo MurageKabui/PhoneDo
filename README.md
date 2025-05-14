@@ -51,12 +51,13 @@ The tech stack for this application :
 
 
 I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I documented these methods <a href="docs" target="_blank">here</a>.
-## Why ?
+<!-- ## Why ?
 This project was inspired by <a href="https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/" target="_blank">this question on reddit</a> Quoted from OP : 
 
 > Is there a Lisp environment for Android that would let me make simple programs to e.g. hit a web API, parse JSON and display the results as text? I'd really like to open an app which shows me a list of all the little scripts I've made, I tap "Weather San Francisco" and see the text output of my program, done. I swear I saw something like this about a decade ago...
-
 ## Let's Help OP
+-->
+## Let's Try it.
 Navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `WeatherSanFrancisco.nts`.
 > Paste the below script inside the IDE and click `Run` > `Run Script` and press Enter.
 > 
