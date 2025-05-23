@@ -42,6 +42,7 @@ The tech stack for this application :
 
 | Technology |Usage |
 |------------|---------|
+|Java| For interfacing with android.| |
 |<a href="https://github.com/vuejs/core">Vue</a>| Front end |
 |[SQLite](https://github.com/sqlite/sqlite) | For script storage CRUD operations.|
 |[Bootstrap](https://github.com/twbs/bootstrap)| For styling (in the context of script evaluation) | 
