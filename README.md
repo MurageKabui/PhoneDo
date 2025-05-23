@@ -12,8 +12,8 @@ https://www.reddit.com/r/lisp/comments/10jlj6b/lisp_scripting_on_android/
  
 
 ### TL;DR 
-> PhoneDo is an <b><i>Android</i></b> automation application that provides a scripting environment based on JavaScript with methods for handling native Android actions in a headless way.
-
+> PhoneDo is a headless automation app for <b><i>Android</i></b>, powered by JavaScript
+> 
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360" height="640">
 </p>
