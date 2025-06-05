@@ -54,7 +54,7 @@ The tech stack for this application :
 I aimed to provide a straightforward way to script tasks, using scripts labeled with the <b><i>.nts</i></b> extension. Users can create these scripts and execute at their convenience. These scripts are stored on their device in a SQLite database and can contain JavaScript code that integrates with Android's native functionalities like file handling, text-to-speech, speech recognition, texting (SMS), Bluetooth connections, Wi-Fi, NFC, infrared, networking, SIM card operations, flashlight control, and battery management, among other things. I documented these methods <a href="docs" target="_blank">here</a>.
 
 ## Why ?
-This project was created to fill a personal need: a lightweight environment on Android for writing small scripts that can interact with web APIs, parse JSON, and display text output quickly. The idea was to have a simple app that could list and run these scripts with just a tap — like checking the weather or fetching other data on the go.
+This project was created to fill a personal need: a lightweight environment on Android for writing small scripts that can interact with web APIs, parse JSON, and display text output quickly. The idea was to have a simple app that could list and run these scripts with just a tap.. like checking the weather or fetching other data on the go!
 
 ## Let's Try it.
 Navigate to `Script Editor` > `File` > `New Script`, then name the script, for instance, `WeatherSanFrancisco.nts`.
