@@ -12,8 +12,6 @@
 
 # PhoneDo Scripting API Documentation
 
-This document provides comprehensive technical specifications for the PhoneDo Scripting API, which enables developers to interact with various native device functionalities through custom scripts. This API facilitates access to hardware resources and system services within a sandboxed environment.
-
 ## Table of Contents
 
 - [Console and Output](#console-and-output)
