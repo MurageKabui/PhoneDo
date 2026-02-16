@@ -1,41 +1,58 @@
 <p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" alt="PhoneDo Logo" width="440" height="77">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" alt="PhoneDo Logo" width="440">
 </p>
 
-# PhoneDo
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/MurageKabui/PhoneDo?label=version&style=flat-square&color=blue" alt="Version">
+  <img src="https://img.shields.io/badge/platform-Android-green?style=flat-square" alt="Platform">
+  <img src="https://img.shields.io/github/license/MurageKabui/PhoneDo?style=flat-square&color=orange" alt="License">
+</p>
 
-PhoneDo is an automation app that lets you control Android hardware using standard JavaScript. It bridges web logic with native features like WiFi, Bluetooth, SMS, and the device file system, allowing you to build mobile automation tools using the code you already know.
+<p align="center">
+  PhoneDo is an automation app that bridges JavaScript with Android native services. It gives you control over hardware features like WiFi, Bluetooth, SMS, SIM Metadata, Voice/Audio, Sensors, and the file system using standard coding patterns in a mobile environment.
+</p>
 
-[API Reference](PHONEDO_DOCS_README.MD) | [Community Support](https://groups.google.com/g/phonedo) | [Discord](https://discord.gg/b4ENrd2FAP)
+<p align="center">
+  <a href="PHONEDO_DOCS_README.MD">API Reference</a> | 
+  <a href="https://groups.google.com/g/phonedo">Community Support</a> | 
+  <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
+</p>
+
+## Why ?
+
+I created this as a personal scripting tool to avoid the overhead of full Android app development and the complexity of Termux. It is built for writing quick scripts that can fetch data from APIs, parse JSON, and interact with hardware using just a few lines of code. It is designed to stay out of the way and let you run logic directly on your phone.
+
+<p align="center">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360">
+</p>
+
+## Automated Hardware Bridges
+
+PhoneDo exposes almost every native Android service to the JavaScript environment. Below are the primary bridges available for script automation:
+
+| Feature Category | Bridges Included |
+| :--- | :--- |
+| **Connectivity** | WiFi, Bluetooth (BLE), Network Diagnostics, HTTP Client |
+| **Messaging** | SMS Sending, SMS Inbox Access, SMS Log Filtering |
+| **Hardware** | Vibrate, Beep, Sensors, SIM Metadata, Battery Status |
+| **Intelligence** | Text-to-Speech (UTTER), Speech Recognition (LISTEN) |
+| **Utilities** | File System (FS), Permissions, Clipboard, Browser Viewport |
+| **Interface** | Native Dialogs, Spinner Controls, Terminal TUI |
+
+## Getting Started
+
+Download the latest APK and the optional demo backup file from the Releases section. 
+
+1. Launch PhoneDo and open the side navigation drawer.
+2. Go to Script Editor and use File > New Script to create a workspace (e.g., hello_world.pjs).
+3. Write your JavaScript in the editor and select Run > Run Script.
+4. Use the Terminal tab to check script output and hardware logs.
+
+Everything uses standard JavaScript. Hardware bridges are global objects, so you can use the same ES6 patterns you use in web development.
 
 ---
 
-## The Power of Standard JavaScript
-
-PhoneDo does not require you to learn a new scripting language. It uses **Vanilla JavaScript**, meaning any skill you have in modern JS development is directly transferable.
-
-* **Familiar Syntax**: Use standard ES6+ features like async/await, arrow functions, and destructuring.
-* **Built-in Functions**: Leverage native JS methods for array manipulation, string formatting, and mathematical operations.
-* **No New Learning Curve**: If you understand JavaScript, you already know how to use PhoneDo. The native bridges are simply global objects added to the environment you are already comfortable with.
-
----
-
-## Quick Start
-
-Follow these steps to run your first script:
-
-1. Open the Script Editor from the app dashboard.
-2. Go to File > New Script. A basic template will be created for you.
-3. Write your logic inside the (async () => { ... })() block.
-4. Press the Run button to start your script.
-5. Switch to the Terminal tab to see your output and logs.
-
-> [!TIP]
-> You can run any saved script from the Terminal by typing: run -i "filename.pjs".
-
----
-
-## How it Works
+## Architecture
 
 PhoneDo runs your code in a secure container. This keeps your logic separate from the rest of the app while providing a serialized message bus to native hardware.
 
@@ -60,39 +77,41 @@ graph TD
 
 ---
 
-## Writing Scripts (.pjs)
+### Script Management
 
-Scripts use the .pjs extension and are executed as standard JavaScript files in an asynchronous environment.
+Scripts use the .pjs extension and run as standard JavaScript files in an asynchronous environment. PhoneDo also supports legacy .nts files for backward compatibility.
 
-### Script Headers
-New scripts include a metadata header used by the IDE to track project details:
+### Metadata Generation
+
+PhoneDo automatically generates a metadata header when you create a new script to help with project tracking.
 
 ```javascript
 /*
   Script Name     : MyProject.pjs
+  Date            : Mon Feb 16 2026 23:35:52 GMT+0300
   Description     : Standard JS processing with native bridges.
   PhoneDo Version : 1.4.0
 */
 ```
 
-### Using Vanilla JS with Native Bridges
-You can combine standard JS logic with hardware calls seamlessly. Because the environment is asynchronous, `await` is used for all hardware-level operations to keep the execution flow linear.
+### Vanilla JS and Native Bridges
+
+You can write standard JS logic alongside hardware calls. Since the environment is asynchronous, use await for hardware operations.
 
 ---
 
 ## Hardware Bridge Examples
 
-These examples show how to combine standard JavaScript logic with the device bridge system.
+These examples show how to combine standard JavaScript with the device bridges.
 
 <details>
-<summary><b>SMS and Messaging</b></summary>
-<blockquote>Manage messaging services using standard JS filtering.</blockquote>
+<summary>SMS and Messaging</summary>
 
 ```javascript
 // Send a text message
 await SMS.send('555-0100', 'Alert: System check passed.');
 
-// Use standard Array.filter to find specific messages
+// Filter messages using standard JS
 const allLogs = await SMS.list({ box: 'inbox' });
 const alerts = allLogs.filter(msg => msg.body.includes('Priority'));
 console.log(`Found ${alerts.length} priority alerts.`);
@@ -269,50 +288,64 @@ spinner.hide();
 ```
 </details>
 
----
+## PhoneDo Terminal
 
-## Terminal Commands
+The terminal includes a TUI designed for diagnostics and script execution.
 
-The terminal is the primary interface for execution and diagnostics.
+<p align="center">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="PhoneDo Terminal Preview" width="270" height="600">
+</p>
 
-| Command | Action | Implementation Detail |
+| Command | Action | Description |
 |:---|:---|:---|
-| slist | Manage saved scripts | Retrieves metadata from internal SQLite store. |
-| run | Execute a script | Runs a .pjs file within the sandboxed VM. |
-| sysinfo | System metadata | Dumps OS, battery, and hardware statistics. |
-| ipconfig | Network settings | Lists interface IP and MAC addresses. |
-| ping | Latency check | Performs ICMP requests through the native stack. |
-| cls | Clear terminal | Purges the JQConsole display buffer. |
+| `slist` | Manage Scripts | Utility for listing and managing your saved scripts. |
+| `run` | Execute Script | Runs a script within the sandboxed environment. |
+| `beep` | Audio Feedback | Plays a system beep for audible script indicators. |
+| `ipconfig` | Network Status | Retrieves IP information for the active connection. |
+| `ifconfig` | Network Status | Alias for `ipconfig`. |
+| `cls` / `clear` | Clear Screen | Purges the terminal display buffer. |
+| `exit` | Terminate | Quits the current terminal instance. |
+| `time` | System Time | Prints the current system time to the standard output. |
+| `sysinfo` | Device Metadata | Dumps OS, battery, and hardware statistics. |
+| `ping` | Latency Check | Sends ICMP requests to check network host connectivity. |
 
----
+## Tech Stack
 
-## Tech Stack and Architecture
+PhoneDo connects high-level JavaScript to Android services.
 
-PhoneDo bridges high-level JavaScript with low-level Android services.
-
-| Component | Responsibility | Base Technology | Interaction Model |
-|:---|:---|:---|:---|
-| **Host Application** | Core Lifecycle | Java (Android SDK) | Manages system threads and permissions. |
-| **Logic Engine** | Script Evaluation | JavaScript (Sandbox) | Evaluates standard JS in a restricted VM. |
-| **Hardware Bridges**| Native Access | Cordova Plugins | Serialized communication with native layers. |
-| **User Interface** | App Dashboard | Vue.js / Bootstrap | Responsive frontend for script management. |
-| **Code Editor** | Development | ACE.js | High-performance editor with JS syntax support. |
-| **Terminal** | Output & TUI | JQConsole | Custom command parser for real-time logs. |
-| **Storage Layer** | Persistence | SQLite3 | Reliable store for scripts and application state. |
-
----
+| Component | Responsibility | Technology |
+|:---|:---|:---|
+| Host App | Lifecycle and permissions | Java |
+| Logic Engine | Script evaluation | JavaScript Sandbox |
+| Hardware Bridges| Native access | Cordova Plugins |
+| UI | Menus and management | Vue.js |
+| Editor | Code development | ACE.js |
+| Terminal | Logs and TUI | JQConsole |
+| Storage | Persistence | SQLite3 |
 
 ## Installation
 
-Due to its hardware requirements, PhoneDo is installed via adb.
+This app requires hardware access and is best installed via ADB.
 
-1. Enable Developer Options and Unknown Sources in your settings.
+1. Enable Unknown Sources in your device security settings.
 2. Install the APK:
    ```bash
    adb install -r PhoneDo.apk
    ```
+3. To load demo scripts, restore the backup file:
+   ```bash
+   adb restore PhoneDoExamples.ab
+   ```
+4. Grant all requested permissions in the app settings to ensure scripts run correctly.
 
----
+## Contributing
 
-**Built by [MurageKabui](https://github.com/MurageKabui)**
-Logo: [namishkashyap](https://linktr.ee/namishkashyap)
+You can report bugs or suggest features through the issue tracker. Pull requests for core logic or documentation improvements are welcome. Join the community group to discuss development.
+
+## Credits
+
+* Lead Developer: [MurageKabui](https://github.com/MurageKabui)
+* Logo Design: [namishkashyap](https://linktr.ee/namishkashyap)
+* Built with: Vue.js, ACE.js, and Cordova
+
+<p align="center">Made with ❤️ for the Android community.</p>
