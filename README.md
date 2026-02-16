@@ -28,7 +28,7 @@ I created this as a personal scripting tool to avoid the overhead of full Androi
 
 ## Automated Hardware Bridges
 
-PhoneDo exposes almost every native Android service to the JavaScript environment. Below are the primary bridges available for script automation:
+PhoneDo exposes almost every native Android service to the JavaScript environment. Below are the primary bridges available for automation:
 
 | Feature Category | Bridges Included |
 | :--- | :--- |
@@ -346,6 +346,5 @@ You can report bugs or suggest features through the issue tracker. Pull requests
 
 * Lead Developer: [MurageKabui](https://github.com/MurageKabui)
 * Logo Design: [namishkashyap](https://linktr.ee/namishkashyap)
-* Built with: Vue.js, ACE.js, and Cordova
 
 <p align="center">Made with ❤️ for the Android community.</p>
