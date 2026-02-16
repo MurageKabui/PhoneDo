@@ -4,7 +4,7 @@
 
 # PhoneDo
 
-PhoneDo is an automation engine that lets you control Android hardware using standard JavaScript. It bridges web logic with native features like WiFi, Bluetooth, SMS, and the device file system, allowing you to build mobile automation tools using the code you already know.
+PhoneDo is an automation app that lets you control Android hardware using standard JavaScript. It bridges web logic with native features like WiFi, Bluetooth, SMS, and the device file system, allowing you to build mobile automation tools using the code you already know.
 
 [API Reference](PHONEDO_DOCS_README.MD) | [Community Support](https://groups.google.com/g/phonedo) | [Discord](https://discord.gg/b4ENrd2FAP)
 
