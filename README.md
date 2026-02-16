@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  PhoneDo is an automation app that bridges JavaScript with Android native services. It gives you control over hardware features like WiFi, Bluetooth, SMS, SIM Metadata, Voice/Audio, Sensors, and the file system using standard coding patterns in a mobile environment.
+  PhoneDo is an automation app that bridges JavaScript with Android native features, giving you programmatic control over hardware features like WiFi, Bluetooth, SMS, SIM Metadata, Voice/Audio, Sensors, and the file system using standard coding patterns in a mobile environment.
 </p>
 
 <p align="center">
