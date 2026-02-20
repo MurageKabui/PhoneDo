@@ -14,32 +14,63 @@
 
 ## Table of Contents
 
-- [Console and Output](#console-and-output)
-- [Browser Bridge](#browser-bridge)
-- [Device Hardware](#device-hardware)
-- [File System](#file-system)
-- [Network Operations](#network-operations)
-- [WiFi Operations](#wifi-operations)
-- [Bluetooth Operations](#bluetooth-operations)
-- [SIM Card Operations](#sim-card-operations)
-- [Speech and Voice](#speech-and-voice)
-- [Clipboard Operations](#clipboard-operations)
-- [Dialog Interface](#dialog-interface)
-- [Android Permissions](#android-permissions)
+- [Core Utilities](#core-utilities)
+  - [Global Aliases](#global-aliases)
+  - [Console Output](#console-output)
+  - [ANSI Color Support](#ansi-color-support)
+  - [Sleep and Timers](#sleep-and-timers)
+  - [Android Permissions](#android-permissions)
+- [User Interface](#user-interface)
+  - [Browser Integration](#browser-integration)
+  - [Dialog Interface](#dialog-interface)
+  - [Spinner Control](#spinner-control)
+- [Connectivity & Data](#connectivity-and-data)
+  - [Network Operations](#network-operations)
+  - [WiFi Operations](#wifi-operations)
+  - [Bluetooth (BLE)](#bluetooth-ble)
+  - [HTTP Client](#http-client)
+  - [SMS Operations](#sms-operations)
+- [Hardware & System](#hardware-and-system)
+  - [Clipboard Operations](#clipboard-operations)
+  - [Device Information](#device-information)
+  - [Flashlight Control](#flashlight-control)
+  - [SIM Card Operations](#sim-card-operations)
+  - [Speech and Voice](#speech-and-voice)
+  - [File System](#file-system)
 
-## Console and Output
+## Core Utilities
 
-The `console` object provides a structured interface for logging output within the application's "console" (PhoneDo Terminal). This allows for script runtime debugging and monitoring of script execution.
+### Global Aliases
+
+These functions are available globally in the script environment for convenience:
+
+```javascript
+cout(...messages: any[]): void;    // Alias for log()
+log(...messages: any[]): void;     // Alias for log()
+exit(exitCode?: number): void;     // Terminates the script execution
+```
+
+#### Example Usage
+
+```javascript
+cout("Hello from PhoneDo!");
+log("This is a log message");
+exit(0); // Exit successfully
+```
+
+### Console Output
+
+The `console` object provides more structured logging with different styles in the terminal.
 
 ### Methods
 
 ```javascript
 interface Console {
-    log(...messages: any[]): void;      // Logs a general styled message
-    info(...messages: any[]): void;     // Logs an informational styled message
-    warn(...messages: any[]): void;     // Logs a warning styled message
-    error(...messages: any[]): void;    // Logs an error styled message
-    success(...messages: any[]): void;  // Logs a success styled message
+    log(...messages: any[]): void;      // Logs a general info message (Blue/White)
+    info(...messages: any[]): void;     // Logs an informational message (Blue)
+    warn(...messages: any[]): void;     // Logs a warning message (Yellow/Red)
+    error(...messages: any[]): void;    // Logs an error message (Red)
+    success(...messages: any[]): void;  // Logs a success message (Green)
     clear(): void;                      // Clears the console output
     cls(): void;                        // Alias for clear()
 }
@@ -223,19 +254,94 @@ console.log("User login attempt:", { username: "john", timestamp: new Date() });
 console.log("User " + username + " logged in at " + new Date());
 ```
 
-3. **Error Handling**
+### Android Permissions
+
+The `permission` object allows you to check for and request system-level permissions required for hardware access.
+
+#### Constants
+
+The following constants are available under the `permission` object:
+
+| Constant | Description |
+|----------|-------------|
+| `permission.ACCESS_COARSE_LOCATION` | Access to approximate location |
+| `permission.ACCESS_FINE_LOCATION` | Access to precise location |
+| `permission.CAMERA` | Access to the camera |
+| `permission.READ_CONTACTS` | Read contact information |
+| `permission.WRITE_CONTACTS` | Modify contact information |
+| `permission.READ_CALENDAR` | Read calendar events |
+| `permission.WRITE_CALENDAR` | Modify calendar events |
+| `permission.READ_EXTERNAL_STORAGE` | Read from shared storage |
+| `permission.WRITE_EXTERNAL_STORAGE` | Write to shared storage |
+| `permission.RECORD_AUDIO` | Access to the microphone |
+| `permission.MODIFY_AUDIO_SETTINGS` | Modify audio settings |
+| `permission.READ_PHONE_STATE` | Read phone state (IMEI, etc.) |
+| `permission.CALL_PHONE` | Direct phone calls |
+| `permission.READ_SMS` | Read SMS messages |
+| `permission.SEND_SMS` | Send SMS messages |
+| `permission.RECEIVE_SMS` | Receive SMS messages |
+| `permission.READ_CALL_LOG` | Read call history |
+| `permission.WRITE_CALL_LOG` | Modify call history |
+| `permission.ADD_VOICEMAIL` | Add voicemail entries |
+| `permission.USE_SIP` | Use SIP services |
+| `permission.PROCESS_OUTGOING_CALLS` | Monitor/Modify outgoing calls |
+| `permission.BODY_SENSORS` | Access body sensor data (Heart rate, etc.) |
+| `permission.RECEIVE_WAP_PUSH` | Receive WAP push messages |
+| `permission.RECEIVE_MMS` | Receive MMS messages |
+| `permission.READ_CELL_BROADCASTS` | Read cell broadcast messages |
+| `permission.BLUETOOTH` | Basic Bluetooth access |
+| `permission.BLUETOOTH_ADMIN` | Admin Bluetooth access |
+| `permission.BLUETOOTH_CONNECT` | Connect to Bluetooth devices (Android 12+) |
+| `permission.BLUETOOTH_SCAN` | Scan for Bluetooth devices (Android 12+) |
+| `permission.BLUETOOTH_ADVERTISE` | Advertise via Bluetooth (Android 12+) |
+| `permission.ACCESS_NETWORK_STATE` | Read network status |
+| `permission.ACCESS_WIFI_STATE` | Read WiFi status |
+| `permission.CHANGE_WIFI_STATE` | Modify WiFi status |
+| `permission.CHANGE_NETWORK_STATE` | Modify network status |
+| `permission.CHANGE_CONFIGURATION` | Modify system configuration |
+| `permission.GET_ACCOUNTS` | Access account list |
+| `permission.MANAGE_ACCOUNTS` | Manage account information |
+| `permission.USE_BIOMETRICS` | Use biometric hardware |
+| `permission.USE_FINGERPRINT` | Use fingerprint hardware |
+| `permission.USE_IRIS` | Use iris scanner |
+| `permission.USE_FACE` | Use face recognition |
+| `permission.POST_NOTIFICATIONS` | Post notifications (Android 13+) |
+| `permission.READ_MEDIA_IMAGES` | Read image files from media (Android 13+) |
+| `permission.READ_MEDIA_VIDEO` | Read video files from media (Android 13+) |
+| `permission.READ_MEDIA_AUDIO` | Read audio files from media (Android 13+) |
+
+#### Methods
+
+- `permission.checkPermission(perm: string): Promise<{hasPermission: boolean}>`
+- `permission.requestPermission(perm: string): Promise<{hasPermission: boolean}>`
+- `permission.requestPermissions(perms: string[]): Promise<{hasPermission: boolean}>`
+
+#### Example Usage
+
 ```javascript
-try {
-    // Some operation
-} catch (error) {
-    console.error("Operation failed:", error);
-    console.info("Attempting recovery...");
+const status = await permission.checkPermission(permission.CAMERA);
+if (!status.hasPermission) {
+    const result = await permission.requestPermission(permission.CAMERA);
+    if (result.hasPermission) {
+        console.success("Camera permission granted!");
+    }
 }
 ```
 
-## Sleep/Timer Bridge
+---
 
-The `sleep` bridge provides methods for creating delays and timing operations in your scripts. This is useful for rate limiting, animations, or waiting for operations to complete.
+### Spinner Control
+
+The `spinner` object controls a system-level loading overlay, preventing user interaction during long-running background tasks.
+
+#### Methods
+
+- `spinner.show(title?: string, message?: string, cancelable?: boolean): void`
+- `spinner.hide(): void`
+
+---
+
+The `sleep` and `sleepWithProgress` functions let you add pauses to your scripts. These are helpful for timing your data requests or showing progress bars to the user.
 
 ### Methods
 
@@ -378,408 +484,281 @@ async function sequentialOperations() {
 - Sleep operations are precise to the millisecond
 - Progress updates are rounded to 2 decimal places
 
-## Browser Bridge
+## User Interface
 
-The `browser` object provides methods for opening and managing web content within the application using the InAppBrowser plugin. This bridge allows for secure and controlled web content viewing with various configuration options.
+### Browser Integration
 
-### Methods
+The `browser` object lets your scripts open websites using a built-in browser window.
+
+#### Methods
+
+- `browser.open(url: string, target?: string, config?: BrowserConfig): Promise<InAppBrowserObject>`
+- `browser.openSafe(url: string): Promise<InAppBrowserObject>`
+- `browser.openFullscreen(url: string): Promise<InAppBrowserObject>`
+- `browser.openMinimal(url: string): Promise<InAppBrowserObject>`
+- `browser.openExternal(url: string): Promise<InAppBrowserObject>`
+
+#### Configuration (`BrowserConfig`)
+
+The following options can be passed to `browser.open`:
+
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `zoom` | `'yes' \| 'no'` | `'no'` | Enable/disable viewport zooming |
+| `hardwareback` | `'yes' \| 'no'` | `'yes'` | Use hardware back button for navigation |
+| `footer` | `'yes' \| 'no'` | `'no'` | Show/hide the footer |
+| `location` | `'yes' \| 'no'` | `'no'` | Show/hide the URL location bar |
+| `hideurlbar` | `'yes' \| 'no'` | `'yes'` | Hide the URL bar on scroll |
+| `hidenavigationbuttons` | `'yes' \| 'no'` | `'no'` | Hide back/forward buttons |
+| `toolbarcolor` | `string` | `'#4a4968'` | HEX color for the toolbar |
+| `navigationbuttoncolor` | `string` | `'#ffffff'` | HEX color for nav buttons |
+| `closebuttoncolor` | `string` | `'#1E1E2A'` | HEX color for close button |
+| `toolbar` | `'yes' \| 'no'` | `'yes'` | Show/hide the navigation toolbar |
+| `enableViewportScale` | `'yes' \| 'no'` | `'yes'` | Allow user to scale viewport |
+| `mediaPlaybackRequiresUserAction` | `'yes' \| 'no'` | `'yes'` | Require touch for media play |
+| `shouldPauseOnSuspend` | `'yes' \| 'no'` | `'yes'` | Pause background media |
+| `clearcache` | `'yes' \| 'no'` | `'no'` | Clear cache before opening |
+| `clearsessioncache` | `'yes' \| 'no'` | `'no'` | Clear session cache before opening |
+| `presentationstyle` | `'pagesheet' \| 'fullscreen' \| 'formsheet'` | `'pagesheet'` | Visual mode (iOS) |
+| `transitionstyle` | `'crossdissolve' \| 'fliphorizontal' \| 'coververtical'` | `'crossdissolve'` | Transition animation (iOS) |
+| `lefttoright` | `'yes' \| 'no'` | `'yes'` | UI layout direction |
+| `fullscreen` | `'yes' \| 'no'` | `'no'` | Open in fullscreen mode |
+| `usewkwebview` | `'yes' \| 'no'` | `'yes'` | Use modern WKWebView |
+| `keyboardDisplayRequiresUserAction` | `'yes' \| 'no'` | `'yes'` | Require touch for keyboard |
+
+#### Example: Event Handling
 
 ```javascript
-browser.open(url: string, target?: string, config?: BrowserConfig): Promise<InAppBrowserObject>
-browser.openSafe(url: string): Promise<InAppBrowserObject>
-browser.openFullscreen(url: string): Promise<InAppBrowserObject>
-browser.openMinimal(url: string): Promise<InAppBrowserObject>
-browser.openExternal(url: string): Promise<InAppBrowserObject>
-```
+const instance = await browser.open('https://example.com');
 
-### Configuration Options
+instance.addEventListener('loadstop', (event) => {
+    console.success(`Page loaded: ${event.url}`);
+});
 
-The browser bridge supports various configuration options through the `BrowserConfig` object:
-
-```javascript
-interface BrowserConfig {
-    // Basic window features
-    zoom?: 'yes' | 'no';
-    hardwareback?: 'yes' | 'no';
-    footer?: 'yes' | 'no';
-    location?: 'yes' | 'no';
-    hideurlbar?: 'yes' | 'no';
-    hidenavigationbuttons?: 'yes' | 'no';
-    
-    // Colors and appearance
-    toolbarcolor?: string;
-    navigationbuttoncolor?: string;
-    closebuttoncolor?: string;
-    
-    // Toolbar options
-    toolbar?: 'yes' | 'no';
-    enableViewportScale?: 'yes' | 'no';
-    mediaPlaybackRequiresUserAction?: 'yes' | 'no';
-    shouldPauseOnSuspend?: 'yes' | 'no';
-    
-    // Security features
-    clearcache?: 'yes' | 'no';
-    clearsessioncache?: 'yes' | 'no';
-    
-    // Presentation
-    presentationstyle?: 'pagesheet' | 'fullscreen' | 'formsheet';
-    transitionstyle?: 'crossdissolve' | 'curlup' | 'curldown' | 'fliphorizontal' | 'flipvertical';
-    
-    // Hidden by default, can be enabled
-    lefttoright?: 'yes' | 'no';
-    fullscreen?: 'yes' | 'no';
-    
-    // User interaction
-    usewkwebview?: 'yes' | 'no';
-    keyboardDisplayRequiresUserAction?: 'yes' | 'no';
-}
-```
-
-### Target Options
-
-- `_blank`: Opens in a new InAppBrowser window (default)
-- `_self`: Opens in the Cordova WebView
-- `_system`: Opens in the system's default browser
-
-### Example Usage
-
-#### Basic Usage
-```javascript
-// Open a URL in a new InAppBrowser window
-await browser.open('https://example.com');
-
-// Open in safe mode (good for untrusted content)
-await browser.openSafe('https://example.com');
-
-// Open in fullscreen mode
-await browser.openFullscreen('https://example.com');
-
-// Open with minimal UI
-await browser.openMinimal('https://example.com');
-
-// Open in system browser
-await browser.openExternal('https://example.com');
-```
-
-#### Advanced Configuration
-```javascript
-// Open with custom configuration
-await browser.open('https://example.com', '_blank', {
-    fullscreen: 'yes',
-    toolbar: 'no',
-    zoom: 'yes',
-    presentationstyle: 'fullscreen',
-    transitionstyle: 'crossdissolve',
-    clearcache: 'yes',
-    clearsessioncache: 'yes'
+instance.addEventListener('exit', () => {
+    console.log('Browser window closed.');
 });
 ```
 
-#### Event Handling
+### Dialog Interface
+
+The `dialog` object provides simple UI components for interacting with the user or showing status messages.
+
+#### Methods
+
+- `dialog.alert(message: string, title?: string, klass?: string, buttons?: object[]): Promise<number>`
+
 ```javascript
-const browserInstance = await browser.open('https://example.com');
+// Basic alert
+await dialog.alert("Configuration successfully updated.");
 
-// Listen for load events
-browserInstance.addEventListener('loadstart', (event) => {
-    console.log('Started loading:', event.url);
-});
-
-browserInstance.addEventListener('loadstop', (event) => {
-    console.log('Finished loading:', event.url);
-});
-
-browserInstance.addEventListener('loaderror', (event) => {
-    console.error('Loading error:', event.message);
-});
-
-browserInstance.addEventListener('exit', () => {
-    console.log('Browser closed');
-});
+// Advanced alert with title
+await dialog.alert("Wait!", "Are you sure you want to proceed?");
 ```
 
-### Best Practices
+### Spinner Control
 
-1. **Security Considerations**
-   - Use `openSafe()` for untrusted content
-   - Enable `clearcache` and `clearsessioncache` when handling sensitive data
-   - Consider using `hideurlbar` to prevent URL manipulation
+The `spinner` object controls a system-level loading overlay, preventing user interaction during long-running background tasks.
 
-2. **User Experience**
-   - Use appropriate presentation styles for different content types
-   - Enable `hardwareback` for better navigation
-   - Consider using `fullscreen` for immersive content
+#### Methods
 
-3. **Performance**
-   - Use `usewkwebview: 'yes'` for better performance on iOS
-   - Enable `shouldPauseOnSuspend` to manage resources
-   - Consider using `openMinimal()` for lightweight content
+- `spinner.show(title?: string, message?: string): void`
+- `spinner.hide(): void`
 
-4. **Error Handling**
+```javascript
+spinner.show("Syncing", "Please wait while we sync your data...");
+await sleep(3000);
+spinner.hide();
+```
+
+## Connectivity and Data
+
+### Network Operations
+
+The `network` object provides diagnostic information about the device's current connectivity state.
+
+#### Methods
+
+- `network.getConnectionType(): Promise<'WIFI' | 'CELLULAR' | 'NONE'>`
+- `network.getIPInfo(): Promise<object>`
+- `network.ping(host: string): Promise<{success: boolean, time: number}>`
+- `network.canConnectToInternet(): Promise<boolean>`
+
+### WiFi Operations
+
+Advanced control over the device's WiFi hardware, including scanning and connection management.
+
+#### Methods
+
+- `WIFI.requestPermission(): Promise<boolean>`
+- `WIFI.scan(): Promise<Array<WifiNetwork>>`
+- `WIFI.connect(config: WifiConfig): Promise<boolean>`
+- `WIFI.getConnectedSSID(): Promise<string>`
+- `WIFI.disconnect(): Promise<void>`
+
+> [!IMPORTANT]
+> Always call `WIFI.requestPermission()` before attempting to scan or connect.
+
+The `http` bridge is a powerful way for your scripts to talk to web APIs. It can bypass standard website restrictions, making it easy to connect your phone to other services.
+
+#### Methods
+
+- `http.sendRequest(url: string, options: object): Promise<HttpResponse>`
+- `http.setHeader(domain: string, header: string, value: string): void`
+- `http.uploadFile(url: string, options: object): Promise<object>`
+- `http.downloadFile(url: string, options: object): Promise<object>`
+
+#### Example: Fetching an API
+
 ```javascript
 try {
-    const browserInstance = await browser.open('https://example.com');
+    const response = await http.sendRequest('https://api.example.com/data', {
+        method: 'get',
+        headers: { Authorization: 'Bearer TOKEN' }
+    });
+    console.log("API Response:", response.data);
 } catch (error) {
-    console.error('Browser error:', error);
-    // Handle specific error cases
-    if (error.code === 'PERMISSION_DENIED') {
-        console.error('Permission denied to open browser');
-    }
+    console.error("Request failed", error);
 }
 ```
 
-### Common Use Cases
+### SMS Operations
 
-1. **Web Content Viewing**
+The `SMS` object allows scripts to interface with the device's messaging capabilities.
+
+#### Methods
+
+- `SMS.sendSMS(phoneNumber: string, message: string): Promise<void>`
+- `SMS.listSMS(filter: object): Promise<Array<SMSMessage>>`
+
+---
+
+## Hardware & System
+
+### Clipboard Operations
+
+The `clipboard` object allows you to interact with the device's clipboard.
+
+#### Methods
+
+- `clipboard.setText(text: string): Promise<boolean>`
+
+#### Example Usage
+
 ```javascript
-async function viewWebContent(url) {
-    try {
-        await browser.open(url, '_blank', {
-            toolbar: 'yes',
-            location: 'yes',
-            zoom: 'yes'
-        });
-    } catch (error) {
-        console.error('Failed to open web content:', error);
-    }
-}
+await clipboard.setText("Copied from PhoneDo Script!");
 ```
 
-2. **Secure Content Viewing**
+---
+
+### Device Information
+
+Access device-specific metadata and system-level hardware triggers.
+
+#### Properties (Read-Only)
+
+- `device.model`: string
+- `device.platform`: string
+- `device.osVersion`: string (uuid mapped in bridge)
+- `device.manufacturer`: string
+- `device.uuid`: string
+- `device.isCharging`: boolean
+- `device.batteryLevel`: number
+- `device.serial`: string
+- `device.isVirtual`: boolean
+
+#### Methods
+
+- `device.vibrate(duration: number): void`
+- `device.beep(): void`
+
+#### Example Usage
+
 ```javascript
-async function viewSecureContent(url) {
-    try {
-        await browser.openSafe(url);
-    } catch (error) {
-        console.error('Failed to open secure content:', error);
-    }
-}
+console.log(`Model: ${device.model}`);
+device.vibrate(500);  // Vibrates for 500ms
 ```
 
-3. **Fullscreen Content**
+The `fs` object lets you work with files on your device. It uses specific locations to make sure your data is saved in the right place.
+
+#### Storage Locations
+
+| Constant | Description | Access |
+|----------|-------------|--------|
+| `fs.APP_ROOT_DIR` | Internal Documents directory | Private |
+| `fs.APP_DIR` | Ready-only application bundles | Private |
+| `fs.APP_STORAGE_DIR` | Application-specific storage | Private |
+| `fs.DATA_DIR` | Private persistent data storage | Private |
+| `fs.CACHE_DIR` | Temporary data storage (Cache) | Private |
+| `fs.EX_APP_STORAGE_DIR` | External application storage | Shared |
+| `fs.EX_DATA_DIR` | External persistent data | Shared |
+| `fs.EX_CACHE_DIR` | External temporary storage | Shared |
+| `fs.EX_ROOT_DIR` | Root external storage (SD Card) | Shared |
+
+#### Methods
+
+- `fs.readTextFile(path: string, fileName: string): Promise<string>`
+- `fs.writeTextFile(path: string, fileName: string, content: string): Promise<void>`
+- `fs.appendTextFile(path: string, fileName: string, content: string): Promise<void>`
+- `fs.createDirectory(path: string, dirName: string): Promise<void>`
+- `fs.dirExists(path: string): Promise<boolean>`
+- `fs.createFile(path: string, fileName: string, content: string): Promise<string>` // Returns URI
+- `fs.writeTextFile(path: string, fileName: string, content: string): Promise<void>`
+- `fs.appendTextFile(path: string, fileName: string, content: string): Promise<void>`
+- `fs.readTextFile(path: string, fileName: string): Promise<string>`
+- `fs.fileExists(path: string, fileName: string): Promise<boolean>`
+- `fs.deleteFile(path: string, fileName: string): Promise<void>`
+- `fs.removeDirectory(path: string, dirName: string): Promise<void>`
+- `fs.resolveLocalFileSystemURL(url: string): Promise<object>`
+- `fs.fileURLToPath(fileURL: string): string`
+
+#### Example: File Operations
+
 ```javascript
-async function viewFullscreenContent(url) {
-    try {
-        await browser.openFullscreen(url);
-    } catch (error) {
-        console.error('Failed to open fullscreen content:', error);
-    }
+const path = fs.DATA_DIR;
+const fileName = "test.txt";
+
+await fs.writeTextFile(path, fileName, "Hello PhoneDo!");
+const exists = await fs.fileExists(path, fileName);
+if (exists) {
+    const content = await fs.readTextFile(path, fileName);
+    console.info("File Content:", content);
 }
 ```
 
-### Notes
+---
 
-- The browser bridge uses the Cordova InAppBrowser plugin
-- All methods return a Promise that resolves to an InAppBrowserObject
-- The InAppBrowserObject provides methods for controlling the browser window
-- Event listeners should be cleaned up when the browser window is closed
-- Some features may be platform-specific (iOS/Android)
-- The bridge supports both HTTP and HTTPS URLs
-- Local file URLs (file://) are supported when appropriate permissions are granted
-
-## Device Hardware
+### Hardware & System
 
 ### Flashlight Control
 
-The `flashlight` object provides methods for programmatically controlling the device's flashlight.
+The `flashlight` object gives you direct control over the device's camera flash.
 
-```javascript
-flashlight.switchOn();    // Activates the device's flashlight.
-flashlight.switchOff();   // Deactivates the device's flashlight.
-flashlight.toggleState(); // Toggles the current state of the flashlight.
-```
-*Note: These methods return a `Promise<boolean>`, resolving with `true` upon successful execution or `false` if an error happens.*
+#### Methods
 
-#### Example Usage
-
-```javascript
-const bTurnedOn = await flashlight.switchOn();
-console.log(`Flashlight On : ${bTurnedOn}`);
-```
-
-### Device Information and Controls
-
-The `device` object provides access to read-only properties containing information about the device. It also includes a few methods for basic device controls..
-
-```javascript
-const device = {
-    manufacturer: string;   // Device manufacturer.
-    model: string;          // Device model.
-    osVersion: string;      // Device operating system version.
-    sdkVersion: number;     // Device SDK version.
-}
-
-device.vibrate(duration?);  // Initiates device vibration with a specified duration.
-device.beep();              // Emits an audible beep sound.
-```
-*Note: The `device` properties are read-only values that cannot be modified via the API. Beep should be used sparingly.*
+- `flashlight.switchOn(): Promise<boolean>`
+- `flashlight.switchOff(): Promise<boolean>`
+- `flashlight.toggleState(): Promise<boolean>`
 
 #### Example Usage
 
 ```javascript
-console.log(`Device Information:\nManufacturer: ${device.manufacturer}\nModel: ${device.model}\nOS Version: ${device.osVersion}`);
-
-device.vibrate(500);  // Vibrates the device for 500 milliseconds.
-device.beep();        // Emits a single beep.
+await flashlight.switchOn();
+await sleep(1000);
+await flashlight.switchOff();
 ```
 
-### File System Operations
+---
 
-The `fs` object provides methods for accessing and managing the device's file system. It includes predefined root directories where you can place directories and files from your scripts. File operations can use one of these constants for added convenience.
+## Error Handling
 
-#### Root Directory Constants
+Most bridge operations are asynchronous and may throw errors due to permission issues, hardware state, or invalid parameters. Always wrap bridge calls in a `try...catch` block.
 
-| Constant | Description |
-|----------|-------------|
-| `fs.APP_ROOT_DIR` | Base directory for the application |
-| `fs.APP_DIR` | Read-only directory where the application is installed |
-| `fs.APP_STORAGE_DIR` | Root directory of the application's sandbox (private to the app) |
-| `fs.DATA_DIR` | Persistent and private data storage within the application's sandbox |
-| `fs.CACHE_DIR` | Directory for temporary cached data files |
-| `fs.EX_APP_STORAGE_DIR` | Application space on external storage |
-| `fs.EX_DATA_DIR` | App-specific data files on external storage |
-| `fs.EX_CACHE_DIR` | Application cache on external storage |
-| `fs.EX_ROOT_DIR` | External storage (SD card) root |
-
-#### Available Methods
-
-```javascript
-fs.readTextFile(path, fileName)               // Read the content of a text file
-fs.writeTextFile(path, fileName, content)     // Write text to a file (creates if doesn't exist)
-fs.appendTextFile(path, fileName, content)    // Append text to an existing file
-fs.createDirectory(path, dirName)             // Create a new directory
-fs.dirExists(path)                            // Check if a directory exists
-fs.fileExists(path, fileName)                 // Check if a file exists
-fs.createFile(path, fileName)                 // Create a new empty file
-fs.deleteFile(path, fileName)                 // Delete a file
-fs.removeDirectory(path, dirName)             // Remove a directory
-```
-
-#### Important Notes:
-- All methods are asynchronous and return Promises
-- If path parameter is undefined, it defaults to the system's document directory
-- File paths should follow the OS conventions (e.g., `/storage/emulated/0/Documents/`)
-- Common error types: `PERMISSION_DENIED`, `NOT_FOUND`, `FILE_ERROR`
-
-#### Basic Usage Example
-```javascript
-const settings = {
-    theme: "dark",
-    notifications: true
-};
-
-async function saveSettings() {
-    try {
-        // Using default path
-        await fs.createDirectory(undefined, "AppSettings");
-        await fs.writeTextFile(undefined, "AppSettings/config.json", 
-            JSON.stringify(settings));
-        console.log("Settings saved successfully");
-        
-        // Reading the saved file
-        const content = await fs.readTextFile(undefined, "AppSettings/config.json");
-        console.log("Retrieved settings:", JSON.parse(content));
-    } catch (error) {
-        console.error("File operation failed:", error);
-    }
-}
-```
-
-#### Comprehensive Example
-```javascript
-async function demonstrateFileOperations() {
-    try {
-        // Create a test directory
-        await fs.createDirectory(undefined, "TestFolder");
-        console.log("Directory created");
-
-        // Verify directory exists
-        const dirExists = await fs.dirExists(undefined);
-        console.log("Directory exists:", dirExists);
-
-        // Create and write to a file
-        await fs.writeTextFile(undefined, "TestFolder/test.txt", 
-            "Hello, World!");
-        console.log("File created and written");
-
-        // Read file contents
-        const content = await fs.readTextFile(undefined, 
-            "TestFolder/test.txt");
-        console.log("File contents:", content);
-
-        // Append to the file
-        await fs.appendTextFile(undefined, "TestFolder/test.txt", 
-            "\nAppended content");
-        console.log("Content appended");
-
-        // Clean up
-        await fs.deleteFile(undefined, "TestFolder/test.txt");
-        await fs.removeDirectory(undefined, "TestFolder");
-        console.log("Cleanup complete");
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-```
-### Error Codes
-
-
-## Complete List of Error Codes
-
-| Code | Constant | Description |
-|------|----------|-------------|
-| 1 | `NOT_FOUND_ERR` | The file or directory could not be found |
-| 2 | `SECURITY_ERR` | Security violation occurred |
-| 3 | `ABORT_ERR` | Operation was aborted |
-| 4 | `NOT_READABLE_ERR` | File or directory is not readable |
-| 5 | `ENCODING_ERR` | File encoding error occurred |
-| 6 | `NO_MODIFICATION_ALLOWED_ERR` | Cannot modify the file or directory |
-| 7 | `INVALID_STATE_ERR` | Invalid state for the operation |
-| 8 | `SYNTAX_ERR` | Invalid syntax in file name or path |
-| 9 | `INVALID_MODIFICATION_ERR` | Invalid modification attempted |
-| 10 | `QUOTA_EXCEEDED_ERR` | Storage quota exceeded |
-| 11 | `TYPE_MISMATCH_ERR` | Wrong type for the operation |
-| 12 | `PERMISSION_DENIED` | Insufficient permissions for the operation |
-| 13 | `PATH_EXISTS_ERR` | Path already exists |
-| 14 | `TIMEOUT_ERR` | Operation timed out |
-
-## Common Causes and Solutions
-
-### For Error Code 12 (PERMISSION_DENIED):
-1. App doesn't have required Android permissions
-2. Path is outside app's allowed directories
-3. File is locked by another process
-4. SELinux restrictions
-
-**Solutions:**
-- Request runtime permissions using appropriate permission APIs
-- Use allowed directories (APP_ROOT_DIR, APP_STORAGE_DIR, etc.)
-- Ensure proper file ownership and access rights
-- Check if path is within allowed scope
-
-### Other Common Error Scenarios:
-- `NOT_FOUND_ERR`: Verify path and filename are correct
-- `QUOTA_EXCEEDED_ERR`: Clear cache or unused files
-- `PATH_EXISTS_ERR`: Check if resource exists before creating
-- `TYPE_MISMATCH_ERR`: Ensure correct file/directory operation
-
-### Error Handling Example
 ```javascript
 try {
-    await fs.createDirectory(fs.APP_DIR, "TestFolder");
+    await SMS.sendSMS("555-0199", "Automated alert from PhoneDo.");
 } catch (error) {
-    switch (error.code) {
-        case 12:
-            console.error("Permission denied. Check app permissions.");
-            break;
-        case 13:
-            console.error("Directory already exists.");
-            break;
-        case 1:
-            console.error("Parent directory not found.");
-            break;
-        default:
-            console.error("Unknown error:", error);
-    }
+    console.error(`Action failed: ${error.message || error}`);
 }
 ```
 
@@ -890,388 +869,139 @@ try {
 ```
 *Tip: To troubleshoot connection issues, attempt to remove the network configuration with `WIFI.getSSIDNetworkID(ssid)` and `WIFI.removeNetwork(id)` before attempting to reconnect.*
 
-## Bluetooth Operations
+### Bluetooth (BLE)
 
-### BLE Device Discovery
+The `bluetooth` object provides comprehensive control over Bluetooth Low Energy (BLE) scanning and communication.
 
-The `bluetooth` object allows for scanning nearby Bluetooth Low Energy (BLE) devices.
+#### Methods
 
-```javascript
-bluetooth.scan(timeout); // Starts a BLE scan for a given timeout period (seconds).
-```
-#### Example Usage
-```javascript
-try{
-  const devices = await bluetooth.scan(5);
-    if(devices.length > 0){
-        console.log(`${devices.length} Bluetooth devices found.`);
-         devices.forEach(device => {
-              console.log(`Device Information: Name: ${device.name}, Address: ${device.address}, Type: ${device.type}`);
-          });
-    }
-  else{
-      console.log("No devices found.");
-  }
-}
-catch(e){
-   console.error("Bluetooth scanning error:", e);
-}
-```
-*Note: `type` indicates the Bluetooth technology, `bondState` indicates pairing status.*
+- `bluetooth.scan(timeout: number, onDeviceFound: (device: object) => void, onScanError: (error: any) => void): Promise<void>`
+- `bluetooth.stopBTScan(): Promise<void>`
+- `bluetooth.connectBT(device: object, onConnected: (device: object) => void, onDisconnected: (device: object) => void, onConnectError: (error: any) => void, options?: object): Promise<object>`
+- `bluetooth.getBTService(device: object, serviceUUID: string): Promise<object>`
+- `bluetooth.getBTCharacteristic(service: object, characteristicUUID: string): Promise<object>`
+- `bluetooth.readBTCharacteristic(device: object, characteristic: object): Promise<ArrayBuffer>`
+- `bluetooth.writeBTCharacteristic(device: object, characteristic: object, data: ArrayBuffer): Promise<void>`
+- `bluetooth.enableBTNotification(device: object, characteristic: object, onData: (data: ArrayBuffer) => void): Promise<void>`
+- `bluetooth.disableBTNotification(device: object, characteristic: object): Promise<void>`
 
-## SIM Card Operations
-
-### Accessing SIM Card Data
-
-The `sim` object allows retrieval of information about the SIM card.
-
-```javascript
-  sim.hasPermission();    // Checks if SIM card information access permissions have been granted.
-  sim.requestPermission(); // Requests SIM card information access permissions.
-  sim.getInfo();         // Retrieves details about the SIM card.
-```
-#### Example Usage
-
-```javascript
-if (await sim.hasPermission()) {
-    const simDetails = await sim.getInfo();
-    console.log("SIM Carrier: " + simDetails.carrierName);
-} else {
-    if (await sim.requestPermission())
-       console.log("Permission granted. Please try again.");
-    else
-        console.warn("SIM access permission has been denied.");
-}
-```
-*Note: Obtaining SIM information requires the `requestPermission` function to be called beforehand due to privacy concerns.*
-
-## Speech and Voice
-
-### Text-to-Speech and Speech-to-Text
-
-The `utter` object offers functions for text-to-speech synthesis and speech recognition.
-
-```javascript
-  utter.speak(text, options?);  // Synthesizes text into speech.
-  utter.getVoices();            // Retrieves a list of available voices.
-  utter.canListen();            // Checks if speech recognition is supported.
-  utter.listen(options?);       // Initiates speech recognition.
-  utter.stopListening();        // Terminates active speech recognition.
-  utter.requestPermission();    // Requests necessary permissions for speech services.
-  utter.hasPermission();        // Checks speech services permissions.
-```
-#### Example Usage
+#### Example: BLE Scanning and Connection
 
 ```javascript
 try {
-    // Text to speech
-    const voiceOptions = await utter.getVoices();
-    await utter.speak("Text-to-speech sample", {
-        voice: voiceOptions[0],
-        rate: 1.0,
-        pitch: 1.0
+    // Scan for 10 seconds
+    await bluetooth.scan(10, (device) => {
+        console.info(`Found Device: ${device.name || 'Unknown'} [${device.address}]`);
+    }, (error) => {
+        console.error("Scan Error:", error);
     });
 
-   // Speech to text
-  if(await utter.hasPermission() === false){
-        if(await utter.requestPermission()===false){
-            console.error("microphone access is not available");
-            return;
-         }
-        console.warn("Please retry the operation, permissions have been granted.")
-    }
-    const result = await utter.listen({
-        language: "en-US",
-        maxResults: 1,
-        partialResults: false
-    });
-     console.log("Recognized Text: " + result);
-
+    // Note: You would usually find a specific device from the scan results to connect to
 } catch (e) {
-    console.error("Speech service operation failed:", e);
-}
-```
-*Note: `getVoices`
-```
-
-## Android Permissions
-
-The `permissions` object provides methods for checking and requesting Android permissions. This is essential for accessing device features that require user authorization, especially on Android 6.0 and above where permissions are requested at runtime.
-
-### Methods
-
-```javascript
-interface PermissionsBridge {
-    checkPermission(permission: string): Promise<{hasPermission: boolean}>;
-    requestPermission(permission: string): Promise<{hasPermission: boolean}>;
-    requestPermissions(permissions: string[]): Promise<{hasPermission: boolean}>;
-    hasPermission(permission: string): Promise<{hasPermission: boolean}>; // Legacy method
+    console.error("Bluetooth operation failed:", e);
 }
 ```
 
-### Permission Constants
+---
 
-The `permissions` object includes constants for all standard Android permissions:
+### HTTP Client
 
-```javascript
-// Location permissions
-permissions.ACCESS_COARSE_LOCATION
-permissions.ACCESS_FINE_LOCATION
+The `http` object is a powerful, low-level bridge for web requests that bypasses many browser-based restrictions.
 
-// Camera
-permissions.CAMERA
+#### Methods
 
-// Storage
-permissions.READ_EXTERNAL_STORAGE
-permissions.WRITE_EXTERNAL_STORAGE
-permissions.READ_MEDIA_IMAGES
-permissions.READ_MEDIA_VIDEO
-permissions.READ_MEDIA_AUDIO
+- `http.initializeSettings(): Promise<void>`
+- `http.sendRequest(url: string, options: HttpOptions): Promise<HttpResponse>`
+- `http.uploadFile(url: string, params: object, headers: object, filePath: string, name: string): Promise<HttpResponse>`
+- `http.downloadFile(url: string, params: object, headers: object, filePath: string): Promise<{entry: object, response: HttpResponse}>`
+- `http.setHeader(hostname: string, header: string, value: string): Promise<boolean>`
+- `http.setDataSerializer(serializer: 'urlencoded' | 'json' | 'utf8' | 'multipart' | 'raw'): Promise<boolean>`
+- `http.setTimeout(timeout: number): Promise<boolean>`
+- `http.setServerTrustMode(mode: 'default' | 'nocheck' | 'pinned' | 'legacy'): Promise<boolean>`
+- `http.getCookieString(url: string): Promise<string>`
+- `http.setCookie(url: string, cookie: string, options?: object): Promise<boolean>`
+- `http.clearCookies(): Promise<boolean>`
 
-// Contacts
-permissions.READ_CONTACTS
-permissions.WRITE_CONTACTS
+#### `HttpOptions`
 
-// Calendar
-permissions.READ_CALENDAR
-permissions.WRITE_CALENDAR
+| Option | Type | Description |
+|--------|------|-------------|
+| `method` | `string` | `get`, `post`, `put`, `patch`, `delete`, `head`, `options`, `upload`, `download` |
+| `data` | `object` | Request body data |
+| `params` | `object` | Query parameters |
+| `headers` | `object` | Request headers |
+| `timeout` | `number` | Request timeout in seconds |
+| `responseType`| `string` | `text`, `json`, `arraybuffer`, `blob` |
 
-// Phone
-permissions.READ_PHONE_STATE
-permissions.CALL_PHONE
-permissions.READ_CALL_LOG
-permissions.WRITE_CALL_LOG
-permissions.ADD_VOICEMAIL
-permissions.USE_SIP
-permissions.PROCESS_OUTGOING_CALLS
+#### Error Codes (`http.ERROR_CODES`)
 
-// SMS
-permissions.READ_SMS
-permissions.SEND_SMS
-permissions.RECEIVE_SMS
-permissions.RECEIVE_WAP_PUSH
-permissions.RECEIVE_MMS
-permissions.READ_CELL_BROADCASTS
+| Constant | Value |
+|----------|-------|
+| `ERROR_CODES.PERMISSION_DENIED` | `-12` |
+| `ERROR_CODES.NOT_FOUND` | `-1` |
+| `ERROR_CODES.SECURITY_ERR` | `-2` |
+| `ERROR_CODES.ABORT_ERR` | `-3` |
+| `ERROR_CODES.NOT_READABLE_ERR` | `-4` |
+| `ERROR_CODES.ENCODING_ERR` | `-5` |
+| `ERROR_CODES.NO_MODIFICATION_ALLOWED_ERR` | `-6` |
+| `ERROR_CODES.INVALID_STATE_ERR` | `-7` |
+| `ERROR_CODES.SYNTAX_ERR` | `-8` |
+| `ERROR_CODES.INVALID_MODIFICATION_ERR` | `-9` |
+| `ERROR_CODES.QUOTA_EXCEEDED_ERR` | `-10` |
+| `ERROR_CODES.TYPE_MISMATCH_ERR` | `-11` |
 
-// Bluetooth
-permissions.BLUETOOTH
-permissions.BLUETOOTH_ADMIN
-permissions.BLUETOOTH_CONNECT
-permissions.BLUETOOTH_SCAN
-permissions.BLUETOOTH_ADVERTISE
-
-// Network
-permissions.ACCESS_NETWORK_STATE
-permissions.ACCESS_WIFI_STATE
-permissions.CHANGE_WIFI_STATE
-permissions.CHANGE_NETWORK_STATE
-permissions.CHANGE_CONFIGURATION
-
-// Accounts
-permissions.GET_ACCOUNTS
-permissions.MANAGE_ACCOUNTS
-
-// Biometrics
-permissions.USE_BIOMETRICS
-permissions.USE_FINGERPRINT
-permissions.USE_IRIS
-permissions.USE_FACE
-
-// Notifications
-permissions.POST_NOTIFICATIONS
-
-// Audio
-permissions.RECORD_AUDIO
-permissions.MODIFY_AUDIO_SETTINGS
-
-// Sensors
-permissions.BODY_SENSORS
-```
-
-### Example Usage
-
-#### Checking a Single Permission
+#### Example: Post Request
 
 ```javascript
-// Check if camera permission is granted
-const cameraStatus = await permissions.checkPermission(permissions.CAMERA);
-if (cameraStatus.hasPermission) {
-    console.log("Camera permission is granted");
-} else {
-    console.log("Camera permission is not granted");
-}
-```
-
-#### Requesting a Single Permission
-
-```javascript
-// Request camera permission
-try {
-    const status = await permissions.requestPermission(permissions.CAMERA);
-    if (status.hasPermission) {
-        console.log("Camera permission granted");
-        // Proceed with camera operations
-    } else {
-        console.log("Camera permission denied");
+const response = await http.sendRequest('https://api.example.com/login', {
+    method: 'post',
+    data: {
+        username: 'admin',
+        password: 'password123'
+    },
+    headers: {
+        'Content-Type': 'application/json'
     }
-} catch (error) {
-    console.error("Error requesting camera permission:", error);
-}
+});
+
+console.log("Status:", response.status);
+console.log("Data:", response.data);
 ```
 
-#### Requesting Multiple Permissions
+---
+
+### SIM Card Operations
+
+The `sim` object allows retrieval of information about the SIM card and placing direct calls.
+
+#### Methods
+
+- `sim.hasPermission(): Promise<boolean>`
+- `sim.requestPermission(): Promise<boolean>`
+- `sim.getInfo(): Promise<object>`
+- `sim.callNumber(number: string, bypassAppChooser?: boolean): Promise<any>`
+
+### Speech and Voice
+
+The `utter` object provides capabilities for Text-to-Speech (TTS) and Speech-to-Text (STT).
+
+#### Methods
+
+- `utter.speak(text: string, options?: UtterOptions): Promise<void>`
+- `utter.getVoices(): Promise<Array<Voice>>`
+- `utter.listen(options?: ListenOptions): Promise<string>`
+- `utter.stopListening(): void`
+- `utter.requestPermission(): Promise<boolean>`
 
 ```javascript
-// Request multiple permissions at once
-try {
-    const permissionList = [
-        permissions.CAMERA,
-        permissions.READ_EXTERNAL_STORAGE,
-        permissions.WRITE_EXTERNAL_STORAGE
-    ];
-    
-    const status = await permissions.requestPermissions(permissionList);
-    if (status.hasPermission) {
-        console.log("All permissions granted");
-        // Proceed with operations
-    } else {
-        console.log("Some permissions were denied");
-    }
-} catch (error) {
-    console.error("Error requesting permissions:", error);
-}
+const voices = await utter.getVoices();
+await utter.speak("Bridge initialized successfully", { voice: voices[0] });
 ```
 
-#### Permission Workflow Pattern
+---
 
-```javascript
-async function ensurePermission(permission) {
-    // First check if we already have the permission
-    const status = await permissions.checkPermission(permission);
-    
-    if (status.hasPermission) {
-        return true; // Permission already granted
-    }
-    
-    // Request the permission
-    try {
-        const requestStatus = await permissions.requestPermission(permission);
-        return requestStatus.hasPermission;
-    } catch (error) {
-        console.error(`Error requesting permission: ${error}`);
-        return false;
-    }
-}
+### Notes & Limitations
 
-// Usage example
-async function takePhoto() {
-    if (await ensurePermission(permissions.CAMERA)) {
-        console.log("Camera permission granted, proceeding to take photo");
-        // Camera operations here
-    } else {
-        console.log("Cannot proceed without camera permission");
-    }
-}
-```
-
-### Best Practices
-
-1. **Check Before Requesting**
-   - Always check if a permission is already granted before requesting it
-   - This avoids unnecessary permission dialogs for the user
-
-2. **Request Permissions When Needed**
-   - Request permissions at the point where they're needed, not at app startup
-   - This helps users understand why the permission is being requested
-
-3. **Handle Permission Denials Gracefully**
-   - Provide fallback functionality when permissions are denied
-   - Explain to users why the permission is important and how to enable it in settings
-
-4. **Group Related Permissions**
-   - Request related permissions together (e.g., READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE)
-   - This reduces the number of permission dialogs shown to the user
-
-5. **Use Appropriate Permission Constants**
-   - Use the predefined constants rather than string literals
-   - This ensures consistency and prevents typos
-
-### Common Use Cases
-
-#### Camera Access
-
-```javascript
-async function setupCamera() {
-    try {
-        const status = await permissions.requestPermission(permissions.CAMERA);
-        if (status.hasPermission) {
-            console.log("Camera permission granted");
-            // Initialize camera
-        } else {
-            console.log("Camera permission denied");
-            // Show alternative UI or instructions
-        }
-    } catch (error) {
-        console.error("Error with camera permission:", error);
-    }
-}
-```
-
-#### Storage Access
-
-```javascript
-async function saveFile() {
-    try {
-        // For Android 10+ (API 29+), use the new media permissions
-        const permission = device.version >= 29 ? 
-            permissions.READ_MEDIA_IMAGES : 
-            permissions.WRITE_EXTERNAL_STORAGE;
-            
-        const status = await permissions.requestPermission(permission);
-        if (status.hasPermission) {
-            console.log("Storage permission granted");
-            // Proceed with file operations
-        } else {
-            console.log("Storage permission denied");
-            // Show alternative storage options
-        }
-    } catch (error) {
-        console.error("Error with storage permission:", error);
-    }
-}
-```
-
-#### Location Services
-
-```javascript
-async function getLocation() {
-    try {
-        // Request fine location permission
-        const status = await permissions.requestPermission(permissions.ACCESS_FINE_LOCATION);
-        if (status.hasPermission) {
-            console.log("Location permission granted");
-            // Get location
-        } else {
-            // Try coarse location as fallback
-            const coarseStatus = await permissions.requestPermission(permissions.ACCESS_COARSE_LOCATION);
-            if (coarseStatus.hasPermission) {
-                console.log("Coarse location permission granted");
-                // Get approximate location
-            } else {
-                console.log("Location permissions denied");
-                // Show map with default location
-            }
-        }
-    } catch (error) {
-        console.error("Error with location permissions:", error);
-    }
-}
-```
-
-### Notes
-
-- The Android Permissions bridge is primarily useful on Android devices
-- On iOS and other platforms, the bridge will return that permissions are granted
-- Some permissions may require additional configuration in the app's manifest file
-- For Android 13+ (API 33+), consider using the new granular media permissions (READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO) instead of the broad READ_EXTERNAL_STORAGE permission
-- The `hasPermission` method is deprecated but still supported for backward compatibility
+- **Platform Support**: While Core and Connectivity bridges are cross-platform, hardware-specific triggers (like SIM or Flashlight) are primarily optimized for Android.
+- **Async Pattern**: All methods returning a `Promise` should be used with `await` to ensure correct execution order.
+- **Permissions**: Runtime permissions are required for sensitive hardware access. Always check the `permission` bridge before execution.
