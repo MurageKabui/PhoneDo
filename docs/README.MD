@@ -73,6 +73,17 @@ interface Console {
     success(...messages: any[]): void;  // Logs a success message (Green)
     clear(): void;                      // Clears the console output
     cls(): void;                        // Alias for clear()
+    
+    // Standard Methods
+    assert(condition: boolean, ...messages: any[]): void;
+    table(data: any, columns?: string[]): void;
+    time(label?: string): void;
+    timeEnd(label?: string): void;
+    timeLog(label?: string, ...messages: any[]): void;
+    count(label?: string): void;
+    trace(...messages: any[]): void;
+    debug(...messages: any[]): void;
+    dir(obj: any, options?: object): void;
 }
 ```
 
@@ -226,15 +237,34 @@ console.warn("This is a warning message");
 console.error("This is an error message");
 console.success("Operation completed successfully!");
 
-// Logging multiple values
-const user = { name: "John", age: 30 };
-console.log("User details:", user);
+// Advanced console methods
+console.assert(1 === 1, "This will not show");
+console.table([{ name: "John", age: 30 }, { name: "Jane", age: 25 }]);
+console.time("timer");
+await sleep(100);
+console.timeEnd("timer");
 
 // Clearing the console
 console.clear();
 // or
 console.cls();
 ```
+
+#### Supported Methods
+
+The `console` object is a full bridge to the native terminal, supporting the following standard methods:
+
+- `log()`, `info()`, `warn()`, `error()`
+- `success()` (PhoneDo specific)
+- `clear()`, `cls()`
+- `assert(condition, ...messages)`
+- `count(label?)`
+- `debug()`, `dir()`, `dirxml()`
+- `group()`, `groupCollapsed()`, `groupEnd()`
+- `table(data, columns?)`
+- `time(label?)`, `timeEnd(label?)`, `timeLog(label?)`
+- `trace()`
+
 
 ### Best Practices
 
@@ -341,21 +371,19 @@ The `spinner` object controls a system-level loading overlay, preventing user in
 
 ---
 
-The `sleep` and `sleepWithProgress` functions let you add pauses to your scripts. These are helpful for timing your data requests or showing progress bars to the user.
+The `sleep` function lets you add pauses to your scripts. This is helpful for timing your data requests.
 
 ### Methods
 
 ```javascript
 interface TimerBridge {
     sleep(ms: number): Promise<void>;
-    sleepWithProgress(ms: number, onProgress?: (progress: number) => void): Promise<void>;
 }
 ```
 
 ### Parameters
 
 - `ms`: Time to sleep in milliseconds (must be a positive number)
-- `onProgress`: Optional callback function that receives progress updates (0-100)
 
 ### Example Usage
 
@@ -371,18 +399,6 @@ for (let i = 0; i < 5; i++) {
 }
 ```
 
-#### Sleep with Progress
-```javascript
-// Basic progress tracking
-await sleepWithProgress(5000, (progress) => {
-    console.log(`Loading... ${progress.toFixed(1)}%`);
-});
-
-// Progress bar in console
-await sleepWithProgress(3000, (progress) => {
-    const bar = '='.repeat(Math.floor(progress / 2)) + '>';
-    console.log(`[${bar.padEnd(50, ' ')}] ${progress.toFixed(1)}%`);
-});
 ```
 
 ### Best Practices
@@ -399,17 +415,6 @@ for (let i = 0; i < 10; i++) {
 await sleep(10000); // Long sleep blocks the script
 ```
 
-2. **Use Progress for User Feedback**
-```javascript
-async function processWithFeedback() {
-    console.log("Starting process...");
-    await sleepWithProgress(5000, (progress) => {
-        if (progress % 20 === 0) {
-            console.log(`Still working... ${progress}% complete`);
-        }
-    });
-    console.log("Process complete!");
-}
 ```
 
 3. **Error Handling**
@@ -439,10 +444,7 @@ async function showLoadingAnimation() {
     const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
     let i = 0;
     
-    await sleepWithProgress(5000, () => {
-        console.log(`\r${frames[i]} Loading...`);
-        i = (i + 1) % frames.length;
-    });
+    await sleep(5000);
 }
 
 // Alternative loading animation using console.log
@@ -450,10 +452,7 @@ async function showSimpleLoadingAnimation() {
     const frames = ['|', '/', '-', '\\'];
     let i = 0;
     
-    await sleepWithProgress(5000, () => {
-        console.log(`Loading ${frames[i]} `);
-        i = (i + 1) % frames.length;
-    });
+    await sleep(5000);
 }
 ```
 
@@ -476,13 +475,9 @@ async function sequentialOperations() {
 ### Notes
 
 - Sleep operations are non-blocking for the main thread
-- Progress updates occur every 100ms
 - Sleep duration must be a positive number
-- Progress callback is optional
 - Sleep operations can be cancelled by script termination
-- Consider using `sleepWithProgress` for operations longer than 1 second
 - Sleep operations are precise to the millisecond
-- Progress updates are rounded to 2 decimal places
 
 ## User Interface
 
@@ -547,13 +542,43 @@ The `dialog` object provides simple UI components for interacting with the user 
 #### Methods
 
 - `dialog.alert(message: string, title?: string, klass?: string, buttons?: object[]): Promise<number>`
+- `dialog.confirm(message: string, title?: string): Promise<boolean>`
+
+> [!TIP]
+> Dialog messages support basic HTML tags like `<p>`, `<strong>`, `<i>`, and `<br>` for rich text formatting.
+
+#### Global Functions
+
+For convenience, standard browser-like global functions are available:
+
+- `alert(message: string, title?: string): Promise<number>`
+- `confirm(message: string, title?: string): Promise<boolean>`
+
+#### Example Usage
 
 ```javascript
 // Basic alert
-await dialog.alert("Configuration successfully updated.");
+await alert("Operation completed.");
 
-// Advanced alert with title
-await dialog.alert("Wait!", "Are you sure you want to proceed?");
+// Confirmation dialog
+const confirmed = await confirm("Delete this file?", "Warning");
+if (confirmed) {
+    console.success("File deleted.");
+} else {
+    console.warn("Operation cancelled.");
+}
+
+// Advanced dialog with custom buttons
+const index = await dialog.alert("Wait!", "Are you sure you want to proceed?", app.kind.danger, [
+    { text: "No", kind: app.kind.secondary },
+    { text: "Yes", kind: app.kind.primary }
+]);
+
+// Rich text with HTML
+await alert(
+    "<p>Your session is about to <strong>expire</strong>.</p><p>Please save your work.</p>",
+    "Session Warning"
+);
 ```
 
 ### Spinner Control
