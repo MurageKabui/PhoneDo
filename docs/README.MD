@@ -569,9 +569,9 @@ if (confirmed) {
 }
 
 // Advanced dialog with custom buttons
-const index = await dialog.alert("Wait!", "Are you sure you want to proceed?", app.kind.danger, [
-    { text: "No", kind: app.kind.secondary },
-    { text: "Yes", kind: app.kind.primary }
+const index = await dialog.alert("Wait!", "Are you sure you want to proceed?", "danger", [
+    { text: "No", kind: "secondary" },
+    { text: "Yes", kind: "primary" }
 ]);
 
 // Rich text with HTML
