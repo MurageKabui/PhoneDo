@@ -600,14 +600,50 @@ spinner.hide();
 
 ### Network Operations
 
-The `network` object provides diagnostic information about the device's current connectivity state.
+The `network` object provides diagnostic information about the device's current connectivity state and network configuration.
 
 #### Methods
 
 - `network.getConnectionType(): Promise<'WIFI' | 'CELLULAR' | 'NONE'>`
-- `network.getIPInfo(): Promise<object>`
-- `network.ping(host: string): Promise<{success: boolean, time: number}>`
+- `network.getIPInfo(): Promise<IPInfo>`
+- `network.getWIFIIPInfo(): Promise<IPInfo>`
+- `network.getCarrierIPInfo(): Promise<IPInfo>`
+- `network.ping(host: string): Promise<PingResult>`
 - `network.canConnectToInternet(): Promise<boolean>`
+- `network.getRouterIP(): Promise<string>`
+
+#### Interfaces
+
+```typescript
+interface IPInfo {
+    ipAddress: string;
+    subnetMask?: string;
+    gateway?: string;
+    dns1?: string;
+    dns2?: string;
+}
+
+interface PingResult {
+    success: boolean;
+    time: number;  // Response time in ms
+    ttl?: number;  // Time to live
+}
+```
+
+#### Example Usage
+
+```javascript
+const connection = await network.getConnectionType();
+console.log(`Connected via: ${connection}`);
+
+if (connection === 'WIFI') {
+    const ipInfo = await network.getWIFIIPInfo();
+    console.log(`Local IP: ${ipInfo.ipAddress}`);
+}
+
+const ping = await network.ping("google.com");
+console.log(`Ping Success: ${ping.success} (${ping.time}ms)`);
+```
 
 ### WiFi Operations
 
@@ -618,11 +654,51 @@ Advanced control over the device's WiFi hardware, including scanning and connect
 - `WIFI.requestPermission(): Promise<boolean>`
 - `WIFI.scan(): Promise<Array<WifiNetwork>>`
 - `WIFI.connect(config: WifiConfig): Promise<boolean>`
+- `WIFI.disconnect(ssid?: string): Promise<void>`
 - `WIFI.getConnectedSSID(): Promise<string>`
-- `WIFI.disconnect(): Promise<void>`
+- `WIFI.isEnabled(): Promise<boolean>`
+- `WIFI.enable(): Promise<boolean>`
+- `WIFI.disable(): Promise<boolean>`
 
 > [!IMPORTANT]
 > Always call `WIFI.requestPermission()` before attempting to scan or connect.
+
+#### Interfaces
+
+```typescript
+interface WifiNetwork {
+    SSID: string;
+    BSSID: string;
+    level: number;       // Signal strength in dBm
+    frequency: number;   // In MHz
+    capabilities: string; // Encryption types (e.g., [WPA2-PSK-CCMP])
+    channelWidth: number;
+    timestamp: number;
+}
+
+interface WifiConfig {
+    ssid: string;
+    password?: string;
+    algorithm?: 'WPA' | 'WEP' | 'NONE';
+    isHiddenSSID?: boolean;
+}
+```
+
+#### Example Usage
+
+```javascript
+await WIFI.requestPermission();
+
+// Scan for networks
+const networks = await WIFI.scan();
+console.table(networks); // Great way to view the list!
+
+// Find a specific network
+const home = networks.find(n => n.SSID === "Home_WiFi");
+if (home) {
+    console.log(`Found ${home.SSID} at ${home.level}dBm`);
+}
+```
 
 The `http` bridge is a powerful way for your scripts to talk to web APIs. It can bypass standard website restrictions, making it easy to connect your phone to other services.
 
@@ -641,6 +717,9 @@ try {
         method: 'get',
         headers: { Authorization: 'Bearer TOKEN' }
     });
+    
+    // Status and Data
+    console.log(`Status: ${response.status}`);
     console.log("API Response:", response.data);
 } catch (error) {
     console.error("Request failed", error);
@@ -654,7 +733,41 @@ The `SMS` object allows scripts to interface with the device's messaging capabil
 #### Methods
 
 - `SMS.sendSMS(phoneNumber: string, message: string): Promise<void>`
-- `SMS.listSMS(filter: object): Promise<Array<SMSMessage>>`
+- `SMS.listSMS(filter: SMSFilter): Promise<Array<SMSMessage>>`
+
+#### Interfaces
+
+```typescript
+interface SMSMessage {
+    address: string;  // Phone number
+    body: string;     // Text content
+    date: number;     // Timestamp
+    type: number;     // 1 = Inbox, 2 = Sent
+}
+
+interface SMSFilter {
+    box?: 'inbox' | 'sent' | 'draft' | 'outbox';
+    address?: string;
+    body?: string;
+    indexFrom?: number;
+    maxCount?: number;
+}
+```
+
+#### Example Usage
+
+```javascript
+// Scan inbox for messages from a specific sender
+const messages = await SMS.listSMS({
+    box: 'inbox',
+    address: 'BANK_ABC',
+    maxCount: 5
+});
+
+messages.forEach(msg => {
+    console.log(`[${new Date(msg.date).toLocaleTimeString()}] ${msg.body}`);
+});
+```
 
 ---
 
@@ -787,112 +900,6 @@ try {
 }
 ```
 
-## Network Operations
-
-### Network Connectivity Information
-
-The `network` object provides methods to access information about network connectivity.
-
-```javascript
-network.getConnectionType();    // Retrieves the current network connection type.
-network.getWIFIIPInfo();        // Retrieves information regarding the current WiFi connection.
-network.getCarrierIPInfo();     // Retrieves IP information for cellular connections.
-network.getHTTPProxyInfo(url);  // Retrieves proxy information for the given URL.
-network.ping(host);             // Performs a ping operation to the specified host.
-network.getIPInfo();            // Retrieves IP address information.
-network.getRouterIP();          // Retrieves the IP of the connected router.
-network.canConnectToRouter();   // Checks if the device can connect to a router.
-network.canConnectToInternet(); // Checks if the device has internet connectivity.
-```
-
-#### Example Usage
-
-```javascript
-const connection = await network.getConnectionType();
-if (connection === "WIFI") {
-   console.log("Device is connected via WiFi.");
-   const ipInfo = await network.getWIFIIPInfo();
-    console.log(`IP Address: ${ipInfo.ipAddress}`);
-} else if (connection === "CELLULAR") {
-    console.log("Device is connected via cellular network.");
-} else {
-    console.log("No network connection available.");
-}
-
-const ping = await network.ping("google.com");
-console.log(`Ping result: Success=${ping.success}, Time=${ping.time}`);
-```
-*Note: The `getConnectionType()` function returns 'WIFI', 'CELLULAR', or 'NONE'. The `ttl` property in a ping result may be undefined when a ping fails.*
-
-## WiFi Operations
-
-### WiFi Connection Management
-
-The `WIFI` object provides methods for interacting with the device's WiFi capabilities.
-
-```javascript
-  WIFI.enable();                        // Enables the device's WiFi adapter.
-  WIFI.disable();                       // Disables the device's WiFi adapter.
-  WIFI.requestPermission();             // Requests necessary permissions for WiFi access.
-  WIFI.suggestConnection(config);      // Proposes a new WiFi network for internet access across apps.
-  WIFI.specifierConnection(config);    // Requests to connect to a wifi network specifically for this app.
-  WIFI.scan();                          // Scans for available WiFi networks.
-  WIFI.connect(config);                // Connects to a specified WiFi network.
-  WIFI.disconnect(ssid);                // Disconnects from a given WiFi network.
-  WIFI.reconnect();                      // Reconnects to the last used WiFi.
-  WIFI.reassociate();                    // Reassociates to the last used wifi.
-  WIFI.getConnectedSSID();              // Retrieves the SSID of the currently connected WiFi network.
-  WIFI.getConnectedBSSID();             // Retrieves the BSSID of the currently connected WiFi network.
-  WIFI.getConnectedNetworkID();          // Retrieves the ID of the currently connected WiFi network.
-  WIFI.listNetworks();                  // Lists all configured WiFi networks.
-  WIFI.getSSIDNetworkID(ssid);           // Retrieves the network ID for a specific SSID.
-  WIFI.formatConfig(config);           // Returns a valid WifiConfig object using specified properties.
-  WIFI.addNetwork(config);              // Adds a new WiFi network to the list of known networks.
-  WIFI.removeNetwork(networkId);       // Removes a WiFi network using its ID.
-  WIFI.enableNetwork(networkId, disableOthers, isTemporary); // Enables a specific network.
-  WIFI.disableNetwork(networkId);      // Disables a specific WiFi network
-  WIFI.isConnectedToInternet();        // Checks if the device has internet access.
-  WIFI.getIP();                         // Retrieves the device's IP address on the WiFi network.
-  WIFI.getIPInfo();                  // Retrieves more detailed IP information.
-  WIFI.getRouterIP();                    // Retrieves the IP of the connected router.
-  WIFI.isLocationEnabled();            // Checks if location services are enabled.
-  WIFI.openLocationSettings();         // Opens location settings.
-  WIFI.setBindAll();                   // Forces the app to use this network only.
-  WIFI.resetBindAll();                 // Resets the network restrictions.
-  WIFI.timeout(ms);                     // Adds a timeout for a specific wifi operation.
-```
-*Note: The `requestPermission()` method must be called to use most WiFi methods. `suggestConnection` and `specifierConnection` are required for connecting to new networks on Android 10+, `connect` and `addNetwork` are deprecated. `BSSID` indicates the MAC address of the access point.*
-
-#### Example Usage
-
-```javascript
-try {
-    await WIFI.requestPermission();
-    const networks = await WIFI.scan();
-    console.log(`Available networks: ${networks.length}`);
-
-    const targetNetwork = networks.find(n => n.ssid === "MyNetwork");
-     if (targetNetwork) {
-        const config = WIFI.formatConfig({
-        ssid: targetNetwork.ssid,
-        password: "password123",
-        security: "WPA2"
-        });
-        const connectionSuccess = await WIFI.connect(config);
-        if(connectionSuccess){
-            console.log("Connection successful.");
-        } else{
-            console.error("Connection failed.");
-        }
-    } else{
-        console.warn("Network not found.");
-    }
-
-} catch (e) {
-    console.error("WiFi operation failed:", e);
-}
-```
-*Tip: To troubleshoot connection issues, attempt to remove the network configuration with `WIFI.getSSIDNetworkID(ssid)` and `WIFI.removeNetwork(id)` before attempting to reconnect.*
 
 ### Bluetooth (BLE)
 
@@ -900,15 +907,35 @@ The `bluetooth` object provides comprehensive control over Bluetooth Low Energy 
 
 #### Methods
 
-- `bluetooth.scan(timeout: number, onDeviceFound: (device: object) => void, onScanError: (error: any) => void): Promise<void>`
+- `bluetooth.scan(timeout: number, onDeviceFound: (device: BLEDevice) => void, onScanError: (error: any) => void): Promise<void>`
 - `bluetooth.stopBTScan(): Promise<void>`
-- `bluetooth.connectBT(device: object, onConnected: (device: object) => void, onDisconnected: (device: object) => void, onConnectError: (error: any) => void, options?: object): Promise<object>`
-- `bluetooth.getBTService(device: object, serviceUUID: string): Promise<object>`
-- `bluetooth.getBTCharacteristic(service: object, characteristicUUID: string): Promise<object>`
-- `bluetooth.readBTCharacteristic(device: object, characteristic: object): Promise<ArrayBuffer>`
-- `bluetooth.writeBTCharacteristic(device: object, characteristic: object, data: ArrayBuffer): Promise<void>`
-- `bluetooth.enableBTNotification(device: object, characteristic: object, onData: (data: ArrayBuffer) => void): Promise<void>`
-- `bluetooth.disableBTNotification(device: object, characteristic: object): Promise<void>`
+- `bluetooth.connectBT(device: BLEDevice, onConnected: (device: BLEDevice) => void, onDisconnected: (device: BLEDevice) => void, onConnectError: (error: any) => void, options?: object): Promise<BLEDevice>`
+- `bluetooth.getBTService(device: BLEDevice, serviceUUID: string): Promise<BLEService>`
+- `bluetooth.getBTCharacteristic(service: BLEService, characteristicUUID: string): Promise<BLECharacteristic>`
+- `bluetooth.readBTCharacteristic(device: BLEDevice, characteristic: BLECharacteristic): Promise<ArrayBuffer>`
+- `bluetooth.writeBTCharacteristic(device: BLEDevice, characteristic: BLECharacteristic, data: ArrayBuffer): Promise<void>`
+
+#### Interfaces
+
+```typescript
+interface BLEDevice {
+    name?: string;
+    address: string;    // MAC address
+    rssi: number;       // Signal strength
+    advertisementData?: object;
+}
+
+interface BLEService {
+    uuid: string;
+    device: BLEDevice;
+}
+
+interface BLECharacteristic {
+    uuid: string;
+    service: BLEService;
+    properties: string[]; // ['read', 'write', 'notify', etc]
+}
+```
 
 #### Example: BLE Scanning and Connection
 
@@ -1003,8 +1030,33 @@ The `sim` object allows retrieval of information about the SIM card and placing 
 
 - `sim.hasPermission(): Promise<boolean>`
 - `sim.requestPermission(): Promise<boolean>`
-- `sim.getInfo(): Promise<object>`
+- `sim.getInfo(): Promise<SimInfo>`
 - `sim.callNumber(number: string, bypassAppChooser?: boolean): Promise<any>`
+
+#### Interfaces
+
+```typescript
+interface SimInfo {
+    carrierName: string;
+    countryCode: string;
+    mcc: string;
+    mnc: string;
+    phoneNumber?: string;
+    deviceId?: string;
+    simSerialNumber?: string;
+    subscriberId?: string;
+}
+```
+
+#### Example Usage
+
+```javascript
+if (await sim.requestPermission()) {
+    const info = await sim.getInfo();
+    console.log(`Carrier: ${info.carrierName}`);
+    console.log(`Phone: ${info.phoneNumber || 'Unknown'}`);
+}
+```
 
 ### Speech and Voice
 
