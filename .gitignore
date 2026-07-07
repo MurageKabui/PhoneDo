@@ -4,7 +4,7 @@
 # Recommended template: Node.gitignore
 
 /platforms/
-/plugins/
+# /plugins/
 /node_modules/
 cleaner.js
 cordova_android_run.bat

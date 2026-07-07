@@ -1,0 +1,10 @@
+dependencies {
+    implementation "androidx.biometric:biometric:1.1.0"
+}
+
+android {
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+}

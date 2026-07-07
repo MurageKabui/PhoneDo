@@ -1,0 +1,43 @@
+{
+  "name": "cordova-plugin-screen-orientation",
+  "version": "3.0.3",
+  "description": "Cordova Screen Orientation plugin",
+  "repository": "github:apache/cordova-plugin-screen-orientation",
+  "bugs": "https://github.com/apache/cordova-plugin-screen-orientation/issues",
+  "scripts": {
+    "test": "npm run lint",
+    "lint": "eslint ."
+  },
+  "cordova": {
+    "id": "cordova-plugin-screen-orientation",
+    "platforms": [
+      "android",
+      "ios",
+      "windows"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-windows",
+    "device",
+    "ecosystem:cordova",
+    "screen",
+    "orientation",
+    "portrait",
+    "landscape"
+  ],
+  "author": "Apache Software Foundation",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@cordova/eslint-config": "^3.0.0"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "4.0.0": {
+        "cordova": ">100"
+      }
+    }
+  }
+}

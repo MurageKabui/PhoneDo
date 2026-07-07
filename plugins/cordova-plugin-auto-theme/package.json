@@ -1,0 +1,24 @@
+{
+  "name": "cordova-plugin-auto-theme",
+  "version": "1.0.3",
+  "description": "A Cordova plugin for detecting if dark mode is enabled on Android",
+  "cordova": {
+    "id": "cordova-plugin-auto-theme",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": "github:terreng/cordova-plugin-auto-theme",
+  "bugs": "https://github.com/terreng/cordova-plugin-auto-theme/issues",
+  "keywords": [
+    "cordova",
+    "dark theme",
+    "dark mode",
+    "autotheme",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "terreng",
+  "license": "MIT",
+  "homepage": "https://github.com/terreng/cordova-plugin-auto-theme#readme"
+}

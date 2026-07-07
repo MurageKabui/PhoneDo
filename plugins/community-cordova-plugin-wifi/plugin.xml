@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="community-cordova-plugin-wifi"
+        version="1.0.7">
+    <name>Cordova Plugin Wifi</name>
+    <description></description>
+    <license>MIT</license>
+    <keywords></keywords>
+    <repo>https://github.com/eyalin/community-cordova-plugin-wifi.git</repo>
+    <issue>https://github.com/eyalin/community-cordova-plugin-wifi/issues</issue>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+            <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+        </config-file>
+        <js-module src="www/plugin.js" name="WifiPlugin">
+            <runs/>
+
+            <!-- This is the window variable name you want, like window.WifiPlugin -->
+            <clobbers target="WifiPlugin" />
+        </js-module>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WifiPlugin">
+                <param name="android-package" value="wifiplugin.WifiPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/WifiPlugin.java" target-dir="src/android" />
+        <source-file src="src/android/IpInfoUtils.java" target-dir="src/android" />
+        <source-file src="src/android/PingTask.java" target-dir="src/android" />
+        <source-file src="src/android/WifiDetailsUtils.java" target-dir="src/android" />
+        <source-file src="src/android/WifiUtils.java" target-dir="src/android" />
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <js-module src="www/plugin.js" name="plugin">
+            <runs/>
+            <clobbers target="WifiPlugin" />
+        </js-module>
+        <config-file target="config.xml" parent="/*">
+            <feature name="WifiPlugin">
+                <param name="ios-package" value="WifiPlugin" onload="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+            <string>Your location is used to access WiFi information.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysAndWhenInUseUsageDescription">
+            <string>Your location is used to access WiFi information even when the app is in the background.</string>
+        </config-file>
+
+        <header-file src="src/ios/WifiPlugin.h" />
+        <source-file src="src/ios/WifiPlugin.m" />
+    </platform>
+</plugin>

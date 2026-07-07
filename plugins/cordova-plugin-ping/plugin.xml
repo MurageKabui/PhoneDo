@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		id="cordova-plugin-ping"
+		version="0.5.0">
+		<name>Ping</name>
+		<description>Cordova Ping Plugin</description>
+		<license>MIT</license>
+		<keywords>cordova,ping</keywords>
+		<repo>https://github.com/t1st3/cordova-plugin-ping.git</repo>
+		<issue>https://github.com/t1st3/cordova-plugin-ping/issues</issue>
+
+		<engines>
+			<engine name="cordova" version="&gt;=3.1.0" />
+		</engines>
+
+		<js-module src="www/ping.js" name="ping">
+			<clobbers target="Ping" />
+		</js-module>
+
+		<platform name="android">
+			<config-file target="res/xml/config.xml" parent="/*">
+				<feature name="Ping">
+					<param name="android-package" value="org.tiste.cordova.ping.Ping"/>
+				</feature>
+			</config-file>
+			<source-file src="src/android/Ping.java" target-dir="src/org/tiste/cordova/ping"/>
+		</platform>
+
+		<!-- ios -->
+		<platform name="ios">
+			<config-file target="config.xml" parent="/*">
+				<feature name="Ping">
+					<param name="ios-package" value="CDVPing" onload="true" />
+				</feature>
+			</config-file>
+			<header-file src="src/ios/CDVPing.h" />
+			<source-file src="src/ios/CDVPing.m" />
+			<header-file src="src/ios/SimplePing.h"/>
+			<source-file src="src/ios/SimplePing.m"/>
+		</platform>
+	</plugin>

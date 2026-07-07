@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<plugin
+  xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="cordova-plugin-tts-advanced"
+  version="0.5.2">
+  <name>TTS</name>
+  <description>Cordova Text-to-Speech Plugin Advanced</description>
+  <author>Sebastiaan Pasma and VILIC VANE</author>
+  <license>MIT</license>
+  <keywords>cordova,tts,text-to-speech</keywords>
+  <repo>https://github.com/spasma/cordova-plugin-tts-advanced.git</repo>
+  <issue>https://github.com/spasma/cordova-plugin-tts-advanced/issues</issue>
+
+  <js-module src="www/tts.js" name="tts">
+    <clobbers target="TTS" />
+  </js-module>
+
+  <!-- ios -->
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="TTS">
+        <param name="ios-package" value="CDVTTS"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/CDVTTS.h" />
+    <source-file src="src/ios/CDVTTS.m" />
+  </platform>
+
+  <!-- android -->
+  <platform name="android">
+    <config-file target="config.xml" parent="/*">
+      <feature name="TTS">
+        <param name="android-package" value="com.wordsbaking.cordova.tts.TTS" />
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+
+    <source-file src="src/android/TTS.java" target-dir="src/com/wordsbaking/cordova/tts" />
+  </platform>
+</plugin>

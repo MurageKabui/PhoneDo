@@ -1,0 +1,30 @@
+{
+    "name": "cordova-plugin-tts-advanced",
+    "version": "0.5.3",
+    "description": "Updated Cordova Text-to-Speech Plugin",
+    "cordova": {
+        "id": "cordova-plugin-tts-advanced",
+        "platforms": [
+            "ios",
+            "android"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/spasma/cordova-plugin-tts-advanced.git"
+    },
+    "keywords": [
+        "cordova",
+        "tts",
+        "text-to-speech",
+        "ecosystem:cordova",
+        "cordova-ios",
+        "cordova-android"
+    ],
+    "author": "Sebastiaan Pasma <sebastiaan@enkodo.nl>, VILIC VANE",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/spasma/cordova-plugin-tts-advanced/issues"
+    },
+    "homepage": "https://github.com/spasma/cordova-plugin-tts-advanced#readme"
+}

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5a269414-5baa-4c38-b2f3-50c21d305b88" name="Changes" comment="* add export to all interfaces">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/android/WifiPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/android/WifiPlugin.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;EYALIN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="554cb47e-af38-4ebf-8263-4816fa246779" />
+        <option name="url" value="https://github.com/EYALIN/community-cordova-plugin-cpu.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2V3XjevBz8TNHSRUbFy8xKWpnmV" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Volumes/Development/Git/forked/community-cordova-plugin-wifi/src/android&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/android" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/ios" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5a269414-5baa-4c38-b2f3-50c21d305b88" name="Changes" comment="" />
+      <created>1694065873471</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694065873471</updated>
+      <workItem from="1694065874545" duration="2544000" />
+      <workItem from="1694096923102" duration="7155000" />
+      <workItem from="1694674927377" duration="5790000" />
+      <workItem from="1695444377955" duration="2093000" />
+      <workItem from="1697977836525" duration="1232000" />
+      <workItem from="1700879084997" duration="1517000" />
+      <workItem from="1703786483609" duration="991000" />
+      <workItem from="1703818528645" duration="3425000" />
+      <workItem from="1703822230230" duration="44262000" />
+      <workItem from="1708181011949" duration="10604000" />
+      <workItem from="1708240272493" duration="19053000" />
+      <workItem from="1709102390279" duration="5116000" />
+      <workItem from="1709959064513" duration="9732000" />
+      <workItem from="1710582743464" duration="1835000" />
+      <workItem from="1710593259268" duration="1509000" />
+      <workItem from="1711186960914" duration="287000" />
+      <workItem from="1720760722451" duration="1035000" />
+      <workItem from="1722058180072" duration="23000" />
+      <workItem from="1722059814051" duration="697000" />
+      <workItem from="1722061550247" duration="21000" />
+      <workItem from="1723267322946" duration="7018000" />
+      <workItem from="1723350101711" duration="1324000" />
+      <workItem from="1724268174858" duration="4603000" />
+      <workItem from="1725518446319" duration="57000" />
+      <workItem from="1725611591287" duration="21000" />
+      <workItem from="1731667624026" duration="469000" />
+    </task>
+    <task id="LOCAL-00001" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1694066156591</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1694066156591</updated>
+    </task>
+    <task id="LOCAL-00002" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1694067087785</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1694067087785</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1695446707323</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1695446707323</updated>
+    </task>
+    <task id="LOCAL-00004" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1704549829774</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1704549829774</updated>
+    </task>
+    <task id="LOCAL-00005" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1708805859165</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708805859165</updated>
+    </task>
+    <task id="LOCAL-00006" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1709190191610</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709190191610</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1710226368210</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1710226368210</updated>
+    </task>
+    <task id="LOCAL-00008" summary="update plugin">
+      <option name="closed" value="true" />
+      <created>1710593285324</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1710593285324</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fixed progress bar in Ping">
+      <option name="closed" value="true" />
+      <created>1711187013726</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1711187013726</updated>
+    </task>
+    <task id="LOCAL-00010" summary="* isConnectedToTheInternet - Support SDK&gt;29&#10;* added exceptions handling when not connected to the internet">
+      <option name="closed" value="true" />
+      <created>1723275809818</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1723275809818</updated>
+    </task>
+    <task id="LOCAL-00011" summary="* add export to all interfaces">
+      <option name="closed" value="true" />
+      <created>1723350160378</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1723350160378</updated>
+    </task>
+    <task id="LOCAL-00012" summary="* add export to all interfaces">
+      <option name="closed" value="true" />
+      <created>1723350242605</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1723350242605</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="update plugin" />
+    <MESSAGE value="fixed progress bar in Ping" />
+    <MESSAGE value="* isConnectedToTheInternet - Support SDK&gt;29&#10;* added exceptions handling when not connected to the internet" />
+    <MESSAGE value="* add export to all interfaces" />
+    <option name="LAST_COMMIT_MESSAGE" value="* add export to all interfaces" />
+  </component>
+</project>

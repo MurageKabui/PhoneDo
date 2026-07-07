@@ -1,0 +1,37 @@
+{
+  "name": "cordova-plugin-ble",
+  "version": "2.0.1",
+  "description": "Bluetooth Low Energy Cordova plugin",
+  "cordova": {
+    "id": "cordova-plugin-ble",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evothings/cordova-ble.git#2.0.1"
+  },
+  "keywords": [
+    "bluetooth",
+    "ble",
+    "bluetooth low energy",
+    "bluetooth smart",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=6.0.0"
+    }
+  ],
+  "author": "Evothings",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/evothings/cordova-ble/issues"
+  },
+  "homepage": "https://github.com/evothings/cordova-ble#readme"
+}

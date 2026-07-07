@@ -1,0 +1,37 @@
+{
+  "name": "community-cordova-plugin-wifi-wizard",
+  "version": "3.4.0",
+  "cordova": {
+    "id": "community-cordova-plugin-wifi-wizard",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "author": "EYALIN",
+  "license": "Apache 2.0",
+  "description": "Cordova WiFi Manager for Android and iOS",
+  "bugs": {
+    "url": "https://github.com/tripflex/wifiwizard2/issues"
+  },
+  "engines": {
+    "cordovaDependencies": {
+      "3.0.0": {
+        "cordova-android": ">=5.0.0"
+      }
+    }
+  },
+  "repository": "EYALIN/community-cordova-plugin-wifi-wizard/tree/master",
+  "homepage": "https://github.com/EYALIN/community-cordova-plugin-wifi-wizard/tree/master/tree/master",
+  "funding": "https://github.com/sponsors/EYALIN",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "cordova": "^5.0.0"
+  }
+}

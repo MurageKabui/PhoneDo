@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-save-dialog" version="2.0.0">
+    <name>Save Dialog</name>
+    <description>Cordova plugin for opening the native Save dialog and storing a file in the user-selected location</description>
+    <license>MIT</license>
+    <keywords>cordova,save,dialog</keywords>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="SaveDialog">
+                <param name="android-package" value="io.github.amphiluke.SaveDialog" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/SaveDialog.java" target-dir="src/io/github/amphiluke" />
+        <js-module src="www/android/SaveDialog.js" name="SaveDialog">
+            <clobbers target="cordova.plugins.saveDialog" />
+        </js-module>
+        <js-module src="www/android/BlobKeeper.js" name="BlobKeeper">
+        </js-module>
+    </platform>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="SaveDialog">
+                <param name="ios-package" value="CDVSaveDialog" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/CDVSaveDialog.h" />
+        <source-file src="src/ios/CDVSaveDialog.m" />
+        <js-module src="www/ios/SaveDialog.js" name="SaveDialog">
+            <clobbers target="cordova.plugins.saveDialog" />
+        </js-module>
+    </platform>
+</plugin>
