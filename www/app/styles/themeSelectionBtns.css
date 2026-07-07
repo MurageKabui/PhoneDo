@@ -1,0 +1,73 @@
+﻿/* Custom Background Color */
+.custom-bg {
+    background-color: #191919 !important;
+}
+
+.theme-scroll-wrapper {
+    position: relative;
+    z-index: 10000;
+    width: 100%;
+    font-family: kanitr;
+  font-size: 0.95em;
+    /* Ensures v-show works: don't use !important on display here */
+}
+
+/* Fix for v-show: Ensure it can actually hide when the flex is active */
+.theme-scroll-wrapper[style*="display: none"] {
+    display: none !important;
+}
+
+.theme-label {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    font-weight: 800;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.theme-snap-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.snap-slide {
+    flex: 0 0 100vw;
+    height: 100%;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    border-radius: 0 !important;
+    white-space: nowrap;
+    background: transparent; /* Let the container bg show through */
+}
+
+/* Arrows Styling */
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10001;
+    pointer-events: none;
+    opacity: 0.6;
+    font-size: 0.8rem;
+    animation: pulse 2s infinite;
+}
+
+.left-arrow { left: 15px; }
+.right-arrow { right: 15px; }
+
+@keyframes pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.3; }
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
