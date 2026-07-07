@@ -9,81 +9,78 @@
 </p>
 
 <p align="center">
-  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using familiar coding patterns in a mobile environment.
+  PhoneDo bridges standard JavaScript with Android's native services. Write scripts that control WiFi, Bluetooth, SMS, sensors, SIM metadata, and more — directly on the device, with no build step.
 </p>
 
 <p align="center">
-  <a href="PHONEDO_DOCS_README.MD">API Reference</a> | 
-  <a href="https://groups.google.com/g/phonedo">Community Support</a> | 
+  <a href="PHONEDO_DOCS_README.MD">API Reference</a> ·
+  <a href="https://groups.google.com/g/phonedo">Community</a> ·
   <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
 </p>
 
-## Why ?
+## Motivation
 
-I created this as a personal scripting tool to avoid the overhead of full Android app development and the complexity of Termux. It is built for writing quick scripts that can fetch data from APIs, parse JSON, and interact with hardware using just a few lines of code. It is designed to stay out of the way and let you run logic directly on your phone.
+Full Android app development is heavy for small automation tasks, and Termux carries its own complexity. PhoneDo occupies the middle ground: a scripting environment where a few lines of JavaScript can fetch data from an API, parse JSON, and talk to device hardware. It stays out of the way and lets you run logic directly on your phone.
 
 <p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello world Demo" alt="Hello World Preview" width="360">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello World Demo" alt="Hello World Preview" width="360">
 </p>
 
-## Automated Hardware Bridges
+## Hardware Bridges
 
-PhoneDo exposes almost every native Android service to the JavaScript environment. Below are the primary bridges available for automation:
+Nearly every native Android service is exposed to the JavaScript environment:
 
-| Feature Category | Bridges Included |
+| Category | Bridges |
 | :--- | :--- |
-| **Connectivity** | WiFi, Bluetooth (BLE), Network Diagnostics, HTTP Client |
-| **Messaging** | SMS Sending, SMS Inbox Access, SMS Log Filtering |
-| **Hardware** | Vibrate, Beep, Sensors, SIM Metadata, Battery Status |
-| **Intelligence** | Text-to-Speech (UTTER), Speech Recognition (LISTEN) |
-| **Utilities** | File System (FS), Permissions, Clipboard, Browser Viewport |
-| **Interface** | Native Dialogs, Spinner Controls, Terminal TUI |
+| Connectivity | WiFi (`WIFI`), Bluetooth LE, Network Diagnostics (`network`), HTTP Client (`http`) |
+| Telephony | SMS Sending and Inbox Access (`SMS`), Phone Dialing (`sim.callNumber`), SIM Metadata (`sim`) |
+| Hardware | Flashlight (`flashlight`), Vibrate and Beep (`device`), Battery Status, Device Metadata |
+| Speech | Text-to-Speech (`utter.speak`), Speech Recognition (`utter.listen`) |
+| Utilities | File System (`fs`), Android Permissions (`permission`), Clipboard (`clipboard`), Browser Viewport (`browser`), Timers (`sleep`) |
+| Interface | Native Dialogs (`alert`, `confirm`, `dialog`), Spinner (`spinner`), Terminal I/O (`console.prompt`, ANSI colors) |
 
 ## Getting Started
 
-Download the latest APK and the optional demo backup file from the Releases section. 
+Download the latest APK (and the optional demo backup) from the [Releases](../../releases) section, then:
 
 1. Launch PhoneDo and open the side navigation drawer.
-2. Go to Script Editor and use File > New Script to create a workspace (e.g., hello_world.pjs).
-3. Write your JavaScript in the editor and select Run > Run Script.
-4. Use the Terminal tab to check script output and hardware logs.
+2. Go to **Script Editor** → **File > New Script** to create a workspace (e.g. `hello_world.pjs`).
+3. Write your JavaScript and select **Run > Run Script**.
+4. Check output and hardware logs in the **Terminal** tab.
 
-Everything uses standard JavaScript. Hardware bridges are global objects, so you can use the same ES6 patterns you use in web development.
-
----
+Scripts are standard JavaScript. Hardware bridges are injected as global objects, so the same ES6 patterns used in web development apply.
 
 ## Architecture
 
-PhoneDo runs your code in a secure container. This keeps your logic separate from the rest of the app while providing a serialized message bus to native hardware.
+Scripts run in an isolated container, separated from the host app, with a serialized message bus to native hardware.
 
 ```mermaid
 graph TD
     A[Android System] --> B[Hardware Bridge Layer]
     B --> C[Script Evaluator]
-    
+
     subgraph Isolated Environment
         C --> D[Secure Sandbox]
         D --> E[Standard JavaScript]
     end
-    
+
     F[Terminal / Editor] --> C
     E -->|Output| F
 ```
 
 ### Security and Stability
-* Isolated Sandbox: Your code runs in a restricted iframe environment. It cannot access your private data or the app's internal files.
-* Frozen Bridge Objects: Native bridges are injected as protected global objects. They are frozen to ensure their behavior cannot be modified by scripts.
-* Error Handling: Standard JS try/catch patterns work as expected. PhoneDo catches exceptions and displays detailed logs in the terminal.
 
----
+- **Isolated sandbox** — each script runs in its own hidden sandboxed iframe, created on run and torn down on exit. Scripts cannot reach the host app's internals.
+- **Frozen bridge objects** — API objects (`fs`, `WIFI`, `http`, `device`, ...) are injected with `Object.freeze`; scripts cannot modify their behavior.
+- **Strict mode** — scripts execute in `"use strict"` inside an async wrapper, so top-level `await` works out of the box.
+- **Error handling** — standard `try/catch` works as expected. Uncaught exceptions and unhandled promise rejections are caught and logged to the terminal instead of crashing the app.
+- **Single execution slot** — one script runs at a time. Starting a new script while one is running prompts you to stop the current one first.
 
 ### Script Management
 
-Scripts use the .pjs extension and run as standard JavaScript files in an asynchronous environment. PhoneDo also supports legacy .nts files for backward compatibility.
+Scripts use the `.pjs` extension and run as standard JavaScript in an asynchronous environment. Legacy `.nts` files are supported for backward compatibility.
 
-### Metadata Generation
-
-PhoneDo automatically generates a metadata header when you create a new script to help with project tracking.
+New scripts are created with a generated metadata header for project tracking:
 
 ```javascript
 /*
@@ -94,111 +91,118 @@ PhoneDo automatically generates a metadata header when you create a new script t
 */
 ```
 
-### Vanilla JS and Native Bridges
+The environment is asynchronous — use `await` for hardware operations.
 
-You can write standard JS logic alongside hardware calls. Since the environment is asynchronous, use await for hardware operations.
-
----
-
-## Hardware Bridge Examples
-
-These examples show how to combine standard JavaScript with the device bridges.
+## Examples
 
 <details>
-<summary>SMS and Messaging</summary>
+<summary><b>SMS and Telephony</b></summary>
 
 ```javascript
 // Send a text message
-await SMS.send('555-0100', 'Alert: System check passed.');
+await SMS.sendSMS('555-0100', 'Alert: System check passed.');
 
-// Filter messages using standard JS
-const allLogs = await SMS.list({ box: 'inbox' });
-const alerts = allLogs.filter(msg => msg.body.includes('Priority'));
+// List and filter inbox messages using standard JS
+const messages = await SMS.listSMS({ box: 'inbox' });
+const alerts = messages.filter(msg => msg.body.includes('Priority'));
 console.log(`Found ${alerts.length} priority alerts.`);
+
+// Dial a number
+await sim.callNumber('555-0100');
 ```
 </details>
 
 <details>
 <summary><b>WiFi Management</b></summary>
-<blockquote>Control wireless hardware and process scan results.</blockquote>
 
 ```javascript
-// Scan and sort networks by signal strength using Array.sort
+// Scan and sort networks by signal strength
 const networks = await WIFI.scan();
 const strongest = networks.sort((a, b) => b.level - a.level)[0];
 
-console.log(`Connecting to strongest AP: ${strongest.ssid}`);
-await WIFI.connect({ ssid: strongest.ssid, password: 'secure_password' });
+// connect(ssid, bindAll, password, algorithm, isHiddenSSID)
+console.log(`Connecting to strongest AP: ${strongest.SSID}`);
+await WIFI.connect(strongest.SSID, false, 'secure_password', 'WPA', false);
+
+// On Android 10+ prefer the suggestion API
+await WIFI.suggestConnection(strongest.SSID, 'secure_password');
 ```
 </details>
 
 <details>
 <summary><b>Network Diagnostics</b></summary>
-<blockquote>Perform connectivity health checks.</blockquote>
 
 ```javascript
 // Check connectivity type
-const conn = await network.getConnectionType();
+const conn = network.getConnectionType();
+console.log(`Connection: ${conn}`);
 
-// Use a simple loop for multiple pings
-for (let i = 0; i < 3; i++) {
-    const stats = await network.ping('google.com');
-    console.log(`Ping ${i+1}: ${stats.time}ms`);
-}
+// Ping a host and check reachability
+const stats = await network.ping('google.com');
+const online = await network.canConnectToInternet();
+console.log(`Internet reachable: ${online}`);
 ```
 </details>
 
 <details>
 <summary><b>File System</b></summary>
-<blockquote>Persistent storage with JSON serialization.</blockquote>
 
 ```javascript
-const path = fs._app_rootpath;
+// Built-in directory constants: APP_ROOT_DIR, DATA_DIR, CACHE_DIR, EX_ROOT_DIR, ...
+const path = fs.APP_ROOT_DIR;
 
-// Use standard JSON methods to serialize your data before saving
+// Serialize with standard JSON methods before saving
 const data = { lastRun: new Date().toISOString(), status: 'ok' };
 await fs.writeTextFile(path, 'status.json', JSON.stringify(data, null, 2));
+
+// Read it back
+const raw = await fs.readTextFile(path, 'status.json');
+console.log(JSON.parse(raw).status);
 ```
 </details>
 
 <details>
 <summary><b>HTTP Client</b></summary>
-<blockquote>Web requests for external data integration.</blockquote>
 
 ```javascript
-// Fetch external data and process it using standard JS
-const response = await http.sendRequest('https://api.example.com/data');
+// Fetch and process external data
+const response = await http.sendRequest('https://api.example.com/data', { method: 'get' });
 if (response.status === 200) {
-    const records = response.data.records;
+    const records = JSON.parse(response.data);
     console.log(`Retrieved ${records.length} items from API.`);
 }
+
+// Also available: uploadFile, downloadFile, setHeader, cookies, timeouts, TLS trust modes
 ```
 </details>
 
 <details>
-<summary><b>Device and System</b></summary>
-<blockquote>Access hardware metadata and trigger feedback.</blockquote>
+<summary><b>Device and Hardware</b></summary>
 
 ```javascript
-// Use template literals for clean output
+// device carries static metadata: model, platform, manufacturer, uuid, version, ...
 console.log(`Device: ${device.model} | Battery: ${device.batteryLevel}%`);
 
-// Run haptic feedback
+// Haptic and audio feedback
 device.vibrate(200);
 device.beep();
+
+// Flashlight control
+await flashlight.switchOn();
+await sleep(1000);
+await flashlight.switchOff();
 ```
 </details>
 
 <details>
 <summary><b>Voice and Audio</b></summary>
-<blockquote>Interface with native speech engines.</blockquote>
 
 ```javascript
 await utter.speak('Ready for voice command.');
 
-// Capturing speech as a standard string for processing
-const rawCommand = await utter.listen();
-const command = rawCommand.toLowerCase().trim();
+// listen() resolves an array of recognition matches
+const matches = await utter.listen();
+const command = matches[0].toLowerCase().trim();
 
 if (command.includes('start')) {
     console.log('Voice trigger activated.');
@@ -208,9 +212,10 @@ if (command.includes('start')) {
 
 <details>
 <summary><b>SIM Information</b></summary>
-<blockquote>Retrieve carrier and network metadata.</blockquote>
 
 ```javascript
+if (!(await sim.hasPermission())) await sim.requestPermission();
+
 const simData = await sim.getInfo();
 console.log(`Carrier: ${simData.carrierName} | Country: ${simData.countryCode}`);
 ```
@@ -218,69 +223,64 @@ console.log(`Carrier: ${simData.carrierName} | Country: ${simData.countryCode}`)
 
 <details>
 <summary><b>Bluetooth (BLE)</b></summary>
-<blockquote>Discover nearby Bluetooth Low Energy peripherals.</blockquote>
 
 ```javascript
-// Scan for 10 seconds and log found device names
-const devices = await bluetooth.scan(10);
-devices.forEach(d => console.log(`Found: ${d.name || 'Unknown'}`));
+// Callback-based scan; stops automatically after the timeout (seconds)
+await _scanBT(
+    d => console.log(`Found: ${d.name || 'Unknown'} (${d.address})`),
+    err => console.error(err),
+    10
+);
+
+// Also available: _connectBT, _readBTCharacteristic, _writeBTCharacteristic, notifications
 ```
 </details>
 
 <details>
 <summary><b>Clipboard</b></summary>
-<blockquote>Manage system clipboard content.</blockquote>
 
 ```javascript
-// Set clipboard for external use
+// Write to the system clipboard
 await clipboard.setText('Generated_Key_123');
-
-// Process text from the clipboard
-const content = await clipboard.getText();
-console.log(`Clipboard length: ${content.length}`);
 ```
 </details>
 
 <details>
 <summary><b>Browser Viewport</b></summary>
-<blockquote>Open browser instances for web content.</blockquote>
 
 ```javascript
-// Open a safe-mode viewport for login flows
+// Open a hardened viewport (cache/session cleared) for untrusted content
 await browser.openSafe('https://github.com/MurageKabui/PhoneDo');
+
+// Other modes: open, openFullscreen, openMinimal, openExternal (system browser)
 ```
 </details>
 
 <details>
 <summary><b>Permissions</b></summary>
-<blockquote>Audit hardware access at runtime.</blockquote>
 
 ```javascript
-const hasCam = await permission.check('camera');
-if (!hasCam) await permission.request('camera');
+// Constants for every Android permission are exposed on the permission object
+const status = await permission.checkPermission(permission.CAMERA);
+if (!status.hasPermission) {
+    await permission.requestPermission(permission.CAMERA);
+}
+
+// Batch requests
+await permission.requestPermissions([permission.READ_SMS, permission.SEND_SMS]);
 ```
 </details>
 
 <details>
-<summary><b>Timers and Flow</b></summary>
-<blockquote>Thread timing and visual progress.</blockquote>
+<summary><b>Dialogs and Spinners</b></summary>
 
 ```javascript
-// Standard thread sleep
-await sleep(2000);
+// Native dialogs are async and awaitable
+await alert('Task complete.', 'Status');
 
-// Progress updates in the console
-await sleepWithProgress(5000, (p) => {
-    process.stdout.write(`\rProgress: ${p}%`);
-});
-```
-</details>
+const proceed = await confirm('Delete all logs?', 'Confirm');
+if (!proceed) exit(0);
 
-<details>
-<summary><b>User Interface</b></summary>
-<blockquote>Control spinners and native dialogs.</blockquote>
-
-```javascript
 // System-level loading state
 spinner.show('Busy', 'Processing data...');
 await doHeavyWork();
@@ -288,36 +288,49 @@ spinner.hide();
 ```
 </details>
 
-## PhoneDo Terminal
+<details>
+<summary><b>Terminal I/O</b></summary>
 
-The terminal includes a TUI designed for diagnostics and script execution.
+```javascript
+// Read input interactively
+const name = await console.prompt();
+console.success(`Hello, ${name}`);
+
+// Styled output with ANSI constants
+console.log(`${ANSI.GREEN}PASS${ANSI.RESET} all checks completed`);
+
+// Pause execution
+await sleep(2000);
+```
+</details>
+
+## Terminal
+
+A built-in TUI for diagnostics and script execution.
 
 <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="PhoneDo Terminal Preview" width="270" height="600">
 </p>
 
-| Command | Action | Description |
-|:---|:---|:---|
-| `slist` | Manage Scripts | Utility for listing and managing your saved scripts. |
-| `run` | Execute Script | Runs a script within the sandboxed environment. |
-| `beep` | Audio Feedback | Plays a system beep for audible script indicators. |
-| `ipconfig` | Network Status | Retrieves IP information for the active connection. |
-| `ifconfig` | Network Status | Alias for `ipconfig`. |
-| `cls` / `clear` | Clear Screen | Purges the terminal display buffer. |
-| `exit` | Terminate | Quits the current terminal instance. |
-| `time` | System Time | Prints the current system time to the standard output. |
-| `sysinfo` | Device Metadata | Dumps OS, battery, and hardware statistics. |
-| `ping` | Latency Check | Sends ICMP requests to check network host connectivity. |
+| Command | Description |
+|:---|:---|
+| `slist` | List and manage saved scripts |
+| `run` | Execute a script in the sandboxed environment |
+| `beep` | Play a system beep |
+| `ipconfig` / `ifconfig` | Show IP information for the active connection |
+| `ping` | Check network host connectivity |
+| `sysinfo` | Dump OS, battery, and hardware statistics |
+| `time` | Print the current system time |
+| `cls` / `clear` | Clear the terminal display buffer |
+| `exit` | Quit the current terminal instance |
 
 ## Tech Stack
-
-PhoneDo connects high-level JavaScript to Android services.
 
 | Component | Responsibility | Technology |
 |:---|:---|:---|
 | Host App | Lifecycle and permissions | Java |
 | Logic Engine | Script evaluation | JavaScript Sandbox |
-| Hardware Bridges| Native access | Cordova Plugins |
+| Hardware Bridges | Native access | Cordova Plugins |
 | UI | Menus and management | Vue.js |
 | Editor | Code development | ACE.js |
 | Terminal | Logs and TUI | JQConsole |
@@ -325,26 +338,28 @@ PhoneDo connects high-level JavaScript to Android services.
 
 ## Installation
 
-This app requires hardware access and is best installed via ADB.
+The app requires hardware access and is best installed via ADB.
 
-1. Enable Unknown Sources in your device security settings.
+1. Enable **Unknown Sources** in device security settings.
 2. Install the APK:
    ```bash
    adb install -r PhoneDo.apk
    ```
-3. To load demo scripts, restore the backup file:
+3. Optionally restore the demo scripts:
    ```bash
    adb restore PhoneDoExamples.ab
    ```
-4. Grant all requested permissions in the app settings to ensure scripts run correctly.
+4. Grant the requested permissions so scripts can access hardware.
 
 ## Contributing
 
-You can report bugs or suggest features through the issue tracker. Pull requests for core logic or documentation improvements are welcome. Join the community group to discuss development.
+Bug reports and feature requests go through the [issue tracker](../../issues). Pull requests for core logic or documentation are welcome. Development discussion happens in the [community group](https://groups.google.com/g/phonedo) and on [Discord](https://discord.gg/b4ENrd2FAP).
 
 ## Credits
 
-* Lead Developer: [MurageKabui](https://github.com/MurageKabui)
-* Logo Design: [namishkashyap](https://linktr.ee/namishkashyap)
+- Lead Developer: [MurageKabui](https://github.com/MurageKabui)
+- Logo Design: [namishkashyap](https://linktr.ee/namishkashyap)
 
-<p align="center">Made with ❤️ for the Android community.</p>
+## License
+
+See [LICENSE](LICENSE).
