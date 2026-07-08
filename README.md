@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using familiar coding patterns in a mobile environment.
+  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using JavaScript coding patterns in a mobile environment.
 </p>
 
 <p align="center">
@@ -18,7 +18,17 @@
   <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
 </p>
 
+## Screenshots
+
+| Scripting | Terminal | Native Dialogs |
+|:---:|:---:|:---:|
+| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
+| Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
+
 ## Table of Contents
+
+<details>
+<summary><b>Jump to a section</b></summary>
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -27,10 +37,11 @@
 - [Examples](#examples)
 - [Terminal](#terminal)
 - [Installation](#installation)
-- [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [Credits](#credits)
 - [License](#license)
+
+</details>
 
 ## Features
 
@@ -405,13 +416,6 @@ The app requires hardware access and is best installed via ADB.
    adb restore PhoneDoExamples.ab
    ```
 4. Grant the requested permissions so scripts can access hardware.
-
-## Screenshots
-
-| Scripting | Terminal | Native Dialogs |
-|:---:|:---:|:---:|
-| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
-| Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
 
 ## Contributing
 
