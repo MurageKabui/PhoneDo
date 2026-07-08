@@ -18,13 +18,19 @@
   <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
 </p>
 
-## Screenshots
+## Table of Contents
 
-| Scripting | Terminal | Native Dialogs |
-|:---:|:---:|:---:|
-| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
-| Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
-
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Architecture](#architecture)
+- [Examples](#examples)
+- [Terminal](#terminal)
+- [Installation](#installation)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
 
 ## Features
 
@@ -41,8 +47,10 @@ Scripts get ready-made global objects that map to native Android services:
 
 The environment is asynchronous, so hardware calls are awaited with standard `async/await`. Everything else is the JavaScript you already know: `Array` methods, `JSON`, template literals, classes.
 
-
 ## Tech Stack
+
+<details>
+<summary><b>View components</b></summary>
 
 | Component | Responsibility | Technology |
 |:---|:---|:---|
@@ -54,22 +62,33 @@ The environment is asynchronous, so hardware calls are awaited with standard `as
 | Terminal | Logs and TUI | JQConsole |
 | Storage | Persistence | SQLite3 |
 
+</details>
+
 ## Getting Started
 
 Download the latest APK (and the optional demo backup) from the [Releases](../../releases) section, then:
 
 1. Launch PhoneDo and open the side navigation drawer.
-2. Go to **Script Editor**, then **File > New Script** to create a workspace (e.g. `hello_world.js`).
+2. Go to **Script Editor**, then **File > New Script** to create a workspace (e.g. `notify_team.js`).
 3. Write your JavaScript and select **Run > Run Script**.
 4. Check output and hardware logs in the **Terminal** tab.
 
-A first script can be as small as this:
+Here is a complete, working script. It texts the same message to a list of contacts, confirms each send in the terminal, and announces when it is done:
 
 ```javascript
-console.log(`Hello from ${device.model}`);
-device.vibrate(200);
-await utter.speak('PhoneDo is ready.');
+const contacts = ['555-0100', '555-0142', '555-0187'];
+const message = 'Meeting moved to 3 PM. See you there.';
+
+for (const number of contacts) {
+    await SMS.sendSMS(number, message);
+    console.success(`Sent to ${number}`);
+    await sleep(1000);
+}
+
+await utter.speak(`Done. ${contacts.length} messages sent.`);
 ```
+
+That is the whole thing. No project setup, no manifest, no build. The same pattern applies to any bridge: loop over data, call the hardware, log the result.
 
 ## Architecture
 
@@ -113,6 +132,8 @@ Scripts are plain `.js` files. New scripts are created with a generated metadata
 <details>
 <summary><b>SMS and Telephony</b></summary>
 
+The `SMS` bridge works in both directions. Sending takes a number and a message, and the inbox comes back as a plain array, so filtering and searching messages is just standard `Array` work. The `sim` bridge places calls directly.
+
 ```javascript
 // Send a text message
 await SMS.sendSMS('555-0100', 'Alert: System check passed.');
@@ -129,6 +150,8 @@ await sim.callNumber('555-0100');
 
 <details>
 <summary><b>WiFi Management</b></summary>
+
+`WIFI.scan()` returns the visible networks with their SSID and signal level, ready to sort and pick from. Connections use positional arguments, and on Android 10 and above the suggestion API is the preferred way to join a network.
 
 ```javascript
 // Scan and sort networks by signal strength
@@ -152,6 +175,8 @@ console.log(`Connected to ${ssid} at ${ip}`);
 <details>
 <summary><b>Network Diagnostics</b></summary>
 
+The `network` bridge answers the basic health questions: what kind of connection is active, whether a host responds, and whether the internet is actually reachable beyond the router.
+
 ```javascript
 // Check connectivity type
 const conn = network.getConnectionType();
@@ -167,8 +192,9 @@ console.log(`Internet reachable: ${online}`);
 <details>
 <summary><b>File System</b></summary>
 
+The `fs` bridge ships with constants for the useful Android directories (`APP_ROOT_DIR`, `DATA_DIR`, `CACHE_DIR`, `EX_ROOT_DIR` and others), so scripts never hardcode paths. Text files are read and written in one call, which pairs naturally with `JSON` for storing script state between runs.
+
 ```javascript
-// Built-in directory constants: APP_ROOT_DIR, DATA_DIR, CACHE_DIR, EX_ROOT_DIR, ...
 const path = fs.APP_ROOT_DIR;
 
 // Serialize with standard JSON methods before saving
@@ -190,6 +216,8 @@ await fs.appendTextFile(path, 'run.log', `Run at ${Date.now()}\n`);
 <details>
 <summary><b>HTTP Client</b></summary>
 
+The `http` bridge is a native HTTP client, so requests are not subject to browser CORS limits. Responses carry a `status` code and the body as a string in `data`, and files can be downloaded straight to device storage.
+
 ```javascript
 // Fetch and process external data
 const response = await http.sendRequest('https://api.example.com/data', { method: 'get' });
@@ -208,8 +236,9 @@ await http.downloadFile('https://example.com/backup.zip', {}, {}, fs.APP_ROOT_DI
 <details>
 <summary><b>Device and Hardware</b></summary>
 
+The `device` object carries the phone's metadata (model, platform, manufacturer, battery level, charging state and more) as plain properties, no calls needed. Vibration, beep, and the flashlight give scripts physical feedback.
+
 ```javascript
-// device carries static metadata: model, platform, manufacturer, uuid, version, ...
 console.log(`Device: ${device.model} | Battery: ${device.batteryLevel}%`);
 
 // Haptic and audio feedback
@@ -226,8 +255,9 @@ await flashlight.switchOff();
 <details>
 <summary><b>Voice and Audio</b></summary>
 
+`utter.speak()` uses the system text-to-speech engine and accepts optional rate, pitch, and voice arguments. `utter.listen()` starts speech recognition and resolves an array of candidate matches, best match first.
+
 ```javascript
-// Speak with optional rate, pitch, and voice
 await utter.speak('Ready for voice command.');
 
 // listen() resolves an array of recognition matches
@@ -243,6 +273,8 @@ if (command.includes('start')) {
 <details>
 <summary><b>SIM Information</b></summary>
 
+Reading SIM data requires a runtime permission, so the bridge includes its own check and request helpers. Once granted, `getInfo()` returns carrier and network metadata in one object.
+
 ```javascript
 if (!(await sim.hasPermission())) await sim.requestPermission();
 
@@ -253,6 +285,8 @@ console.log(`Carrier: ${simData.carrierName} | Country: ${simData.countryCode}`)
 
 <details>
 <summary><b>Bluetooth (BLE)</b></summary>
+
+BLE scanning is callback based: each discovered device fires the first callback, and the scan stops itself after the timeout. Beyond discovery, the bridge covers connecting to peripherals and reading, writing, and subscribing to characteristics.
 
 ```javascript
 // Callback-based scan; stops automatically after the timeout (seconds)
@@ -269,8 +303,9 @@ await _scanBT(
 <details>
 <summary><b>Clipboard</b></summary>
 
+Scripts can place text on the system clipboard, handy for handing generated values (keys, links, formatted output) to other apps.
+
 ```javascript
-// Write to the system clipboard
 await clipboard.setText('Generated_Key_123');
 ```
 </details>
@@ -278,8 +313,10 @@ await clipboard.setText('Generated_Key_123');
 <details>
 <summary><b>In-App Browser</b></summary>
 
+The `browser` bridge opens web content in several modes: a hardened safe mode that clears cache and session data for untrusted pages, fullscreen and minimal chrome variants, and a handoff to the system browser.
+
 ```javascript
-// Open a hardened viewport (cache and session cleared) for untrusted content
+// Open a hardened viewport for untrusted content
 await browser.openSafe('https://github.com/MurageKabui/PhoneDo');
 
 // Other modes: open, openFullscreen, openMinimal, openExternal (system browser)
@@ -289,8 +326,9 @@ await browser.openSafe('https://github.com/MurageKabui/PhoneDo');
 <details>
 <summary><b>Permissions</b></summary>
 
+Every Android permission is available as a constant on the `permission` object, so there are no magic strings. Checks return a status object, and multiple permissions can be requested in one batch.
+
 ```javascript
-// Constants for every Android permission are exposed on the permission object
 const status = await permission.checkPermission(permission.CAMERA);
 if (!status.hasPermission) {
     await permission.requestPermission(permission.CAMERA);
@@ -304,8 +342,9 @@ await permission.requestPermissions([permission.READ_SMS, permission.SEND_SMS]);
 <details>
 <summary><b>Dialogs and Spinners</b></summary>
 
+`alert()` and `confirm()` show real native dialogs and are awaitable, so a script pauses until the user responds. `confirm()` resolves to a boolean, which makes it a natural guard before destructive actions. The spinner shows a system-level busy state during long operations.
+
 ```javascript
-// Native dialogs are async and awaitable
 await alert('Task complete.', 'Status');
 
 const proceed = await confirm('Delete all logs?', 'Confirm');
@@ -320,6 +359,8 @@ spinner.hide();
 
 <details>
 <summary><b>Terminal I/O</b></summary>
+
+Scripts can be interactive. `console.prompt()` waits for a line of input from the terminal, `console.success()` prints in a highlighted style, and the `ANSI` constants add color to any output.
 
 ```javascript
 // Read input interactively
@@ -364,6 +405,13 @@ The app requires hardware access and is best installed via ADB.
    adb restore PhoneDoExamples.ab
    ```
 4. Grant the requested permissions so scripts can access hardware.
+
+## Screenshots
+
+| Scripting | Terminal | Native Dialogs |
+|:---:|:---:|:---:|
+| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
+| Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
 
 ## Contributing
 
