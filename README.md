@@ -13,18 +13,17 @@
 </p>
 
 <p align="center">
-  <a href="PHONEDO_DOCS_README.MD">API Reference</a> ·
+  <a href="docs/README.MD">API Reference</a> ·
   <a href="https://groups.google.com/g/phonedo">Community</a> ·
   <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
 </p>
 
-## Motivation
+## Preview
 
-Full Android app development is heavy for small automation tasks, and Termux carries its own complexity. PhoneDo occupies the middle ground: a scripting environment where a few lines of JavaScript can fetch data from an API, parse JSON, and talk to device hardware. It stays out of the way and lets you run logic directly on your phone.
-
-<p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" title="Hello World Demo" alt="Hello World Preview" width="360">
-</p>
+| Scripting | Terminal | Native Dialogs |
+|:---:|:---:|:---:|
+| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
+| Write and run JavaScript on-device | Built-in TUI for diagnostics | Awaitable system dialogs |
 
 ## Hardware Bridges
 
@@ -307,10 +306,6 @@ await sleep(2000);
 ## Terminal
 
 A built-in TUI for diagnostics and script execution.
-
-<p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="PhoneDo Terminal Preview" width="270" height="600">
-</p>
 
 | Command | Description |
 |:---|:---|
