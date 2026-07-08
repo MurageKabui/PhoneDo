@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  PhoneDo bridges standard JavaScript with Android's native services. Write scripts that control WiFi, Bluetooth, SMS, sensors, SIM metadata, and more — directly on the device, with no build step.
+  PhoneDo is a JavaScript scripting environment for Android. It gives plain JavaScript direct access to native device services such as WiFi, Bluetooth, SMS, telephony, speech, and the file system. Write a script, press run, and it executes on the device. No build step, no SDK, no computer required.
 </p>
 
 <p align="center">
@@ -23,35 +23,43 @@
 | Scripting | Terminal | Native Dialogs |
 |:---:|:---:|:---:|
 | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
-| Write and run JavaScript on-device | Built-in TUI for diagnostics | Awaitable system dialogs |
+| Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
 
-## Hardware Bridges
+## Features
 
-Nearly every native Android service is exposed to the JavaScript environment:
+Scripts get frozen global objects that map to native Android services:
 
 | Category | Bridges |
 | :--- | :--- |
-| Connectivity | WiFi (`WIFI`), Bluetooth LE, Network Diagnostics (`network`), HTTP Client (`http`) |
-| Telephony | SMS Sending and Inbox Access (`SMS`), Phone Dialing (`sim.callNumber`), SIM Metadata (`sim`) |
-| Hardware | Flashlight (`flashlight`), Vibrate and Beep (`device`), Battery Status, Device Metadata |
-| Speech | Text-to-Speech (`utter.speak`), Speech Recognition (`utter.listen`) |
-| Utilities | File System (`fs`), Android Permissions (`permission`), Clipboard (`clipboard`), Browser Viewport (`browser`), Timers (`sleep`) |
-| Interface | Native Dialogs (`alert`, `confirm`, `dialog`), Spinner (`spinner`), Terminal I/O (`console.prompt`, ANSI colors) |
+| Connectivity | WiFi (`WIFI`), Bluetooth LE, network diagnostics (`network`), HTTP client (`http`) |
+| Telephony | SMS sending and inbox access (`SMS`), phone dialing (`sim.callNumber`), SIM metadata (`sim`) |
+| Hardware | Flashlight (`flashlight`), vibration and beep (`device`), battery status, device metadata |
+| Speech | Text-to-speech (`utter.speak`), speech recognition (`utter.listen`) |
+| Storage & System | File system (`fs`), Android permissions (`permission`), clipboard (`clipboard`), in-app browser (`browser`) |
+| Interface | Native dialogs (`alert`, `confirm`, `dialog`), spinner (`spinner`), interactive terminal input (`console.prompt`), ANSI colors |
+
+The environment is asynchronous, so hardware calls are awaited with standard `async/await`. Everything else is the JavaScript you already know: `Array` methods, `JSON`, template literals, classes.
 
 ## Getting Started
 
 Download the latest APK (and the optional demo backup) from the [Releases](../../releases) section, then:
 
 1. Launch PhoneDo and open the side navigation drawer.
-2. Go to **Script Editor** → **File > New Script** to create a workspace (e.g. `hello_world.pjs`).
+2. Go to **Script Editor**, then **File > New Script** to create a workspace (e.g. `hello_world.js`).
 3. Write your JavaScript and select **Run > Run Script**.
 4. Check output and hardware logs in the **Terminal** tab.
 
-Scripts are standard JavaScript. Hardware bridges are injected as global objects, so the same ES6 patterns used in web development apply.
+A first script can be as small as this:
+
+```javascript
+console.log(`Hello from ${device.model}`);
+device.vibrate(200);
+await utter.speak('PhoneDo is ready.');
+```
 
 ## Architecture
 
-Scripts run in an isolated container, separated from the host app, with a serialized message bus to native hardware.
+Every script runs inside an isolated sandbox, separated from the host app, with a serialized message bus to native hardware.
 
 ```mermaid
 graph TD
@@ -69,28 +77,24 @@ graph TD
 
 ### Security and Stability
 
-- **Isolated sandbox** — each script runs in its own hidden sandboxed iframe, created on run and torn down on exit. Scripts cannot reach the host app's internals.
-- **Frozen bridge objects** — API objects (`fs`, `WIFI`, `http`, `device`, ...) are injected with `Object.freeze`; scripts cannot modify their behavior.
-- **Strict mode** — scripts execute in `"use strict"` inside an async wrapper, so top-level `await` works out of the box.
-- **Error handling** — standard `try/catch` works as expected. Uncaught exceptions and unhandled promise rejections are caught and logged to the terminal instead of crashing the app.
-- **Single execution slot** — one script runs at a time. Starting a new script while one is running prompts you to stop the current one first.
+Each script runs in its own hidden sandboxed iframe that is created on run and torn down on exit, so scripts cannot reach the host app's internals. The bridge objects (`fs`, `WIFI`, `http`, `device`, and the rest) are injected with `Object.freeze`, which prevents scripts from tampering with their behavior.
 
-### Script Management
+Scripts execute in strict mode inside an async wrapper, so top-level `await` works without any setup. Uncaught exceptions and unhandled promise rejections are caught and printed to the terminal instead of crashing the app, and normal `try/catch` works as expected.
 
-Scripts use the `.pjs` extension and run as standard JavaScript in an asynchronous environment. Legacy `.nts` files are supported for backward compatibility.
+Only one script runs at a time. Starting a new script while another is running prompts you to stop the current one first, and `exit(code)` terminates a script cleanly from within.
 
-New scripts are created with a generated metadata header for project tracking:
+### Script Files
+
+Scripts are plain `.js` files. New scripts are created with a generated metadata header for project tracking:
 
 ```javascript
 /*
-  Script Name     : MyProject.pjs
+  Script Name     : MyProject.js
   Date            : Mon Feb 16 2026 23:35:52 GMT+0300
   Description     : Standard JS processing with native bridges.
   PhoneDo Version : 1.4.0
 */
 ```
-
-The environment is asynchronous — use `await` for hardware operations.
 
 ## Examples
 
@@ -125,6 +129,11 @@ await WIFI.connect(strongest.SSID, false, 'secure_password', 'WPA', false);
 
 // On Android 10+ prefer the suggestion API
 await WIFI.suggestConnection(strongest.SSID, 'secure_password');
+
+// Inspect the current connection
+const ssid = await WIFI.getConnectedSSID();
+const ip = await WIFI.getIP();
+console.log(`Connected to ${ssid} at ${ip}`);
 ```
 </details>
 
@@ -157,6 +166,12 @@ await fs.writeTextFile(path, 'status.json', JSON.stringify(data, null, 2));
 // Read it back
 const raw = await fs.readTextFile(path, 'status.json');
 console.log(JSON.parse(raw).status);
+
+// Directories and housekeeping
+if (!(await fs.dirExists(path + 'logs'))) {
+    await fs.createDirectory(path, 'logs');
+}
+await fs.appendTextFile(path, 'run.log', `Run at ${Date.now()}\n`);
 ```
 </details>
 
@@ -171,7 +186,10 @@ if (response.status === 200) {
     console.log(`Retrieved ${records.length} items from API.`);
 }
 
-// Also available: uploadFile, downloadFile, setHeader, cookies, timeouts, TLS trust modes
+// Download a file straight to storage
+await http.downloadFile('https://example.com/backup.zip', {}, {}, fs.APP_ROOT_DIR + 'backup.zip');
+
+// Also available: uploadFile, setHeader, cookies, timeouts, TLS trust modes
 ```
 </details>
 
@@ -197,6 +215,7 @@ await flashlight.switchOff();
 <summary><b>Voice and Audio</b></summary>
 
 ```javascript
+// Speak with optional rate, pitch, and voice
 await utter.speak('Ready for voice command.');
 
 // listen() resolves an array of recognition matches
@@ -245,10 +264,10 @@ await clipboard.setText('Generated_Key_123');
 </details>
 
 <details>
-<summary><b>Browser Viewport</b></summary>
+<summary><b>In-App Browser</b></summary>
 
 ```javascript
-// Open a hardened viewport (cache/session cleared) for untrusted content
+// Open a hardened viewport (cache and session cleared) for untrusted content
 await browser.openSafe('https://github.com/MurageKabui/PhoneDo');
 
 // Other modes: open, openFullscreen, openMinimal, openExternal (system browser)
@@ -305,7 +324,7 @@ await sleep(2000);
 
 ## Terminal
 
-A built-in TUI for diagnostics and script execution.
+A built-in terminal for diagnostics and script execution.
 
 | Command | Description |
 |:---|:---|
