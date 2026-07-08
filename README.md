@@ -18,16 +18,17 @@
   <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
 </p>
 
-## Preview
+## Screenshots
 
 | Scripting | Terminal | Native Dialogs |
 |:---:|:---:|:---:|
 | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/HelloWorldDemo.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/TUI-Preview.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/dialogDemo1.jpg" alt="Native dialog demo" width="240"> |
 | Write and run JavaScript on-device | Built-in terminal for diagnostics | Awaitable system dialogs |
 
+
 ## Features
 
-Scripts get frozen global objects that map to native Android services:
+Scripts get ready-made global objects that map to native Android services:
 
 | Category | Bridges |
 | :--- | :--- |
@@ -39,6 +40,19 @@ Scripts get frozen global objects that map to native Android services:
 | Interface | Native dialogs (`alert`, `confirm`, `dialog`), spinner (`spinner`), interactive terminal input (`console.prompt`), ANSI colors |
 
 The environment is asynchronous, so hardware calls are awaited with standard `async/await`. Everything else is the JavaScript you already know: `Array` methods, `JSON`, template literals, classes.
+
+
+## Tech Stack
+
+| Component | Responsibility | Technology |
+|:---|:---|:---|
+| Host App | Lifecycle and permissions | Java |
+| Logic Engine | Script evaluation | JavaScript Sandbox |
+| Hardware Bridges | Native access | Cordova Plugins |
+| UI | Menus and management | Vue.js |
+| Editor | Code development | ACE.js |
+| Terminal | Logs and TUI | JQConsole |
+| Storage | Persistence | SQLite3 |
 
 ## Getting Started
 
@@ -77,11 +91,9 @@ graph TD
 
 ### Security and Stability
 
-Each script runs in its own hidden sandboxed iframe that is created on run and torn down on exit, so scripts cannot reach the host app's internals. The bridge objects (`fs`, `WIFI`, `http`, `device`, and the rest) are injected with `Object.freeze`, which prevents scripts from tampering with their behavior.
+Every script runs in its own sandbox, created when the script starts and destroyed when it ends, so your code stays isolated from the rest of the app. Errors never crash the app: uncaught exceptions and failed promises are caught and printed to the terminal, and normal `try/catch` works as expected. Top-level `await` works without any setup.
 
-Scripts execute in strict mode inside an async wrapper, so top-level `await` works without any setup. Uncaught exceptions and unhandled promise rejections are caught and printed to the terminal instead of crashing the app, and normal `try/catch` works as expected.
-
-Only one script runs at a time. Starting a new script while another is running prompts you to stop the current one first, and `exit(code)` terminates a script cleanly from within.
+One script runs at a time. Starting a new script while another is running asks you to stop the current one first, and `exit()` ends a script cleanly from within.
 
 ### Script Files
 
@@ -337,18 +349,6 @@ A built-in terminal for diagnostics and script execution.
 | `time` | Print the current system time |
 | `cls` / `clear` | Clear the terminal display buffer |
 | `exit` | Quit the current terminal instance |
-
-## Tech Stack
-
-| Component | Responsibility | Technology |
-|:---|:---|:---|
-| Host App | Lifecycle and permissions | Java |
-| Logic Engine | Script evaluation | JavaScript Sandbox |
-| Hardware Bridges | Native access | Cordova Plugins |
-| UI | Menus and management | Vue.js |
-| Editor | Code development | ACE.js |
-| Terminal | Logs and TUI | JQConsole |
-| Storage | Persistence | SQLite3 |
 
 ## Installation
 
