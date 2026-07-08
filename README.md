@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  PhoneDo is a JavaScript scripting environment for Android. It gives plain JavaScript direct access to native device services such as WiFi, Bluetooth, SMS, telephony, speech, and the file system. Write a script, press run, and it executes on the device. No build step, no SDK, no computer required.
+  PhoneDo is an app that bridges standard JavaScript with Android’s native features. It allows you to write scripts to manage hardware and system services including WiFi, Bluetooth, SMS, SIM metadata, and more , using familiar coding patterns in a mobile environment.
 </p>
 
 <p align="center">
