@@ -1092,7 +1092,6 @@ const viewEditScript = {
 if (!app.store.bLoadedDb) {
     app.showAlert('An critical error occoured loading database.');
 } else {
-    //views.viewConsole.syncwebsocket.open();
     app.populateUserScripts();
     if (!app.store.loadedace) {
       app.setReactiveVar('aceedit' , ace.edit('editor'));
@@ -1115,6 +1114,7 @@ if (!app.store.bLoadedDb) {
     }
     app.aceEditFocusLastLine();
 }
+
 app.setViewReadyForDeviceKeyboard();
 app.setDialogReadyForDeviceKeyboard();
       },
@@ -1127,30 +1127,23 @@ app.setDialogReadyForDeviceKeyboard();
           dialogs = app._getLoadedDialogs();
         view.event = null;
 let cs = app.store.currentScriptName;
-// views.viewConsole.syncwebsocket.close();
 if (cs) {
-    app.getActualScriptContent(cs)
-        .then(function(savedContent) {
-
-            if (savedContent !== app.store.aceedit.getValue()) {
-
-                SA.confirm({
-                    title: cs.toString(),
-                    body: 'You have unsaved changes.',
-                    okText: 'Save',
-                    cancelText: 'Discard'
-                }).then(function(confirmed) {
-                    if (confirmed) {
-                        app.saveScript(cs);
-                    }
-                });
-
-            }
-
-            savedContent = null;
-
-        });
-
+	app.getActualScriptContent(cs)
+		.then(function(savedContent) {
+			if (savedContent !== app.store.aceedit.getValue()) {
+				SA.confirm({
+					title: cs.toString(),
+					body: 'You have unsaved changes.',
+					okText: 'Save',
+					cancelText: 'Discard'
+				}).then(function(confirmed) {
+					if (confirmed) {
+						app.saveScript(cs);
+					}
+				});
+			}
+			savedContent = null;
+		});
 }
       },
       methods: {
@@ -1398,7 +1391,7 @@ const DabApp = {
       error: null,
       
       id: "com.phonedopro.muragekabui",
-      version: "1.3.2",
+      version: "1.4.0",
       name: "PhoneDo (PRO)",
       shortName: "PhoneDo",
       description: "Script Android the JS Way",
@@ -1409,7 +1402,7 @@ const DabApp = {
       languageName: "English",
       textDirection: "ltr",
       style: "scaled",
-      buildNumber: 1111,
+      buildNumber: 1112,
       lastSound: null,
       activeDialog: null,
       defaultLanguage: "en",
@@ -4325,7 +4318,7 @@ app.setReactiveVar('currentScriptName', '');
 app.setReactiveVar('bSearchingScript', false);
 
 
-app.setReactiveVar('hdr', 'PhoneDo [Version 1.3.2.9043.906]\n');
+app.setReactiveVar('hdr', `PhoneDo [Version ${app.version}]\n`);
 app.setReactiveVar('jqconsole', $('#console_wrapper').jqconsole(app.store.hdr + '\n'));
 
 $('.debugStyle span, .infoStyle span, .warningStyle span, .successStyle span, .errorStyle span').addClass('selectabletxt');
@@ -4527,7 +4520,7 @@ console.log = function (...messages) {
 
 // Override console.error
 console.error = function (...messages) {
-    //writeToJQConsole(messages, "errorStyle", originalError);
+    writeToJQConsole(messages, "errorStyle", originalError);
 };
 
 // Override console.debug
