@@ -501,11 +501,10 @@ for (let i = 0; i < 5; i++) {
 }
 ```
 
-```
-
 ### Best Practices
 
 1. **Avoid Long Sleeps**
+
 ```javascript
 // Good - Break long operations into smaller chunks
 for (let i = 0; i < 10; i++) {
@@ -515,7 +514,6 @@ for (let i = 0; i < 10; i++) {
 
 // Avoid
 await sleep(10000); // Long sleep blocks the script
-```
 
 ```
 
