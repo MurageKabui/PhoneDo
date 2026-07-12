@@ -1,10 +1,10 @@
-<!-- <p align="center">
+<p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/PhoneDo_logo_light%20(Small).png?raw=true" alt="PhoneDo Logo" width="440">
 </p>
- -->
-<p align="center">
+
+<!-- <p align="center">
   <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/PhoneDo_icon.png?raw=true" alt="PhoneDo Logo" width="150" height="150">
-</p>
+</p> -->
 
 <p align="center">
   <img src="https://img.shields.io/github/v/release/MurageKabui/PhoneDo?include_prereleases&style=flat-square" alt="Version">
