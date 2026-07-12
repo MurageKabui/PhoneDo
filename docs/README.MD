@@ -17,6 +17,7 @@
 - [Core Utilities](#core-utilities)
   - [Global Aliases](#global-aliases)
   - [Console Output](#console-output)
+  - [Reading User Input](#reading-user-input)
   - [ANSI Color Support](#ansi-color-support)
   - [Sleep and Timers](#sleep-and-timers)
   - [Android Permissions](#android-permissions)
@@ -38,6 +39,27 @@
   - [Speech and Voice](#speech-and-voice)
   - [File System](#file-system)
 
+## Recent Updates & Behavior Notes
+
+If you have used PhoneDo before, these are the behaviors worth knowing:
+
+- **Read user input** with `await console.prompt()` (see [Reading User Input](#reading-user-input)).
+- **`exit()` stops the script immediately.** Code after `exit()` does not run. Because it works
+  by throwing an internal signal, a catch-all `try { ... } catch (e) { }` around your whole
+  script will also swallow `exit()`. Call it at the top level, or re-throw errors you do not
+  recognise.
+- **Stopping a run.** A running script can be stopped from the app menu (**Stop Run**). This
+  stops any script that yields to the event loop (uses `sleep`, `prompt`, or awaits a bridge).
+  A purely synchronous loop such as `while (true) {}` cannot be interrupted and will freeze the
+  app, so always give long loops an `await sleep(...)`.
+- **`console.log` prints objects as JSON.** Passing an object or array now prints readable JSON
+  instead of `[object Object]`, and `console.table` renders a real text table.
+- **`sleep()` is capped at 10 minutes** and rejects negative or non-numeric input.
+- **`browser.open()` blocks dangerous URL schemes** (`javascript:`, `data:`, `file:`). Only
+  `http`/`https` (and `tel`/`mailto`/`sms`/`geo` via the system handler) are allowed.
+- **`fs` path arguments are optional.** If you omit the directory, file methods default to
+  `fs.DATA_DIR` (app-private, always writable, no permission needed).
+
 ## Core Utilities
 
 ### Global Aliases
@@ -47,8 +69,14 @@ These functions are available globally in the script environment for convenience
 ```javascript
 cout(...messages: any[]): void;    // Alias for log()
 log(...messages: any[]): void;     // Alias for log()
-exit(exitCode?: number): void;     // Terminates the script execution
+exit(exitCode?: number): void;     // Stops the script immediately
 ```
+
+> [!IMPORTANT]
+> `exit()` stops the script right away - nothing after it runs. It signals the stop by throwing
+> internally, so a `try/catch` that wraps your whole script and swallows every error will also
+> swallow `exit()`. Keep `exit()` at the top level, or re-throw errors you did not expect. A
+> non-zero exit code prints `Script Terminated. ExitCode: N`.
 
 #### Example Usage
 
@@ -71,6 +99,7 @@ interface Console {
     warn(...messages: any[]): void;     // Logs a warning message (Yellow/Red)
     error(...messages: any[]): void;    // Logs an error message (Red)
     success(...messages: any[]): void;  // Logs a success message (Green)
+    prompt(): Promise<string>;          // Reads a line of input from the user
     clear(): void;                      // Clears the console output
     cls(): void;                        // Alias for clear()
     
@@ -256,6 +285,7 @@ The `console` object is a full bridge to the native terminal, supporting the fol
 
 - `log()`, `info()`, `warn()`, `error()`
 - `success()` (PhoneDo specific)
+- `prompt()` (PhoneDo specific - reads user input)
 - `clear()`, `cls()`
 - `assert(condition, ...messages)`
 - `count(label?)`
@@ -283,6 +313,67 @@ console.log("User login attempt:", { username: "john", timestamp: new Date() });
 // Avoid
 console.log("User " + username + " logged in at " + new Date());
 ```
+
+### Reading User Input
+
+`console.prompt()` pauses the script and waits for the user to type a line and press enter. It
+resolves to the entered text as a string (empty string if nothing was typed). Always `await` it.
+
+```javascript
+console.log("What is your name?");
+const name = await console.prompt();
+console.success(`Hello, ${name || 'stranger'}!`);
+```
+
+#### Reusable helpers
+
+```javascript
+// Ask a question and return the trimmed answer.
+async function ask(question) {
+    console.log(question);
+    return (await console.prompt() || '').trim();
+}
+
+// Ask for a number, with a fallback when the input is blank or invalid.
+async function askNumber(question, fallback) {
+    const raw = await ask(question);
+    const n = parseFloat(raw);
+    return (raw === '' || isNaN(n)) ? fallback : n;
+}
+
+const age = await askNumber("Your age?", 0);
+```
+
+#### Validate and re-ask
+
+Wrap the prompt in a bounded loop so a bad answer can be re-entered without looping forever.
+
+```javascript
+async function askValid(question, validate, tries = 3) {
+    for (let i = 0; i < tries; i++) {
+        const value = await ask(question);
+        const error = validate(value);
+        if (!error) return value;
+        console.warn(error);
+    }
+    return null; // gave up
+}
+
+const email = await askValid(
+    "Email:",
+    v => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v) ? '' : 'That does not look like an email.'
+);
+```
+
+> [!TIP]
+> For yes/no questions or button choices, a native `dialog.confirm()` or `dialog.alert()` popup
+> is often nicer than a typed prompt. Use `console.prompt()` for free-form text and numbers.
+
+> [!IMPORTANT]
+> While the script waits at a prompt, the shell is paused. If the user does not answer, use the
+> **Stop Run** menu item to cancel; the prompt aborts cleanly and the shell returns.
+
+---
 
 ### Android Permissions
 
@@ -368,6 +459,17 @@ The `spinner` object controls a system-level loading overlay, preventing user in
 
 - `spinner.show(title?: string, message?: string, cancelable?: boolean): void`
 - `spinner.hide(): void`
+
+```javascript
+spinner.show("Syncing", "Please wait while we sync your data...");
+await sleep(3000);
+spinner.hide();
+```
+
+> [!NOTE]
+> The spinner is cancelable by default, and the hardware back button will dismiss it. Always
+> pair `spinner.show()` with a `spinner.hide()` (a `try/finally` is a good place) so it does not
+> linger if your task throws.
 
 ---
 
@@ -475,9 +577,9 @@ async function sequentialOperations() {
 ### Notes
 
 - Sleep operations are non-blocking for the main thread
-- Sleep duration must be a positive number
-- Sleep operations can be cancelled by script termination
-- Sleep operations are precise to the millisecond
+- Sleep duration must be a non-negative number of milliseconds (negative or non-numeric values are rejected)
+- Sleep is capped at 10 minutes (600000 ms); larger values are clamped
+- Sleep operations can be cancelled by script termination (including Stop Run)
 
 ## User Interface
 
@@ -492,6 +594,11 @@ The `browser` object lets your scripts open websites using a built-in browser wi
 - `browser.openFullscreen(url: string): Promise<InAppBrowserObject>`
 - `browser.openMinimal(url: string): Promise<InAppBrowserObject>`
 - `browser.openExternal(url: string): Promise<InAppBrowserObject>`
+
+> [!IMPORTANT]
+> For security, only `http` and `https` URLs are allowed (plus `tel`, `mailto`, `sms`, and `geo`
+> when using `openExternal`, which hands off to the system). Script-injection and local-file
+> schemes such as `javascript:`, `data:`, and `file:` are blocked and will throw.
 
 #### Configuration (`BrowserConfig`)
 
@@ -514,12 +621,18 @@ The following options can be passed to `browser.open`:
 | `shouldPauseOnSuspend` | `'yes' \| 'no'` | `'yes'` | Pause background media |
 | `clearcache` | `'yes' \| 'no'` | `'no'` | Clear cache before opening |
 | `clearsessioncache` | `'yes' \| 'no'` | `'no'` | Clear session cache before opening |
-| `presentationstyle` | `'pagesheet' \| 'fullscreen' \| 'formsheet'` | `'pagesheet'` | Visual mode (iOS) |
-| `transitionstyle` | `'crossdissolve' \| 'fliphorizontal' \| 'coververtical'` | `'crossdissolve'` | Transition animation (iOS) |
+| `presentationstyle` | `'pagesheet' \| 'fullscreen' \| 'formsheet'` | `'pagesheet'` | No effect on Android |
+| `transitionstyle` | `'crossdissolve' \| 'fliphorizontal' \| 'coververtical'` | `'crossdissolve'` | No effect on Android |
 | `lefttoright` | `'yes' \| 'no'` | `'yes'` | UI layout direction |
 | `fullscreen` | `'yes' \| 'no'` | `'no'` | Open in fullscreen mode |
 | `usewkwebview` | `'yes' \| 'no'` | `'yes'` | Use modern WKWebView |
 | `keyboardDisplayRequiresUserAction` | `'yes' \| 'no'` | `'yes'` | Require touch for keyboard |
+
+> [!WARNING]
+> Do not combine `fullscreen: 'yes'` with `location: 'no'` and `toolbar: 'no'` - that leaves the
+> window with no visible control to close it, trapping the user. `openFullscreen()` keeps the
+> hardware back button working so the window can still be dismissed. By default the hardware back
+> button navigates the page history and closes the window when there is nothing to go back to.
 
 #### Example: Event Handling
 
@@ -581,21 +694,6 @@ await alert(
 );
 ```
 
-### Spinner Control
-
-The `spinner` object controls a system-level loading overlay, preventing user interaction during long-running background tasks.
-
-#### Methods
-
-- `spinner.show(title?: string, message?: string): void`
-- `spinner.hide(): void`
-
-```javascript
-spinner.show("Syncing", "Please wait while we sync your data...");
-await sleep(3000);
-spinner.hide();
-```
-
 ## Connectivity and Data
 
 ### Network Operations
@@ -652,16 +750,43 @@ Advanced control over the device's WiFi hardware, including scanning and connect
 #### Methods
 
 - `WIFI.requestPermission(): Promise<boolean>`
+- `WIFI.isLocationEnabled(): Promise<boolean>`
+- `WIFI.openLocationSettings(): Promise<boolean>`
 - `WIFI.scan(): Promise<Array<WifiNetwork>>`
-- `WIFI.connect(config: WifiConfig): Promise<boolean>`
-- `WIFI.disconnect(ssid?: string): Promise<void>`
-- `WIFI.getConnectedSSID(): Promise<string>`
+- `WIFI.connect(ssid, bindAll, password?, algorithm?, isHiddenSSID?): Promise<any>`
+- `WIFI.suggestConnection(ssid, password, algorithm?, isHiddenSSID?): Promise<any>`  // Android 10+ (API 29+)
+- `WIFI.disconnect(ssid?: string): Promise<any>`
+- `WIFI.getConnectedSSID(): Promise<string>`   // resolves -1 when not on WiFi
+- `WIFI.getConnectedBSSID(): Promise<string>`
+- `WIFI.getIP(): Promise<string>`
 - `WIFI.isEnabled(): Promise<boolean>`
 - `WIFI.enable(): Promise<boolean>`
 - `WIFI.disable(): Promise<boolean>`
+- `WIFI.isConnectedToInternet(): Promise<boolean>`
+
+**`connect` parameters (positional):**
+
+| Param | Type | Notes |
+|-------|------|-------|
+| `ssid` | string | Network name |
+| `bindAll` | boolean | Route all app traffic through this network |
+| `password` | string | Omit for an open network |
+| `algorithm` | string | `WPA` or `WEP` only. For WPA2, pass `WPA`. Omit for open networks |
+| `isHiddenSSID` | boolean | `true` if the network does not broadcast its SSID |
+
+> [!NOTE]
+> `connect` does not resolve until the connection is verified as complete - it can wait up to
+> **60 seconds** before resolving or failing. Keep this in mind (a spinner helps) and do not
+> assume it hung. It handles the full add-then-enable flow for you.
 
 > [!IMPORTANT]
-> Always call `WIFI.requestPermission()` before attempting to scan or connect.
+> Scanning requires location permission AND location services turned on (an Android rule).
+> Call `WIFI.requestPermission()` first, and check `WIFI.isLocationEnabled()`.
+
+> [!TIP]
+> On Android 10+ (API 29+), apps can no longer silently join arbitrary networks. Use
+> `WIFI.suggestConnection(ssid, password, algorithm, isHiddenSSID)` to suggest a network for
+> internet access across the device; its `algorithm` accepts `WPA`, `WPA2`, or `WPA3`.
 
 #### Interfaces
 
@@ -669,19 +794,23 @@ Advanced control over the device's WiFi hardware, including scanning and connect
 interface WifiNetwork {
     SSID: string;
     BSSID: string;
-    level: number;       // Signal strength in dBm
+    level: number;       // Signal strength in dBm (e.g. -45 strong, -85 weak)
     frequency: number;   // In MHz
     capabilities: string; // Encryption types (e.g., [WPA2-PSK-CCMP])
     channelWidth: number;
     timestamp: number;
 }
+```
 
-interface WifiConfig {
-    ssid: string;
-    password?: string;
-    algorithm?: 'WPA' | 'WEP' | 'NONE';
-    isHiddenSSID?: boolean;
-}
+#### Example: connect to the strongest open-or-known network
+
+```javascript
+await WIFI.requestPermission();
+const networks = await WIFI.scan();
+const strongest = networks.sort((a, b) => b.level - a.level)[0];
+console.log(`Connecting to ${strongest.SSID} (${strongest.level} dBm)`);
+await WIFI.connect(strongest.SSID, false, 'your_password', 'WPA', false);
+console.log('Now on:', await WIFI.getConnectedSSID(), 'IP:', await WIFI.getIP());
 ```
 
 #### Example Usage
@@ -797,13 +926,17 @@ Access device-specific metadata and system-level hardware triggers.
 
 - `device.model`: string
 - `device.platform`: string
-- `device.osVersion`: string (uuid mapped in bridge)
+- `device.version`: string        // OS version
 - `device.manufacturer`: string
 - `device.uuid`: string
-- `device.isCharging`: boolean
-- `device.batteryLevel`: number
 - `device.serial`: string
 - `device.isVirtual`: boolean
+- `device.isCharging`: boolean     // snapshot taken at script start
+- `device.batteryLevel`: number    // snapshot taken at script start
+
+> [!NOTE]
+> `device` values (including `batteryLevel` and `isCharging`) are read once when the script
+> starts and do not update live during the run.
 
 #### Methods
 
@@ -818,6 +951,12 @@ device.vibrate(500);  // Vibrates for 500ms
 ```
 
 The `fs` object lets you work with files on your device. It uses specific locations to make sure your data is saved in the right place.
+
+> [!TIP]
+> The directory argument is optional. If you pass `undefined` (or omit it), file methods default
+> to `fs.DATA_DIR` - the app-private storage that always exists and needs no permission. Use an
+> explicit location like `fs.EX_ROOT_DIR` only when you need files the user can see, and note that
+> shared/external locations may require storage permission and are restricted on newer Android.
 
 #### Storage Locations
 
@@ -886,6 +1025,10 @@ await sleep(1000);
 await flashlight.switchOff();
 ```
 
+> [!TIP]
+> The flashlight needs no runtime permission (it is handled for you). Always switch it off before
+> your script ends - a torch left on stays on after the script finishes.
+
 ---
 
 ## Error Handling
@@ -907,13 +1050,24 @@ The `bluetooth` object provides comprehensive control over Bluetooth Low Energy 
 
 #### Methods
 
-- `bluetooth.scan(timeout: number, onDeviceFound: (device: BLEDevice) => void, onScanError: (error: any) => void): Promise<void>`
-- `bluetooth.stopBTScan(): Promise<void>`
-- `bluetooth.connectBT(device: BLEDevice, onConnected: (device: BLEDevice) => void, onDisconnected: (device: BLEDevice) => void, onConnectError: (error: any) => void, options?: object): Promise<BLEDevice>`
-- `bluetooth.getBTService(device: BLEDevice, serviceUUID: string): Promise<BLEService>`
-- `bluetooth.getBTCharacteristic(service: BLEService, characteristicUUID: string): Promise<BLECharacteristic>`
-- `bluetooth.readBTCharacteristic(device: BLEDevice, characteristic: BLECharacteristic): Promise<ArrayBuffer>`
-- `bluetooth.writeBTCharacteristic(device: BLEDevice, characteristic: BLECharacteristic, data: ArrayBuffer): Promise<void>`
+- `bluetooth.scan(onDeviceFound?, onScanError?, timeoutSeconds?): Promise<Array<BLEDevice>>`
+- `bluetooth.stopScan(): Promise<void>`
+- `bluetooth.connect(device, onConnected?, onDisconnected?, onConnectError?, options?): Promise<BLEDevice>`
+- `bluetooth.getService(device: BLEDevice, serviceUUID: string): Promise<BLEService>`
+- `bluetooth.getCharacteristic(service: BLEService, characteristicUUID: string): Promise<BLECharacteristic>`
+- `bluetooth.readCharacteristic(device: BLEDevice, characteristic: BLECharacteristic): Promise<ArrayBuffer>`
+- `bluetooth.writeCharacteristic(device: BLEDevice, characteristic: BLECharacteristic, data: ArrayBuffer): Promise<void>`
+
+> [!NOTE]
+> `scan()` takes the callbacks first and the timeout (in **seconds**) last. All three arguments
+> are optional. It scans for the timeout period, then **resolves an array of the devices found**
+> (de-duplicated), so you can simply `const devices = await bluetooth.scan(null, null, 8);`.
+> Requires Bluetooth on and BLE/location permission.
+
+> [!TIP]
+> `connect()` performs automatic service discovery, so after it resolves you can go straight to
+> `getService` / `getCharacteristic`. If a service has two characteristics with the **same UUID**
+> (rare), `getCharacteristic` returns only the first one found.
 
 #### Interfaces
 
@@ -941,14 +1095,15 @@ interface BLECharacteristic {
 
 ```javascript
 try {
-    // Scan for 10 seconds
-    await bluetooth.scan(10, (device) => {
-        console.info(`Found Device: ${device.name || 'Unknown'} [${device.address}]`);
-    }, (error) => {
-        console.error("Scan Error:", error);
-    });
+    // Scan for 8 seconds. Callbacks are optional; the resolved array is usually enough.
+    const devices = await bluetooth.scan(
+        (device) => console.info(`Found: ${device.name || 'Unknown'} [${device.address}]`),
+        (error) => console.error("Scan Error:", error),
+        8
+    );
 
-    // Note: You would usually find a specific device from the scan results to connect to
+    console.log(`Discovered ${devices.length} device(s).`);
+    // Pick one from `devices` and pass it to bluetooth.connect(...) to talk to it.
 } catch (e) {
     console.error("Bluetooth operation failed:", e);
 }
@@ -984,6 +1139,18 @@ The `http` object is a powerful, low-level bridge for web requests that bypasses
 | `headers` | `object` | Request headers |
 | `timeout` | `number` | Request timeout in seconds |
 | `responseType`| `string` | `text`, `json`, `arraybuffer`, `blob` |
+
+> [!TIP]
+> Notes from the underlying HTTP engine that are easy to miss:
+> - **`setHeader` includes the port.** A header set for `example.com` will NOT apply to
+>   `example.com:8080`. Match the exact host (and port) you request.
+> - **Serializer must match your data.** `urlencoded` (the default) and `json` expect an object;
+>   `utf8` expects a string; `raw` expects a `Uint8Array`/`ArrayBuffer`. Importantly, `urlencoded`
+>   cannot serialize nested objects - use `http.setDataSerializer('json')` for structured bodies.
+> - **Encode special characters in the URL yourself** (for example with `encodeURI()`); the query
+>   string is not auto-encoded for you.
+> - **`setServerTrustMode('nocheck')`** disables TLS certificate checking. Only ever use it for
+>   local testing; never against real servers.
 
 #### Error Codes (`http.ERROR_CODES`)
 
@@ -1033,6 +1200,12 @@ The `sim` object allows retrieval of information about the SIM card and placing 
 - `sim.getInfo(): Promise<SimInfo>`
 - `sim.callNumber(number: string, bypassAppChooser?: boolean): Promise<any>`
 
+> [!IMPORTANT]
+> `sim.getInfo()` reads the SIM through Android's `TelephonyManager`/`SubscriptionManager`, which
+> require the `READ_PHONE_STATE` permission (Android 6+). Always call `sim.requestPermission()`
+> first and proceed only if it resolves true. `sim.callNumber(number, true)` dials immediately;
+> pass `false` to show the app chooser instead.
+
 #### Interfaces
 
 ```typescript
@@ -1064,21 +1237,57 @@ The `utter` object provides capabilities for Text-to-Speech (TTS) and Speech-to-
 
 #### Methods
 
-- `utter.speak(text: string, options?: UtterOptions): Promise<void>`
-- `utter.getVoices(): Promise<Array<Voice>>`
-- `utter.listen(options?: ListenOptions): Promise<string>`
-- `utter.stopListening(): void`
+**Text to Speech**
+
+- `utter.speak(text: string, rate?: number, pitch?: number, identifier?: string): Promise<void>`
+- `utter.getVoices(): Promise<Array<{ name: string, identifier: string, language: string }>>`
+
+`rate` and `pitch` are roughly 0-1 (rate defaults to ~0.95, pitch to 1). `identifier` is a voice
+id from `getVoices()`; if omitted, the device default voice is used.
+
+**Speech to Text**
+
+- `utter.canListen(): Promise<boolean>`      // is speech recognition available
+- `utter.hasPermission(): Promise<boolean>`  // microphone permission
 - `utter.requestPermission(): Promise<boolean>`
+- `utter.listen(options?: ListenOptions): Promise<string[]>`  // resolves best-match candidates
+- `utter.stopListening(): Promise<void>`
+
+> [!IMPORTANT]
+> Speech recognition (`listen`) **requires an internet connection** and the `RECORD_AUDIO`
+> (microphone) permission. Check `utter.canListen()` first, then `utter.hasPermission()` /
+> `utter.requestPermission()`. Text to speech (`speak`) works offline.
+
+```typescript
+interface ListenOptions {
+    language?: string;    // e.g. 'en-US' (default)
+    matches?: number;     // number of candidate results (default 5)
+    prompt?: string;      // Android only: text shown in the listen popup
+    showPopup?: boolean;  // Android only: show the listen popup (default true)
+    showPartial?: boolean;// stream partial results (default false)
+}
+```
+
+#### Example
 
 ```javascript
+// Speak
 const voices = await utter.getVoices();
-await utter.speak("Bridge initialized successfully", { voice: voices[0] });
+await utter.speak("Bridge initialized successfully", 0.95, 1.0, voices[0] && voices[0].identifier);
+
+// Listen
+if (await utter.canListen()) {
+    if (!(await utter.hasPermission())) await utter.requestPermission();
+    const results = await utter.listen({ language: 'en-US', matches: 5 });
+    console.log("You said:", results[0]);
+}
 ```
 
 ---
 
 ### Notes & Limitations
 
-- **Platform Support**: While Core and Connectivity bridges are cross-platform, hardware-specific triggers (like SIM or Flashlight) are primarily optimized for Android.
+- **Platform**: PhoneDo is an Android application. All bridges target Android; there is no iOS build.
 - **Async Pattern**: All methods returning a `Promise` should be used with `await` to ensure correct execution order.
-- **Permissions**: Runtime permissions are required for sensitive hardware access. Always check the `permission` bridge before execution.
+- **Permissions**: Runtime permissions are required for sensitive hardware access (Android 6+ grants them at run time, not install time). Always request via the `permission` bridge before using a feature that needs it.
+- **Stopping**: A script that yields to the event loop (uses `sleep`, `prompt`, or awaits a bridge) can be stopped with **Stop Run**. A purely synchronous loop cannot be interrupted, so give long loops an `await sleep(...)`.

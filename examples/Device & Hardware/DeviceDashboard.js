@@ -16,22 +16,21 @@ function batteryBar(level) {
     return `${color}${'█'.repeat(filled)}${ANSI.BLACK}${'░'.repeat(w - filled)}${ANSI.RESET} ${color}${ANSI.BOLD}${level}%${ANSI.RESET}`;
 }
 
-const label = (s) => `${ANSI.CYAN}${(s + ':').padEnd(15)}${ANSI.RESET}`;
+const label = (s) => `${ANSI.WHITE}${(s + ':').padEnd(18)}${ANSI.RESET}`;
 
-console.log(`${ANSI.BOLD}${ANSI.BLUE}╔════════════════════════════════════════╗${ANSI.RESET}`);
-console.log(`${ANSI.BOLD}${ANSI.BLUE}║           DEVICE  DASHBOARD            ║${ANSI.RESET}`);
-console.log(`${ANSI.BOLD}${ANSI.BLUE}╚════════════════════════════════════════╝${ANSI.RESET}\n`);
+console.log(`${ANSI.BG_BLACK}${ANSI.WHITE}╔═══════════════════════════════════╗${ANSI.RESET}`);
+console.log(`${ANSI.BG_BLACK}${ANSI.WHITE}║            DEVICE DASHBOARD             ║${ANSI.RESET}`);
+console.log(`${ANSI.BG_BLACK}${ANSI.WHITE}╚═══════════════════════════════════╝${ANSI.RESET}\n`);
 
-console.log(label('Manufacturer') + `${ANSI.BOLD}${device.manufacturer}${ANSI.RESET}`);
-console.log(label('Model') + `${ANSI.BOLD}${device.model}${ANSI.RESET}`);
-console.log(label('Platform') + `${device.platform} ${device.version}`);
-console.log(label('Virtual') + (device.isVirtual ? `${ANSI.YELLOW}emulator${ANSI.RESET}` : 'physical'));
-console.log(label('UUID') + `${ANSI.BLACK}${device.uuid}${ANSI.RESET}`);
+console.log(label('1. Manufacturer') + `${ANSI.BOLD}${device.manufacturer}${ANSI.RESET}`);
+console.log(label('2. Model') + `${ANSI.BOLD}${device.model}${ANSI.RESET}`);
+console.log(label('3. Platform') + `${device.platform} ${device.version}`);
+console.log(label('4. Virtual') + (device.isVirtual ? `${ANSI.YELLOW}emulator${ANSI.RESET}` : 'physical'));
+console.log(label('5. UUID') + `${ANSI.WHITE}${device.uuid}${ANSI.RESET}`);
+console.log(`${ANSI.UNDERLINE}${ANSI.BOLD} Power Information ${ANSI.RESET}`);
+console.log(label('6. Charging') + (device.isCharging ? `${ANSI.WHITE}yes${ANSI.RESET}` : 'no'));
+console.log(label('7. Battery') + batteryBar(Number(device.batteryLevel) || 0));
 
-console.log(`\n${ANSI.BOLD}Power${ANSI.RESET}`);
-console.log(label('Charging') + (device.isCharging ? `${ANSI.GREEN}yes${ANSI.RESET}` : 'no'));
-console.log(label('Battery') + batteryBar(Number(device.batteryLevel) || 0));
-
-console.log(`\n${ANSI.BLACK}Tip: device.vibrate(ms) and device.beep() are also available.${ANSI.RESET}`);
+console.log(`\n${ANSI.WHITE}Tip: device.vibrate(ms) and device.beep() are also available.${ANSI.RESET}`);
 device.beep();
 exit(0);
