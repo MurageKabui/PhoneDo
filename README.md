@@ -3,7 +3,7 @@
 </p>
  -->
 <p align="center">
-  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/PhoneDo_icon.png?raw=true" alt="PhoneDo Logo" width="440">
+  <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/PhoneDo_icon.png?raw=true" alt="PhoneDo Logo" width="150" height="150">
 </p>
 
 <p align="center">
