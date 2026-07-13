@@ -1,11 +1,17 @@
 
 <p align="center">
-<img alt="PhoneDo" src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" width="440px" height="77px">
+  <img alt="PhoneDo" src="https://github.com/MurageKabui/PhoneDo/blob/main/Previews/PhoneDo.gif?raw=true" width="440" height="77">
 </p>
-<p align="center"><a href="">[<img src="pictures/home.png" width="20px"> Homepage]</a> | <a href="">[🤖 PhoneDo AI]</a> | <a href="">[🤗 Community]</a> | <a href="https://discord.gg/b4ENrd2FAP">[Discord]</a></p>
+
 <p align="center">
-  <a href="a"><b>Download App </b>💾
-️</a>
+  <a href="">Homepage</a> |
+  <a href="">PhoneDo AI</a> |
+  <a href="">Community</a> |
+  <a href="https://discord.gg/b4ENrd2FAP">Discord</a>
+</p>
+
+<p align="center">
+  <a href="a"><b>Download App</b></a>
 </p>
 <hr>
 
