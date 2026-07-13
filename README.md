@@ -26,7 +26,7 @@
 
 | Scripting | Terminal | Workspace |
 |:---:|:---:|:---:|
-| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/ace.js_themes.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/terminal1.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/Assets/workspace.jpg" alt="Native dialog demo" width="240"> |
+| <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/ace.js_themes.gif?raw=true" alt="Hello World demo" width="240"> | <img src="https://github.com/MurageKabui/PhoneDo/blob/main/docs/Assets/terminal1.jpg?raw=true" alt="Terminal TUI" width="240"> | <img src="docs/Assets/workspace.jpg" alt="PhoneDo Workspace" width="240"> |
 | Integrated [Ace](https://ace.c9.io/) JavaScript IDE with multiple built in themes and customizable editor preferences. | Integrated terminal for running application specific commands, managing and executing scripts. |Scan a QR code to pair your device with a full scale browser IDE, unlocking an optimized desktop UX, advanced script editing, and instant code syncing. |
 
 ## Table of Contents
