@@ -1,1 +1,207 @@
-@font-face{font-family:kanitr;src:url("../files/KanitReg.woff") format('woff')}#console_wrapper,*{padding:0;margin:0}#editor,.jqconsole{width:100%;top:0;right:0;bottom:0;left:0}:root{--body-bg:#191919;--font-family-base:Menlo,Monaco,"Consolas","Courier New","kanitr";--bs-body-line-height:1.2;--jqc-caretColor:#f0eaea;--jqc-caretBlinkRate:2s;--jqc-fontSize:12.8px;--jqc-promptLabelColor:pink;--jqc-promptTextColor:#baa4e5;--jqc-compositionColor:#f5f5f5;--jqc-oldInputColor:#09b;--jqc-oldInputColor:#baa4e5;--jqc-oldPromptColor:#baa4e5;--jqc-oldPromptFontsize:13.5px;--jqc-headerColor:#f5eda2;--jqc-headerFontSize:12px;--jqc-error:#b54136;--jqc-info:#f5eda2;--jqc-success:#22e58a;--jqc-debug:#00bfff;--jqc-warning:gold;--body-color:#9fa9b5;--menuitm-active:#333;--menuitm-activecol:#22e58a;--menu-bgcolor:#333;--menu-color:#c4bebe}*{box-sizing:content-box}body{background:var(--body-bg);width:100vw;height:100vh;box-sizing:border-box;direction:ltr;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}#htmlAceEditor{animation:fadeInUp;animation-duration:.3s}#editor{height:100%;z-index:10;border-radius:15px}.jqconsole{margin:0;padding:10px 10px 15px;font-family:var(--font-family-base);font-size:var(--jqc-fontSize);white-space:pre-wrap;word-wrap:break-word;overflow-scrolling:touch;direction:ltr;text-align:left}.debugStyle,.errorStyle,.infoStyle,.successStyle,.warningStyle{user-select:text;-webkit-user-select:text;direction:ltr}.debugStyle{color:var(--jqc-debug)}.infoStyle{color:var(--jqc-info)}.warningStyle{color:var(--jqc-warning)}.successStyle{color:var(--jqc-success)}.errorStyle{color:var(--jqc-error);font-weight:700;user-select:text;-webkit-user-select:text}.selectabletxt{user-select:text;-webkit-user-select:text}.selectabletxt::selection{filter:invert()}.jqconsole-cursor{background-color:#f0eaea;animation:2s step-end infinite blink}.jqconsole-prompt{color:#baa4e5;padding-top:5px;font-size:var(--jqc-oldPromptFontsize);direction:ltr}.jqconsole-old-prompt{color:#f5f5f5;font-size:var(--jqc-oldPromptFontsize);direction:ltr}.jqconsole-old-input{color:#21af90;direction:ltr}.jqconsole-composition{color:#f5f5f5;direction:ltr}.jqconsole-prompt-text{color:#c1e1ff;direction:ltr}.jqconsole-header{text-align:center;align-items:center;display:block;margin:0;font-size:var(--jqc-headerFontSize);font-weight:700;color:#f5f5f5}@media (max-width:768px){.jqconsole{-webkit-overflow-scrolling:touch;padding:12px}.jqconsole-cursor{width:.6em}}@keyframes blink{0%,100%{background-color:var(--jqc-caretColor)}50%{background-color:transparent}}@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+﻿@font-face {
+    font-family: "kanitr";
+    src: url("../files/KanitReg.woff") format('woff');
+}
+
+
+/* Fixed Terminal CSS */
+#console_wrapper,
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#editor,
+.jqconsole {
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+:root {
+    --body-bg: #191919;
+    --font-family-base: Menlo, Monaco, "Consolas", "Courier New", "kanitr";
+    --bs-body-line-height: 1.2;
+    /*  -- JQConsole --   */
+    --jqc-caretColor: #f0eaea;
+    --jqc-caretBlinkRate: 2s;
+    --jqc-fontSize: 12.8px;
+    --jqc-promptLabelColor: pink;
+    --jqc-promptTextColor: #baa4e5;
+    --jqc-compositionColor: #f5f5f5;
+    --jqc-oldInputColor: #09b;
+    --jqc-oldInputColor: #baa4e5;
+    --jqc-oldPromptColor: #baa4e5;
+    --jqc-oldPromptFontsize: 13.5px;
+    /* JQConsole Output Colors   */
+    --jqc-headerColor: #f5eda2;
+    --jqc-headerFontSize: 12px;
+    --jqc-error: #b54136;
+    --jqc-info: #f5eda2;
+    --jqc-success: #22e58a;
+    --jqc-debug: #00bfff;
+    --jqc-warning: gold;
+    --body-color:  #9fa9b5;
+    --menuitm-active: #333;
+    --menuitm-activecol: #22e58a;
+    --menu-bgcolor: #333;
+    --menu-color: #c4bebe;
+}
+
+* {
+    box-sizing: content-box;
+}
+
+body {
+    background: var(--body-bg);
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    /* Ensure text direction is normal */
+    direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#htmlAceEditor {
+    animation: fadeInUp;
+    animation-duration: .3s;
+}
+
+#editor {
+    height: 100%;
+    z-index: 10;
+    border-radius: 15px;
+}
+
+.jqconsole {
+    margin: 0;
+    padding: 10px 10px 15px;
+    font-family: var(--font-family-base);    
+    font-size: var(--jqc-fontSize);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-scrolling: touch;
+    direction: ltr; /* Explicitly set direction to left-to-right */
+    text-align: left;
+}
+
+.successStyle,
+.errorStyle,
+.debugStyle,
+.infoStyle,
+.warningStyle {
+    user-select: text;
+    -webkit-user-select: text;
+    direction: ltr;
+}
+
+.debugStyle {
+    color: var(--jqc-debug);
+}
+
+.infoStyle {
+    color: var(--jqc-info);
+}
+
+.warningStyle {
+    color: var(--jqc-warning);
+}
+
+.successStyle {
+    color: var(--jqc-success);
+}
+
+.errorStyle {
+    color: var(--jqc-error);
+    font-weight: 700;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.selectabletxt {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.selectabletxt::selection {
+    filter: invert();
+}
+
+.jqconsole-cursor {
+    background-color: #f0eaea;
+    animation: 2s step-end infinite blink;
+}
+
+.jqconsole-prompt {
+    color: #baa4e5;
+    padding-top: 5px;
+    font-size: var(--jqc-oldPromptFontsize);
+    direction: ltr;
+}
+
+.jqconsole-old-prompt {
+    color: #f5f5f5;
+    font-size: var(--jqc-oldPromptFontsize);
+    direction: ltr;
+}
+
+.jqconsole-old-input {
+    color: #21af90;
+    direction: ltr;
+}
+
+.jqconsole-composition {
+    color: #f5f5f5;
+    direction: ltr;
+}
+
+.jqconsole-prompt-text {
+    color: #c1e1ff;
+    direction: ltr;
+}
+
+.jqconsole-header {
+    text-align: center;
+    align-items: center;
+    display: block;
+    margin: 0;
+    font-size: var(--jqc-headerFontSize);
+    font-weight: 700;
+    color: #f5f5f5;
+}
+
+/* Simple improvements for touch devices */
+@media (max-width: 768px) {
+    .jqconsole {
+        -webkit-overflow-scrolling: touch;
+        padding: 12px;
+    }
+    
+    .jqconsole-cursor {
+        width: 0.6em;
+    }
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        background-color: var(--jqc-caretColor);
+    }
+    50% {
+        background-color: transparent;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

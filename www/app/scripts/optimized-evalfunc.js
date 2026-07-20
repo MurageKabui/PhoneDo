@@ -1,1 +1,2008 @@
-class SandboxedEnvironment{constructor(){this.iframe=null,this.idSandBox=null,this.isRunning=!1,this.bridges={},this._apiTemplate=null,this.initializeBridges()}initializeBridges(){const e=cordova.file.externalRootDirectory+"Documents/",n=cordova.file.dataDirectory,i=e=>e.map(e=>{if("string"==typeof e)return e;if(e instanceof Error)return e.stack||`${e.name}: ${e.message}`;if(void 0===e)return"undefined";if(null===e)return"null";if("object"==typeof e)try{const n=new WeakSet;return JSON.stringify(e,(e,i)=>{if("object"==typeof i&&null!==i){if(n.has(i))return"[Circular]";n.add(i)}return i},2)}catch(n){return String(e)}return String(e)}).join(" ");this.bridges.clipboard={_clipboardSetText:async e=>new Promise((n,i)=>{app.plugins.decsoft.clipboard.setText(e,()=>n(!0),e=>i("clipboard error: "+e))})},this.bridges.console={_prompt:()=>new Promise(e=>{const n=app.store.jqconsole,i=n.IsDisabled();i&&n.Enable(),n.Prompt(!0,function(o){i&&n.Disable(),n.ScrollWindowToPrompt(),e(o)}),n.Focus()}),_infoPrint:(...e)=>{app.store.jqconsole.Write(i(e)+"\n","infoStyle"),app.store.jqconsole.ScrollWindowToPrompt()},_successPrint:(...e)=>{app.store.jqconsole.Write(i(e)+"\n","successStyle"),app.store.jqconsole.ScrollWindowToPrompt()},_Print:(e="",n="successStyle")=>app.store.jqconsole.Write(e,n),_consoleclear:()=>app.store.jqconsole.Clear(),_errorPrint:(...e)=>{app.store.jqconsole.Write(i(e)+"\n","errorStyle"),app.store.jqconsole.ScrollWindowToPrompt()},assert:(e,...n)=>{e||this.bridges.console._errorPrint("Assertion failed:",...n)},clear:()=>{app.store.jqconsole.Clear()},count:(e="default")=>{this.consoleCounters||(this.consoleCounters={}),this.consoleCounters[e]||(this.consoleCounters[e]=0),this.consoleCounters[e]++,this.bridges.console._infoPrint(`${e}: ${this.consoleCounters[e]}`)},debug:(...e)=>{this.bridges.console._infoPrint(...e)},dir:(e,n)=>{this.bridges.console._infoPrint(JSON.stringify(e,null,n?.spaces||2))},dirxml:e=>{this.bridges.console._infoPrint(e?e.outerHTML||e.toString():"null")},error:(...e)=>{this.bridges.console._errorPrint(...e)},group:e=>{this.bridges.console._infoPrint(`--- ${e} ---`)},groupCollapsed:e=>{this.bridges.console._infoPrint(`+++ ${e} +++`)},groupEnd:()=>{this.bridges.console._infoPrint("---")},info:(...e)=>{this.bridges.console._infoPrint(...e)},log:(...e)=>{this.bridges.console._infoPrint(...e)},memory:()=>{performance&&performance.memory?this.bridges.console._infoPrint(performance.memory):this.bridges.console._infoPrint("memory: not available on this platform")},profile:e=>{console.profile&&console.profile(e)},profileEnd:e=>{console.profileEnd&&console.profileEnd(e)},table:(e,n)=>{try{const i=Array.isArray(e)?e:Object.values(e||{});if(!i.length)return void this.bridges.console._infoPrint("(empty)");const o=n||[...new Set(i.flatMap(e=>e&&"object"==typeof e?Object.keys(e):["value"]))],r=[["(index)",...o].join("\t")];i.forEach((e,n)=>{const i=o.map(n=>{const i=e&&"object"==typeof e?e[n]:"value"===n?e:"";return void 0===i?"":"object"==typeof i?JSON.stringify(i):String(i)});r.push([n,...i].join("\t"))}),this.bridges.console._infoPrint(r.join("\n"))}catch(n){this.bridges.console._infoPrint(String(e))}},time:(e="default")=>{this.consoleTimers||(this.consoleTimers={}),this.consoleTimers[e]=performance.now()},timeEnd:(e="default")=>{if(this.consoleTimers&&this.consoleTimers[e]){let n=performance.now()-this.consoleTimers[e];this.bridges.console._infoPrint(`${e}: ${n.toFixed(2)}ms`),delete this.consoleTimers[e]}},timeLog:(e="default",...n)=>{this.consoleTimers||(this.consoleTimers={}),this.consoleTimers[e]||(this.consoleTimers[e]=performance.now());let i=performance.now()-this.consoleTimers[e];this.bridges.console._infoPrint(`${e}: ${i.toFixed(2)}ms - ${n.join(" ")}`)},trace:(...e)=>{const n=(new Error).stack,i=n?n.split("\n").slice(2).join("\n"):"(stack unavailable)";this.bridges.console._infoPrint("Trace:",...e,"\n",i)},warn:(...e)=>{this.bridges.console._errorPrint(...e)}},this.bridges.device={_toggleFlashlight:async()=>new Promise((e,n)=>{window.plugins.flashlight.available(i=>{i?window.plugins.flashlight.toggle(()=>e(!0),e=>n(e)):n(-1)})}),_turnOnFlashlight:async()=>new Promise((e,n)=>{window.plugins.flashlight.available(i=>{i?window.plugins.flashlight.switchOn(()=>e(!0),e=>n(e)):n(-1)})}),_turnOffFlashlight:async()=>new Promise((e,n)=>{window.plugins.flashlight.available(i=>{i?window.plugins.flashlight.switchOff(()=>e(!0),e=>n(e)):n(-1)})}),_vibrate:e=>{app.cordova.vibration.vibrate(e)},_beep:()=>app.beep()},this.bridges.sms={_send:async function(e,n){return new Promise((i,o)=>{try{SMS.sendSMS(e,n,i,o)}catch(e){o(e)}})},_list:async function(e={}){return new Promise((n,i)=>{try{SMS.listSMS(e,n,i)}catch(e){i(e)}})}},this.bridges.dialog={_Alert:async(e,n,i=app.kind.primary,o=[{text:"OK",kind:app.kind.primary,size:app.size.md}])=>new Promise(r=>{app.showAlert(e,n,i,o,e=>r(e))}),_Confirm:async(e,n,i=app.kind.primary,o=[{text:"Cancel",kind:app.kind.secondary,size:app.size.md},{text:"OK",kind:app.kind.primary,size:app.size.md}])=>new Promise(r=>{app.showAlert(e,n,i,o,e=>r(1===e))})},this.bridges.deviceInfo={getInfo:()=>({model:app.cordova.device.model(),platform:app.cordova.device.platform(),uuid:app.cordova.device.uuid(),version:app.cordova.device.version(),manufacturer:app.cordova.device.manufacturer(),isVirtual:app.cordova.device.isVirtual(),serial:app.cordova.device.serial(),batteryLevel:app.cordova.battery.level,isCharging:app.cordova.battery.isPlugged})},this.bridges.browser={DEFAULT_CONFIG:{zoom:"no",hardwareback:"yes",footer:"no",location:"no",hideurlbar:"yes",hidenavigationbuttons:"no",toolbarcolor:"#4a4968",navigationbuttoncolor:"#ffffff",closebuttoncolor:"#1E1E2A",toolbar:"yes",enableViewportScale:"yes",mediaPlaybackRequiresUserAction:"yes",shouldPauseOnSuspend:"yes",clearcache:"no",clearsessioncache:"no",presentationstyle:"pagesheet",transitionstyle:"crossdissolve",lefttoright:"yes",fullscreen:"no",usewkwebview:"yes",keyboardDisplayRequiresUserAction:"yes"},_openBrowser:async(e,n="_blank",i={})=>new Promise((o,r)=>{try{if(!e||"string"!=typeof e)throw new Error("Invalid URL provided");if(!["_blank","_self","_system"].includes(n))throw new Error("Invalid target. Must be _blank, _self, or _system");const r=(e.match(/^\s*([a-z][a-z0-9+.-]*):/i)||[,""])[1].toLowerCase(),t=["tel","mailto","sms","geo"];if(!(""===r||(["http","https"].includes(r)||"_system"===n&&t.includes(r))))throw new Error(`Blocked URL scheme "${r}:" for security reasons`);const s={...this.bridges.browser.DEFAULT_CONFIG,...i},a=Object.entries(s).map(([e,n])=>`${e}=${n}`).join(","),c=cordova.InAppBrowser.open(e,n,a);if(!c)throw new Error("Failed to create browser instance");c.addEventListener("loaderror",e=>{this.bridges.console._errorPrint("Browser loading error:",e.message)}),o(c)}catch(e){r(e)}}),_openSafeMode:async e=>this.bridges.browser._openBrowser(e,"_blank",{clearcache:"yes",clearsessioncache:"yes",toolbar:"yes",enableViewportScale:"no",mediaPlaybackRequiresUserAction:"yes",shouldPauseOnSuspend:"yes",usewkwebview:"yes"}),_openFullscreen:async e=>this.bridges.browser._openBrowser(e,"_blank",{fullscreen:"yes",footer:"no",toolbar:"no",location:"no",hideurlbar:"yes",hidenavigationbuttons:"yes"}),_openMinimal:async e=>this.bridges.browser._openBrowser(e,"_blank",{toolbar:"no",footer:"no",location:"no",hideurlbar:"yes",hidenavigationbuttons:"yes",presentationstyle:"fullscreen"}),_openExternal:async e=>this.bridges.browser._openBrowser(e,"_system")},this.bridges.timer={_sleep:async e=>{if("number"!=typeof e||Number.isNaN(e)||e<0)throw new Error("Sleep duration must be a non-negative number of milliseconds");const n=Math.min(e,6e5);return new Promise(e=>setTimeout(e,n))}},this.bridges.permissions={ACCESS_COARSE_LOCATION:cordova.plugins.permissions.ACCESS_COARSE_LOCATION,ACCESS_FINE_LOCATION:cordova.plugins.permissions.ACCESS_FINE_LOCATION,CAMERA:cordova.plugins.permissions.CAMERA,READ_CONTACTS:cordova.plugins.permissions.READ_CONTACTS,WRITE_CONTACTS:cordova.plugins.permissions.WRITE_CONTACTS,READ_CALENDAR:cordova.plugins.permissions.READ_CALENDAR,WRITE_CALENDAR:cordova.plugins.permissions.WRITE_CALENDAR,READ_EXTERNAL_STORAGE:cordova.plugins.permissions.READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE:cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE,RECORD_AUDIO:cordova.plugins.permissions.RECORD_AUDIO,MODIFY_AUDIO_SETTINGS:cordova.plugins.permissions.MODIFY_AUDIO_SETTINGS,READ_PHONE_STATE:cordova.plugins.permissions.READ_PHONE_STATE,CALL_PHONE:cordova.plugins.permissions.CALL_PHONE,READ_SMS:cordova.plugins.permissions.READ_SMS,SEND_SMS:cordova.plugins.permissions.SEND_SMS,RECEIVE_SMS:cordova.plugins.permissions.RECEIVE_SMS,READ_CALL_LOG:cordova.plugins.permissions.READ_CALL_LOG,WRITE_CALL_LOG:cordova.plugins.permissions.WRITE_CALL_LOG,ADD_VOICEMAIL:cordova.plugins.permissions.ADD_VOICEMAIL,USE_SIP:cordova.plugins.permissions.USE_SIP,PROCESS_OUTGOING_CALLS:cordova.plugins.permissions.PROCESS_OUTGOING_CALLS,BODY_SENSORS:cordova.plugins.permissions.BODY_SENSORS,RECEIVE_WAP_PUSH:cordova.plugins.permissions.RECEIVE_WAP_PUSH,RECEIVE_MMS:cordova.plugins.permissions.RECEIVE_MMS,READ_CELL_BROADCASTS:cordova.plugins.permissions.READ_CELL_BROADCASTS,BLUETOOTH:cordova.plugins.permissions.BLUETOOTH,BLUETOOTH_ADMIN:cordova.plugins.permissions.BLUETOOTH_ADMIN,BLUETOOTH_CONNECT:cordova.plugins.permissions.BLUETOOTH_CONNECT,BLUETOOTH_SCAN:cordova.plugins.permissions.BLUETOOTH_SCAN,BLUETOOTH_ADVERTISE:cordova.plugins.permissions.BLUETOOTH_ADVERTISE,ACCESS_NETWORK_STATE:cordova.plugins.permissions.ACCESS_NETWORK_STATE,ACCESS_WIFI_STATE:cordova.plugins.permissions.ACCESS_WIFI_STATE,CHANGE_WIFI_STATE:cordova.plugins.permissions.CHANGE_WIFI_STATE,CHANGE_NETWORK_STATE:cordova.plugins.permissions.CHANGE_NETWORK_STATE,CHANGE_CONFIGURATION:cordova.plugins.permissions.CHANGE_CONFIGURATION,GET_ACCOUNTS:cordova.plugins.permissions.GET_ACCOUNTS,MANAGE_ACCOUNTS:cordova.plugins.permissions.MANAGE_ACCOUNTS,USE_BIOMETRICS:cordova.plugins.permissions.USE_BIOMETRICS,USE_FINGERPRINT:cordova.plugins.permissions.USE_FINGERPRINT,USE_IRIS:cordova.plugins.permissions.USE_IRIS,USE_FACE:cordova.plugins.permissions.USE_FACE,POST_NOTIFICATIONS:cordova.plugins.permissions.POST_NOTIFICATIONS,READ_MEDIA_IMAGES:cordova.plugins.permissions.READ_MEDIA_IMAGES,READ_MEDIA_VIDEO:cordova.plugins.permissions.READ_MEDIA_VIDEO,READ_MEDIA_AUDIO:cordova.plugins.permissions.READ_MEDIA_AUDIO,_checkPermission:async e=>new Promise((n,i)=>{try{if(!e||"string"!=typeof e)throw new Error("Invalid permission specified");cordova.plugins.permissions.checkPermission(e,e=>n(e),e=>n(e))}catch(e){i(e)}}),_requestPermission:async e=>new Promise((n,i)=>{try{if(!e||"string"!=typeof e)throw new Error("Invalid permission specified");cordova.plugins.permissions.requestPermission(e,e=>n(e),e=>i(e))}catch(e){i(e)}}),_requestPermissions:async e=>new Promise((n,i)=>{try{if(!Array.isArray(e)||0===e.length)throw new Error("Invalid permissions array");cordova.plugins.permissions.requestPermissions(e,e=>n(e),e=>i(e))}catch(e){i(e)}}),_hasPermission:async e=>new Promise((n,i)=>{try{if(!e||"string"!=typeof e)throw new Error("Invalid permission specified");cordova.plugins.permissions.hasPermission(e,e=>n(e),e=>i(e))}catch(e){i(e)}})},this.bridges.utils={_exitEval:(e=0)=>{app.hideAlert();const n=new Error(0===e?"Script exited.":`Script Terminated. ExitCode: ${e}`);throw n.__phonedoExit=!0,n.exitCode=e,n}},this.bridges.filesystem={_app_rootpath:e,_applicationDirectory:cordova.file.applicationDirectory,_applicationStorageDirectory:cordova.file.applicationStorageDirectory,_dataDirectory:cordova.file.dataDirectory,_cacheDirectory:cordova.file.cacheDirectory,_externalApplicationStorageDirectory:cordova.file.externalApplicationStorageDirectory,_externalDataDirectory:cordova.file.externalDataDirectory,_externalCacheDirectory:cordova.file.externalCacheDirectory,_externalRootDirectory:cordova.file.externalRootDirectory,_readTextFile:async(e,i)=>{const o=e??n;return new Promise((e,n)=>{app.cordova.file.readTextFile(o,i,n=>e(n),e=>n("readTextFile error: "+app.serialize(e)))})},_writeTextFile:async(e,i,o)=>{const r=e??n;return new Promise((e,n)=>{app.cordova.file.writeTextFile(r,i,o,()=>e(!0),e=>n("writeTextFile error: "+app.serialize(e)))})},_appendTextFile:async(e,i,o)=>{const r=e??n;return new Promise((e,n)=>{app.cordova.file.appendTextFile(r,i,o,()=>e(!0),e=>n("appendTextFile error: "+app.serialize(e)))})},_createDirectory:async(e,i)=>{const o=e??n;return new Promise((e,n)=>{app.cordova.file.createDir(o,i,()=>e(!0),e=>n("createDirectory error: "+app.serialize(e)))})},_dirExists:async e=>{const i=e??n;return new Promise((e,n)=>{app.cordova.file.dirExists(i,n=>e(n),n=>e(0==n.code))})},_fileExists:async(e,i)=>{const o=e??n;return new Promise((e,n)=>{app.cordova.file.fileExists(o+i,n=>e(n),e=>n("fileExists error: "+app.serialize(e)))})},_writeFile:async(e,n,i)=>new Promise((o,r)=>{window.resolveLocalFileSystemURL(e,e=>{e.getFile(n,{create:!0,exclusive:!1},e=>{e.createWriter(n=>{n.onwriteend=()=>{o(e.nativeURL)},n.onerror=e=>{r(e)};const t=new Blob([i],{type:"text/plain"});n.write(t)})},e=>{r(e)})},e=>{r(e)})}),_deleteFile:async(e,i)=>{const o=e??n;return new Promise((e,n)=>{app.cordova.file.removeFile(o,i,()=>e(!0),e=>n("removeFile error: "+app.serialize(e)))})},_removeDirectory:async(e,i)=>{const o=e??n;return new Promise((e,n)=>{app.cordova.file.removeDir(o+i,()=>e(!0),e=>n("removeDirectory error: "+app.serialize(e)))})},_resolveLocalFileSystemURL:async e=>new Promise((n,i)=>{if(!e)return void i(new Error("Path is required"));const o=e.startsWith("file://")?e:"file://"+e;window.resolveLocalFileSystemURL(o,e=>{!e.toNativeURL&&e.toURL&&(e.toNativeURL=function(){if("function"==typeof this.getNativeURL)return this.getNativeURL();const e=this.toURL();this.filesystem.root.fullPath;switch(this.filesystem.name){case"temporary":return e.replace("file://","content://"+cordova.file.cacheDirectory);case"persistent":return e.replace("file://","content://"+cordova.file.dataDirectory);case"external":return e.replace("file://","content://"+cordova.file.externalRootDirectory);default:return e}}),n(e)},e=>{i(e)})})},this.bridges.network={_connectionType:()=>app.cordova.network.getConnectionType(),_getWiFiIPAddress:async()=>new Promise((e,n)=>{networkinterface.getWiFiIPAddress(n=>e(n),e=>n(e))}),_getCarrierIPAddress:async()=>new Promise((e,n)=>{networkinterface.getCarrierIPAddress(n=>e(n),e=>n(e))}),_getHttpProxyInformation:async e=>new Promise((n,i)=>{networkinterface.getHttpProxyInformation(e,e=>n(e),e=>i(e))}),_ping:async e=>new Promise((n,i)=>{(new Ping).ping(e,e=>n(e),e=>i(e))})},this.bridges.wifi={_enableWifi:async()=>new Promise((e,n)=>{WifiWizard2.enableWifi().then(n=>e(n)).catch(n=>e(!1))}),_disableWifi:async()=>new Promise((e,n)=>{WifiWizard2.disableWifi().then(n=>e(n)).catch(n=>e(!1))}),_isEnabled:()=>new Promise(e=>{WifiPlugin.isWifiEnabled().then(n=>{e(n)}).catch(n=>{e(n)})}),_requestWifiPermission:async()=>new Promise((e,n)=>{WifiWizard2.requestPermission().then(n=>e(n)).catch(n=>e(!1))}),_suggestConnection:async(e,n,i="WPA",o=!1)=>new Promise((r,t)=>{WifiWizard2.suggestConnection(e,n,i,o).then(e=>r(e)).catch(e=>r(!1))}),_specifierConnection:async(e,n,i="WPA",o=!1)=>new Promise((r,t)=>{WifiWizard2.specifierConnection(e,n,i,o).then(e=>r(e)).catch(e=>r(!1))}),_Connectwifi:async(e,n,i,o,r)=>new Promise((t,s)=>{WifiWizard2.connect(e,n,i,o,r).then(e=>t(e)).catch(e=>t(!1))}),_disconnectWifi:async e=>new Promise((n,i)=>{WifiWizard2.disconnect(e).then(e=>n(e)).catch(e=>n(!1))}),_getConnectedSSID:async()=>new Promise((e,n)=>{app.cordova.network.getConnectionType()===app.cordova.network.connectionTypes.WIFI?WifiWizard2.getConnectedSSID().then(n=>e(n)).catch(n=>e(-1)):e(-1)}),_getConnectedNetworkID:async()=>new Promise(e=>{WifiWizard2.getConnectedNetworkID().then(n=>e(n)).catch(n=>e(-1))}),_getConnectedBSSID:async()=>new Promise((e,n)=>{WifiWizard2.getConnectedBSSID().then(n=>e(n)).catch(n=>e(null))}),_isConnectedToInternet:async()=>new Promise(e=>{WifiPlugin.isConnectedToInternet().then(n=>e(n)).catch(()=>e(!1))}),_canConnectToRouter:async()=>new Promise(e=>{WifiWizard2.canConnectToRouter().then(n=>e(n)).catch(n=>e(!1))}),_canConnectToInternet:async()=>new Promise(e=>{WifiWizard2.canConnectToInternet().then(n=>e(n)).catch(n=>e(!1))}),_getWifiIP:async()=>new Promise(e=>{WifiWizard2.getWifiIP().then(n=>e(n)).catch(n=>e(null))}),_getWifiIPInfo:async()=>new Promise(e=>{WifiWizard2.getWifiIPInfo().then(n=>e(n)).catch(n=>e(null))}),_scanwifi:async()=>new Promise(e=>{WifiWizard2.scan().then(n=>e(n)).catch(n=>e([]))}),_listNetworks:async()=>new Promise(e=>{WifiWizard2.listNetworks().then(n=>e(n)).catch(n=>e([]))}),_isLocationEnabled:async()=>new Promise(e=>{WifiWizard2.isLocationEnabled().then(n=>e(n)).catch(n=>e(!1))}),_formatWifiConfig:async(e,n,i,o)=>new Promise(r=>{WifiWizard2.formatWifiConfig(e,n,i,o).then(e=>r(e)).catch(e=>r(null))}),_addNetwork:async e=>new Promise(n=>{WifiWizard2.add(e).then(e=>n(e)).catch(e=>n(!1))}),_removeNetwork:async e=>new Promise(n=>{WifiWizard2.remove(e).then(e=>n(e)).catch(e=>n(!1))}),_enableNetwork:async(e,n,i)=>new Promise(o=>{WifiWizard2.enable(e,n,i).then(e=>o(e)).catch(e=>o(!1))}),_disableNetwork:async e=>new Promise(n=>{WifiWizard2.disable(e).then(e=>n(e)).catch(e=>n(!1))}),_getWifiRouterIP:async()=>new Promise(e=>{WifiWizard2.getWifiRouterIP().then(n=>e(n)).catch(n=>e(null))}),_switchToLocationSettings:async()=>new Promise(e=>{WifiWizard2.switchToLocationSettings().then(n=>e(n)).catch(n=>e(!1))}),_setBindAll:async()=>new Promise(e=>{WifiWizard2.setBindAll().then(n=>e(n)).catch(n=>e(!1))}),_resetBindAll:async()=>new Promise(e=>{WifiWizard2.resetBindAll().then(n=>e(n)).catch(n=>e(!1))}),_reconnectWifi:async()=>new Promise(e=>{WifiWizard2.reconnect().then(n=>e(n)).catch(n=>e(!1))}),_reassociateWifi:async()=>new Promise(e=>{WifiWizard2.reassociate().then(n=>e(n)).catch(n=>e(!1))}),_getSSIDNetworkID:async e=>new Promise(n=>{WifiWizard2.getSSIDNetworkID(e).then(e=>n(e)).catch(e=>n(-1))}),_timeout:async e=>new Promise(n=>{WifiWizard2.timeout(e).then(e=>n(e)).catch(e=>n(!0))})},this.bridges.utter={_UtterText:async(e="",n=.95,i=1,o="en-au-x-auc-local")=>new Promise((r,t)=>{TTS.speak({text:e,rate:n,pitch:i,identifier:o,cancel:!0}).then(r,t)}),_getvoices:async()=>TTS.getVoices(),_utterCanRec:async()=>new Promise((e,n)=>{window.plugins.speechRecognition.isRecognitionAvailable(n=>e(n),e=>n(e))}),_utterListen:async e=>new Promise((n,i)=>{window.plugins.speechRecognition.startListening(e=>n(e),e=>i(e),e)}),_utterStopListen:async()=>new Promise((e,n)=>{window.plugins.speechRecognition.stopListening(n=>e(n),e=>n(e))}),_utter_requestPermission:async()=>new Promise((e,n)=>{window.plugins.speechRecognition.requestPermission(n=>e(n),e=>n(e))}),_utter_hasPermission:async()=>new Promise((e,n)=>{window.plugins.speechRecognition.hasPermission(n=>e(n),e=>n(e))})},this.bridges.sim={_requestSimPermission:async()=>new Promise(e=>{window.plugins.sim.requestReadPermission(n=>e(n))}),_checkSimPermission:async()=>new Promise(e=>{window.plugins.sim.hasReadPermission(n=>e(n))}),_getSimInfo:async()=>new Promise((e,n)=>{window.plugins.sim.getSimInfo(n=>e(n),e=>n(e))})},this.bridges.ble={_scanBT:async(e,n,i=10)=>new Promise((o,r)=>{try{const t=[],s=new Set;evothings.ble.startScan(n=>{const i=n&&(n.address||n.id);i&&!s.has(i)&&(s.add(i),t.push(n)),"function"==typeof e&&e(n)},e=>{"function"==typeof n&&n(e),r(e)}),app.store.jqconsole.Write(`Scanning for devices. Timeout: ${i} seconds\n`,"infoStyle"),setTimeout(()=>{this.bridges.ble._stopBTScan().then(()=>{app.store.jqconsole.Write("Scanning stopped due to timeout.\n","infoStyle"),o(t)}).catch(e=>{app.store.jqconsole.Write(`Error stopping scan after timeout: ${e}\n`,"infoStyle"),r(e)})},1e3*i)}catch(e){r(e)}}),_stopBTScan:async function(){return new Promise((e,n)=>{try{evothings.ble.stopScan(),app.store.jqconsole.Write("Stopped scanning for devices.","infoStyle"),e()}catch(e){n(e)}})},_connectBT:async function(e,n,i,o,r={}){return new Promise((t,s)=>{try{evothings.ble.connectToDevice(e,e=>{n&&n(e),t(e)},e=>{i&&i(e)},e=>{o&&o(e),s(e)},r)}catch(e){s(e)}})},_getBTService:async function(e,n){return new Promise((i,o)=>{try{i(evothings.ble.getService(e,n))}catch(e){o(e)}})},_getBTCharacteristic:async function(e,n){return new Promise((i,o)=>{try{i(evothings.ble.getCharacteristic(e,n))}catch(e){o(e)}})},_readBTCharacteristic:async function(e,n){return new Promise((i,o)=>{evothings.ble.readCharacteristic(e,n,e=>i(e),e=>o(e))})},_writeBTCharacteristic:async function(e,n,i){return new Promise((o,r)=>{evothings.ble.writeCharacteristic(e,n,i,()=>o(),e=>r(e))})},_enableBTNotification:async function(e,n,i){return new Promise((o,r)=>{evothings.ble.enableNotification(e,n,e=>{i&&i(e)},e=>r(e)),o()})},_disableBTNotification:async function(e,n){return new Promise((i,o)=>{try{evothings.ble.disableNotification(e,n),i()}catch(e){o(e)}})}},this.bridges.http={DEFAULT_TIMEOUT:60,_initializeSettings:async()=>new Promise((e,n)=>{try{const i=Number(60);if(isNaN(i)||i<=0)throw new Error("Invalid timeout value: 60");cordova.plugin.http.setDataSerializer("urlencoded"),cordova.plugin.http.setRequestTimeout(i),cordova.plugin.http.setFollowRedirect(!0),cordova.plugin.http.setServerTrustMode("default",()=>{console.log("Trust mode set to default"),e()},e=>{console.error("Error setting trust mode:",e),n(e)})}catch(e){n(e)}}),_sendRequest:async function(e,n={}){return new Promise((i,o)=>{try{if(!e||"string"!=typeof e)throw new Error("The URL must be a non-empty string.");n.method||(n.method="get");if(!["get","post","put","patch","delete","head","options","upload","download"].includes(n.method.toLowerCase()))throw new Error(`Invalid HTTP method: ${n.method}`);if(n.timeout&&(isNaN(Number(n.timeout))||Number(n.timeout)<=0))throw new Error("Timeout must be a positive number.");const r=["text","json","arraybuffer","blob"];if(n.responseType&&!r.includes(n.responseType.toLowerCase()))throw new Error(`Invalid responseType: ${n.responseType}`);const t=encodeURI(e);cordova.plugin.http.sendRequest(t,n,function(e){i(e)},function(e){o(e)})}catch(e){o(e)}})},_uploadFile:async function(e,n={},i={},o,r){return new Promise((t,s)=>{cordova.plugin.http.uploadFile(e,n,i,o,r,e=>t(e),e=>s(e))})},_downloadFile:async function(e,n={},i={},o){return new Promise((r,t)=>{cordova.plugin.http.downloadFile(e,n,i,o,(e,n)=>r({entry:e,response:n}),e=>t(e))})},_setHeader:async function(e,n,i){return new Promise((o,r)=>{try{cordova.plugin.http.setHeader(e,n,i),o(!0)}catch(e){r(e)}})},_setDataSerializer:async function(e){if(["urlencoded","json","utf8","multipart","raw"].includes(e))return cordova.plugin.http.setDataSerializer(e),!0;throw new Error("Invalid serializer type")},_setTimeout:async function(e){if("number"==typeof e&&e>0)return cordova.plugin.http.setRequestTimeout(e),!0;throw new Error("Invalid timeout value")},_setServerTrustMode:async function(e){return new Promise((n,i)=>{cordova.plugin.http.setServerTrustMode(e,()=>n(!0),e=>i(e))})},_getCookieString:async function(e){return new Promise((n,i)=>{try{n(cordova.plugin.http.getCookieString(e))}catch(e){i(e)}})},_setCookie:async function(e,n,i={}){return new Promise((o,r)=>{try{cordova.plugin.http.setCookie(e,n,i),o(!0)}catch(e){r(e)}})},_clearCookies:async function(){return new Promise((e,n)=>{try{cordova.plugin.http.clearCookies(),e(!0)}catch(e){n(e)}})},ERROR_CODES:{PERMISSION_DENIED:-12,NOT_FOUND:-1,SECURITY_ERR:-2,ABORT_ERR:-3,NOT_READABLE_ERR:-4,ENCODING_ERR:-5,NO_MODIFICATION_ALLOWED_ERR:-6,INVALID_STATE_ERR:-7,SYNTAX_ERR:-8,INVALID_MODIFICATION_ERR:-9,QUOTA_EXCEEDED_ERR:-10,TYPE_MISMATCH_ERR:-11}},this.bridges.callNumber={_callNumber:async(e,n=!0)=>new Promise((i,o)=>{window.plugins.CallNumber.callNumber(e=>i(e),e=>i(e),e,n)})},this.bridges.spinner={_showSpinner:async(e=null,n="Please wait...",i=!1)=>{try{"undefined"!=typeof SpinnerDialog?SpinnerDialog.show(e,n,i):app.store.jqconsole.ShowSpinner()}catch(e){console.error("Error showing spinner:",e)}},_hideSpinner:async()=>{try{"undefined"!=typeof SpinnerDialog?SpinnerDialog.hide():app.store.jqconsole.HideSpinner()}catch(e){console.error("Error hiding spinner:",e)}}}}async initialize(){if(this.isRunning)throw new Error("Sandbox is already running");this.iframe=document.createElement("iframe"),this.iframe.setAttribute("sandbox","allow-scripts allow-same-origin"),this.iframe.style.display="none",document.body.appendChild(this.iframe),this.idSandBox=this.iframe.contentWindow,this.idSandBox.addEventListener("error",e=>{this.bridges.console._errorPrint(`Runtime Error: ${e.message} at ${e.filename}:${e.lineno}`)}),this.idSandBox.addEventListener("unhandledrejection",e=>{this.bridges.console._errorPrint(`Unhandled Promise Rejection: ${e.reason}`)}),this.isRunning=!0,Object.values(this.bridges).forEach(e=>{Object.entries(e).forEach(([e,n])=>{this.idSandBox[e]=n})}),this.idSandBox.console=this.bridges.console}cleanup(){this.iframe&&(this.iframe.parentNode&&this.iframe.parentNode.removeChild(this.iframe),this.iframe=null,this.idSandBox=null,this.isRunning=!1)}getSandboxAPI(){this._apiTemplate||this._generateAPITemplate();const e=this.bridges.deviceInfo.getInfo();return`\n            ${this._apiTemplate}\n            // Device Information & Controls\n            const device = Object.freeze({\n                ...${JSON.stringify(e)},\n                vibrate: _vibrate,\n                beep: _beep,\n            });\n        `}_generateAPITemplate(){this._apiTemplate="\n        // Core Utilities\n        const cout = _Print;\n        const exit = _exitEval;\n        const log = _Print;\n\n        // Android Permissions\n        const permission = Object.freeze({\n            // Permission Constants\n            ACCESS_COARSE_LOCATION: ACCESS_COARSE_LOCATION,\n            ACCESS_FINE_LOCATION: ACCESS_FINE_LOCATION,\n            CAMERA: CAMERA,\n            READ_EXTERNAL_STORAGE: READ_EXTERNAL_STORAGE,\n            WRITE_EXTERNAL_STORAGE: WRITE_EXTERNAL_STORAGE,\n            READ_CONTACTS: READ_CONTACTS,\n            WRITE_CONTACTS: WRITE_CONTACTS,\n            READ_CALENDAR: READ_CALENDAR,\n            WRITE_CALENDAR: WRITE_CALENDAR,\n            READ_PHONE_STATE: READ_PHONE_STATE,\n            CALL_PHONE: CALL_PHONE,\n            READ_CALL_LOG: READ_CALL_LOG,\n            WRITE_CALL_LOG: WRITE_CALL_LOG,\n            ADD_VOICEMAIL: ADD_VOICEMAIL,\n            USE_SIP: USE_SIP,\n            PROCESS_OUTGOING_CALLS: PROCESS_OUTGOING_CALLS,\n            READ_SMS: READ_SMS,\n            SEND_SMS: SEND_SMS,\n            RECEIVE_SMS: RECEIVE_SMS,\n            RECEIVE_WAP_PUSH: RECEIVE_WAP_PUSH,\n            RECEIVE_MMS: RECEIVE_MMS,\n            READ_CELL_BROADCASTS: READ_CELL_BROADCASTS,\n            BLUETOOTH: BLUETOOTH,\n            BLUETOOTH_ADMIN: BLUETOOTH_ADMIN,\n            BLUETOOTH_CONNECT: BLUETOOTH_CONNECT,\n            BLUETOOTH_SCAN: BLUETOOTH_SCAN,\n            BLUETOOTH_ADVERTISE: BLUETOOTH_ADVERTISE,\n            ACCESS_NETWORK_STATE: ACCESS_NETWORK_STATE,\n            ACCESS_WIFI_STATE: ACCESS_WIFI_STATE,\n            CHANGE_WIFI_STATE: CHANGE_WIFI_STATE,\n            CHANGE_NETWORK_STATE: CHANGE_NETWORK_STATE,\n            CHANGE_CONFIGURATION: CHANGE_CONFIGURATION,\n            GET_ACCOUNTS: GET_ACCOUNTS,\n            MANAGE_ACCOUNTS: MANAGE_ACCOUNTS,\n            USE_BIOMETRICS: USE_BIOMETRICS,\n            USE_FINGERPRINT: USE_FINGERPRINT,\n            USE_IRIS: USE_IRIS,\n            USE_FACE: USE_FACE,\n            POST_NOTIFICATIONS: POST_NOTIFICATIONS,\n            READ_MEDIA_IMAGES: READ_MEDIA_IMAGES,\n            READ_MEDIA_VIDEO: READ_MEDIA_VIDEO,\n            READ_MEDIA_AUDIO: READ_MEDIA_AUDIO,\n            RECORD_AUDIO: RECORD_AUDIO,\n            MODIFY_AUDIO_SETTINGS: MODIFY_AUDIO_SETTINGS,\n            BODY_SENSORS: BODY_SENSORS,\n            // Methods\n            checkPermission: _checkPermission,\n            requestPermission: _requestPermission,\n            requestPermissions: _requestPermissions,\n            hasPermission: _hasPermission // Legacy method\n        });\n\n        // Browser Bridge\n        const browser = {\n            open: _openBrowser,\n            openSafe: _openSafeMode,\n            openFullscreen: _openFullscreen,\n            openMinimal: _openMinimal,\n            openExternal: _openExternal\n        };\n        \n        Object.freeze(browser);\n\n        const SMS = Object.freeze({\n            sendSMS: _send,\n            listSMS: _list\n        });\n\n        const ANSI = Object.freeze({\n            RESET: '\\x1b[0m',\n            BLACK: '\\x1b[30m', // Foreground (text) colors\n            RED: '\\x1b[31m',\n            GREEN: '\\x1b[32m',\n            YELLOW: '\\x1b[33m',\n            BLUE: '\\x1b[34m',\n            MAGENTA: '\\x1b[35m',\n            CYAN: '\\x1b[36m',\n            WHITE: '\\x1b[37m',\n            BG_BLACK: '\\x1b[40m', // Background colors\n            BG_RED: '\\x1b[41m',\n            BG_GREEN: '\\x1b[42m',\n            BG_YELLOW: '\\x1b[43m',\n            BG_BLUE: '\\x1b[44m',\n            BG_MAGENTA: '\\x1b[45m',\n            BG_CYAN: '\\x1b[46m',\n            BG_WHITE: '\\x1b[47m',\n            BOLD: '\\x1b[1m', // Additional formatting\n            ITALIC: '\\x1b[3m',\n            UNDERLINE: '\\x1b[4m',\n            BLINK: '\\x1b[5m',\n            INVERSE: '\\x1b[7m',\n            STRIKETHROUGH: '\\x1b[9m'\n        });\n            \n        // Console Interface\n        const console = Object.freeze({\n            prompt : _prompt,\n            log: _infoPrint,\n            info: _infoPrint,\n            warn: _errorPrint,\n            error: _errorPrint,\n            success: _successPrint,\n            clear: _consoleclear,\n            cls: _consoleclear,\n            assert: assert,\n            count: count,\n            debug: debug,\n            dir: dir,\n            dirxml: dirxml,\n            group: group,\n            groupCollapsed: groupCollapsed,\n            groupEnd: groupEnd,\n            memory: memory,\n            profile: profile,\n            profileEnd: profileEnd,\n            table: table,\n            time: time,\n            timeEnd: timeEnd,\n            timeLog: timeLog,\n            trace: trace,\n            warn: warn\n        });\n\n        // Global Dialog Functions\n        const alert = (message, title) => _Alert(message, title);\n        const confirm = (message, title) => _Confirm(message, title);\n\n        // Device Hardware Controls\n        const flashlight = Object.freeze({\n            switchOn: _turnOnFlashlight,\n            switchOff: _turnOffFlashlight,\n            toggleState: _toggleFlashlight\n        });\n\n        // UI Dialogs\n        const dialog = Object.freeze({\n            alert: _Alert,\n            confirm: _Confirm\n        });\n\n        // File System Operations\n        const fs = Object.freeze({\n            APP_ROOT_DIR: _app_rootpath,\n            APP_DIR: _applicationDirectory,\n            APP_STORAGE_DIR: _applicationStorageDirectory,\n            DATA_DIR: _dataDirectory,\n            CACHE_DIR: _cacheDirectory,\n            EX_APP_STORAGE_DIR: _externalApplicationStorageDirectory,\n            EX_DATA_DIR: _externalDataDirectory,\n            EX_CACHE_DIR: _externalCacheDirectory,\n            EX_ROOT_DIR: _externalRootDirectory,\n\n            createDirectory: _createDirectory,\n            dirExists: _dirExists,\n            createFile: _writeFile,\n            writeTextFile: _writeTextFile,\n            appendTextFile: _appendTextFile,\n            readTextFile: _readTextFile,\n            fileExists: _fileExists,\n            deleteFile: _deleteFile,\n            removeDirectory: _removeDirectory,\n            resolveLocalFileSystemURL: _resolveLocalFileSystemURL,\n            fileURLToPath: (fileURL) => fileURL.replace('file://', '')\n        });\n\n        // Network Operations\n        const network = Object.freeze({\n            getConnectionType: _connectionType,\n            getWIFIIPInfo: _getWiFiIPAddress,\n            getCarrierIPInfo: _getCarrierIPAddress,\n            getHTTPProxyInfo: _getHttpProxyInformation,\n            ping: _ping,\n            getIPInfo: _getWifiIPInfo,\n            getRouterIP: _getWifiRouterIP,\n            canConnectToRouter: _canConnectToRouter,\n            canConnectToInternet: _canConnectToInternet\n        });\n\n        // WiFi Operations\n        const WIFI = Object.freeze({\n           // Basic Controls\n           enable: _enableWifi,\n           disable: _disableWifi,\n           isEnabled: _isEnabled,\n           requestPermission: _requestWifiPermission,\n           \n           // API 29+ (Android 10+) Features \n           suggestConnection: _suggestConnection,     // For internet access across all apps\n           specifierConnection: _specifierConnection, // For internet access in your app only\n           \n           // Scanning & Connection\n           scan: _scanwifi,\n           connect: _Connectwifi,\n           disconnect: _disconnectWifi,\n           reconnect: _reconnectWifi,\n           reassociate: _reassociateWifi,\n           \n           // Network Information\n           getConnectedSSID: _getConnectedSSID,\n           getConnectedBSSID: _getConnectedBSSID,\n           getConnectedNetworkID: _getConnectedNetworkID,\n           listNetworks: _listNetworks,\n           getSSIDNetworkID: _getSSIDNetworkID,\n           \n           // Network Configuration\n           formatConfig: _formatWifiConfig,\n           addNetwork: _addNetwork,\n           removeNetwork: _removeNetwork,\n           enableNetwork: _enableNetwork,\n           disableNetwork: _disableNetwork,\n           \n           // Connection Testing\n           isConnectedToInternet: _isConnectedToInternet,\n           canConnectToRouter: _canConnectToRouter,\n           canConnectToInternet: _canConnectToInternet,\n           \n           // IP Information\n           getIP: _getWifiIP,\n           getIPInfo: _getWifiIPInfo,\n           getRouterIP: _getWifiRouterIP,\n           \n           // Location Services\n           isLocationEnabled: _isLocationEnabled,\n           openLocationSettings: _switchToLocationSettings,\n           \n           // Connection Binding\n           setBindAll: _setBindAll,\n           resetBindAll: _resetBindAll,\n           \n           // Helper Functions\n           timeout: _timeout\n        });\n\n        const bluetooth = Object.freeze({\n            scan: _scanBT,\n            stopScan: _stopBTScan,\n            getService: _getBTService,\n            connect: _connectBT,\n            readCharacteristic: _readBTCharacteristic,\n            writeCharacteristic: _writeBTCharacteristic,\n            getCharacteristic : _getBTCharacteristic\n        });\n\n        // SIM Card Operations\n        const sim = Object.freeze({\n            hasPermission: _checkSimPermission,\n            requestPermission: _requestSimPermission,\n            getInfo: _getSimInfo,\n            callNumber: _callNumber\n        });\n\n        // Speech & Voice Operations\n        const utter = Object.freeze({\n            speak: _UtterText,\n            getVoices: _getvoices,\n            canListen: _utterCanRec,\n            listen: _utterListen,\n            stopListening: _utterStopListen,\n            requestPermission: _utter_requestPermission,\n            hasPermission: _utter_hasPermission\n        });\n\n        const clipboard = Object.freeze({\n            setText: _clipboardSetText\n        });\n\n        const http = Object.freeze({\n            initializeSettings: _initializeSettings,\n            sendRequest: _sendRequest,\n            uploadFile : _uploadFile,\n            downloadFile : _downloadFile,\n            setHeader : _setHeader,\n            setDataSerializer : _setDataSerializer,\n            setTimeout : _setTimeout,\n            setServerTrustMode : _setServerTrustMode,\n            getCookieString : _getCookieString,\n            setCookie : _setCookie,\n            clearCookies : _clearCookies\n        });\n\n        const sleep = _sleep;\n\n        const spinner = Object.freeze({\n            show: _showSpinner,\n            hide: _hideSpinner\n        });\n        "}async executeScript(e){try{const n=`\n                (async function() {\n                    "use strict";\n                    try {\n                        ${this.getSandboxAPI()}\n                        ${e}\n                    } catch (innerError) {\n                        // A call to exit() throws a tagged sentinel: swallow a clean exit,\n                        // and print a terse notice for a non-zero exit code.\n                        if (innerError && innerError.__phonedoExit) {\n                            if (innerError.exitCode !== 0) {\n                                _errorPrint(innerError.message);\n                            }\n                        } else {\n                            const msg = innerError instanceof Error ? innerError.message : String(innerError);\n                            _errorPrint(" ❌ Runtime Error: " + msg);\n                        }\n                    }\n                })();\n            `;await this.idSandBox.eval(n)}catch(e){const n=e instanceof Error?e.message:String(e);app.store.jqconsole.Write(" ❌ Evaluation Error: "+n+"\n","errorStyle"),console.error("Sandbox Execution Failed:",e)}}}async function evaluate(e){if(app.store.runningscript)return void app.cordova.dialogs.confirm("A script is currently running. Do you want to stop it and run this script instead?","Shell Busy",function(n){switch(n){case 1:app.store.sandboxedIframe&&app.store.sandboxedIframe.parentNode&&app.store.sandboxedIframe.parentNode.removeChild(app.store.sandboxedIframe),app.store.sandboxedIframe=null,app.store.runningscript=!1,app.store.jqconsole.Enable();const n=new SandboxedEnvironment;app.store.runningscript=!0,n.initialize().then(()=>{app.store.sandboxedIframe=n.iframe}).then(()=>n.executeScript(e)).finally(()=>{n.cleanup(),app.store.sandboxedIframe=null,app.store.runningscript=!1,app.store.jqconsole.Enable()});break;case 2:app.toastMsg("Script execution cancelled.","short")}},["Stop and Run","Cancel"]);const n=new SandboxedEnvironment;app.store.runningscript=!0;let i=null;const o=new Promise((e,n)=>{i=n});app.store.stopScript=()=>{if(i){const e=new Error("__PHONEDO_STOP__");i(e),i=null}};try{await n.initialize(),app.store.sandboxedIframe=n.iframe,await Promise.race([n.executeScript(e),o])}catch(e){if(e&&"__PHONEDO_STOP__"===e.message)app.store.jqconsole.Write(" Script stopped.\n","warningStyle");else{const n=e instanceof Error?e.message:String(e);app.store.jqconsole.Write(" ❌ Setup Error: "+n+"\n","errorStyle"),console.error("Sandbox Execution Failed:",e)}}finally{n.cleanup(),app.store.sandboxedIframe=null,app.store.runningscript=!1,app.store.stopScript=null;try{app.store.jqconsole.AbortPrompt()}catch(e){}app.store.jqconsole.Enable()}}
+/**
+ * PhoneDo Sandboxed Environment
+ * Provides a secure sandbox for executing user scripts with access to device features
+ * through Cordova plugins.
+ * Author : Murage Kabui
+ */
+class SandboxedEnvironment {
+    constructor() {
+        this.iframe = null;
+        this.idSandBox = null;
+        this.isRunning = false;
+        this.bridges = {};
+        this._apiTemplate = null; // Cache for the static part of the API
+        this.initializeBridges();
+    }
+    /**
+     * Initialize all bridge objects for native functionality
+     */
+    initializeBridges() {
+        // Shared constants / helpers (closure-scoped: NOT injected as sandbox globals)
+        // User-facing "app root" — the external Documents folder (exposed as fs.APP_ROOT_DIR).
+        // NOTE: on Android 10+ this external path is subject to scoped-storage limits and may
+        // not be directly writable, so it is NOT used as the implicit default below.
+        const APP_ROOT = cordova.file.externalRootDirectory + "Documents/";
+        // Safe default path used when a filesystem method is called without a path. This is
+        // the app-private data directory: it always exists and is writable with no runtime
+        // permission, so `fs.writeTextFile(undefined, name, content)` just works.
+        const DEFAULT_FS_PATH = cordova.file.dataDirectory;
+        // Default HTTP request timeout (seconds).
+        const HTTP_DEFAULT_TIMEOUT = 60.0;
+        // Circular-safe stringifier so console.log(obj) prints the object instead of
+        // "[object Object]". Errors show their stack; undefined/null are explicit.
+        const formatArgs = (messages) => messages.map(m => {
+            if (typeof m === 'string') return m;
+            if (m instanceof Error) return m.stack || `${m.name}: ${m.message}`;
+            if (m === undefined) return 'undefined';
+            if (m === null) return 'null';
+            if (typeof m === 'object') {
+                try {
+                    const seen = new WeakSet();
+                    return JSON.stringify(m, (key, value) => {
+                        if (typeof value === 'object' && value !== null) {
+                            if (seen.has(value)) return '[Circular]';
+                            seen.add(value);
+                        }
+                        return value;
+                    }, 2);
+                } catch (e) {
+                    return String(m);
+                }
+            }
+            return String(m);
+        }).join(" ");
+
+        // Clipboard Bridge
+        this.bridges.clipboard = {
+            _clipboardSetText: async text => {
+                return new Promise((resolve, reject) => {
+                    app.plugins.decsoft.clipboard.setText(text, () => resolve(true), error => reject("clipboard error: " + error));
+                });
+            }
+        };
+        // Console Bridge
+        this.bridges.console = {
+            _prompt: () => new Promise((resolve) => {
+                const jq = app.store.jqconsole;
+                // The console is disabled while a script runs, which makes its input source
+                // unfocusable and unable to receive keystrokes. Re-enable it for the duration
+                // of the prompt, focus it (so the soft keyboard appears), then restore the
+                // previous disabled state once the user submits.
+                const wasDisabled = jq.IsDisabled();
+                if (wasDisabled) {
+                    jq.Enable();
+                }
+                jq.Prompt(true, function (input) {
+                    if (wasDisabled) {
+                        jq.Disable();
+                    }
+                    jq.ScrollWindowToPrompt();
+                    resolve(input);
+                });
+                jq.Focus();
+            }),
+            _infoPrint: (...messages) => {
+                app.store.jqconsole.Write(formatArgs(messages) + "\n", "infoStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            _successPrint: (...messages) => {
+                app.store.jqconsole.Write(formatArgs(messages) + "\n", "successStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            _Print: (msg = "", customclass = "successStyle") => {
+                return app.store.jqconsole.Write(msg, customclass);
+            },
+            _consoleclear: () => app.store.jqconsole.Clear(),
+            _errorPrint: (...messages) => {
+                app.store.jqconsole.Write(formatArgs(messages) + "\n", "errorStyle");
+                app.store.jqconsole.ScrollWindowToPrompt();
+            },
+            assert: (condition, ...messages) => {
+                if (!condition) {
+                    this.bridges.console._errorPrint("Assertion failed:", ...messages);
+                }
+            },
+            clear: () => {
+                app.store.jqconsole.Clear();
+            },
+            count: (label = "default") => {
+                if (!this.consoleCounters) {
+                    this.consoleCounters = {};
+                }
+                if (!this.consoleCounters[label]) {
+                    this.consoleCounters[label] = 0;
+                }
+                this.consoleCounters[label]++;
+                this.bridges.console._infoPrint(`${label}: ${this.consoleCounters[label]}`);
+            },
+            debug: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            dir: (obj, options) => {
+                this.bridges.console._infoPrint(JSON.stringify(obj, null, options?.spaces || 2));
+            },
+            dirxml: (node) => {
+                this.bridges.console._infoPrint((node ? node.outerHTML || node.toString() : 'null'));
+            },
+            error: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
+            },
+            group: (label) => {
+                this.bridges.console._infoPrint(`--- ${label} ---`);
+            },
+            groupCollapsed: (label) => {
+                this.bridges.console._infoPrint(`+++ ${label} +++`);
+            },
+            groupEnd: () => {
+                this.bridges.console._infoPrint('---');
+            },
+            info: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            log: (...messages) => {
+                this.bridges.console._infoPrint(...messages);
+            },
+            memory: () => {
+                // performance.memory is non-standard and absent on most WebViews.
+                if (performance && performance.memory) {
+                    this.bridges.console._infoPrint(performance.memory);
+                } else {
+                    this.bridges.console._infoPrint('memory: not available on this platform');
+                }
+            },
+            profile: (label) => {
+                if (console.profile) { // Check for browser support
+                    console.profile(label);
+                }
+            },
+            profileEnd: (label) => {
+                if (console.profileEnd) {
+                    console.profileEnd(label);
+                }
+            },
+            table: (data, columns) => {
+                // Render a real text table. The native console.table returns undefined,
+                // so the previous implementation printed the string "undefined".
+                try {
+                    const rows = Array.isArray(data) ? data : Object.values(data || {});
+                    if (!rows.length) {
+                        this.bridges.console._infoPrint('(empty)');
+                        return;
+                    }
+                    const keys = columns || [...new Set(rows.flatMap(r =>
+                        (r && typeof r === 'object') ? Object.keys(r) : ['value']))];
+                    const header = ['(index)', ...keys];
+                    const lines = [header.join('\t')];
+                    rows.forEach((row, i) => {
+                        const cells = keys.map(k => {
+                            const v = (row && typeof row === 'object') ? row[k] : (k === 'value' ? row : '');
+                            return v === undefined ? '' : (typeof v === 'object' ? JSON.stringify(v) : String(v));
+                        });
+                        lines.push([i, ...cells].join('\t'));
+                    });
+                    this.bridges.console._infoPrint(lines.join('\n'));
+                } catch (e) {
+                    this.bridges.console._infoPrint(String(data));
+                }
+            },
+            time: (label = "default") => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                this.consoleTimers[label] = performance.now();
+            },
+            timeEnd: (label = "default") => {
+                if (this.consoleTimers && this.consoleTimers[label]) {
+                    let timeDiff = performance.now() - this.consoleTimers[label];
+                    this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms`);
+                    delete this.consoleTimers[label];
+                }
+            },
+            timeLog: (label = "default", ...messages) => {
+                if (!this.consoleTimers) {
+                    this.consoleTimers = {};
+                }
+                if (!this.consoleTimers[label]) {
+                    this.consoleTimers[label] = performance.now();
+                }
+                let timeDiff = performance.now() - this.consoleTimers[label];
+                this.bridges.console._infoPrint(`${label}: ${timeDiff.toFixed(2)}ms - ${messages.join(' ')}`);
+            },
+            trace: (...messages) => {
+                // Error.stack can be undefined on some engines; guard before splitting.
+                const rawStack = (new Error()).stack;
+                const stack = rawStack ? rawStack.split('\n').slice(2).join('\n') : '(stack unavailable)';
+                this.bridges.console._infoPrint("Trace:", ...messages, '\n', stack);
+            },
+            warn: (...messages) => {
+                this.bridges.console._errorPrint(...messages);
+            }
+        };
+        // Device Bridge
+        this.bridges.device = {
+            _toggleFlashlight: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.flashlight.available(isAvailable => {
+                        if (isAvailable) {
+                            window.plugins.flashlight.toggle(() => resolve(true), err => reject(err));
+                        } else {
+                            reject(-1);
+                        }
+                    });
+                });
+            },
+            _turnOnFlashlight: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.flashlight.available(isAvailable => {
+                        if (isAvailable) {
+                            window.plugins.flashlight.switchOn(() => resolve(true), err => reject(err));
+                        } else {
+                            reject(-1);
+                        }
+                    });
+                });
+            },
+            _turnOffFlashlight: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.flashlight.available(isAvailable => {
+                        if (isAvailable) {
+                            window.plugins.flashlight.switchOff(() => resolve(true), err => reject(err));
+                        } else {
+                            reject(-1);
+                        }
+                    });
+                });
+            },
+            _vibrate: duration => {
+                app.cordova.vibration.vibrate(duration);
+            },
+            _beep: () => app.beep()
+        };
+        // SMS Bridge
+        this.bridges.sms = {
+            _send: async function (phoneNumber, message) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        SMS.sendSMS(phoneNumber, message, resolve, reject);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+            // List SMS
+            _list: async function (filter = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        SMS.listSMS(filter, resolve, reject);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+        };
+        // Dialog Bridge
+        this.bridges.dialog = {
+            _Alert: async (message, title, klass = app.kind.primary, a_oButtons = [{
+                text: "OK",
+                kind: app.kind.primary,
+                size: app.size.md
+            }]) => {
+                return new Promise(resolve => {
+                    app.showAlert(message, title, klass, a_oButtons, index => resolve(index));
+                });
+            },
+            _Confirm: async (message, title, klass = app.kind.primary, a_oButtons = [{
+                text: "Cancel",
+                kind: app.kind.secondary,
+                size: app.size.md
+            }, {
+                text: "OK",
+                kind: app.kind.primary,
+                size: app.size.md
+            }]) => {
+                return new Promise(resolve => {
+                    app.showAlert(message, title, klass, a_oButtons, index => resolve(index === 1));
+                });
+            }
+        };
+
+        // Device Info Bridge
+        this.bridges.deviceInfo = {
+            getInfo: () => ({
+                model: app.cordova.device.model(),
+                platform: app.cordova.device.platform(),
+                uuid: app.cordova.device.uuid(),
+                version: app.cordova.device.version(),
+                manufacturer: app.cordova.device.manufacturer(),
+                isVirtual: app.cordova.device.isVirtual(),
+                serial: app.cordova.device.serial(),
+                batteryLevel: app.cordova.battery.level,
+                isCharging: app.cordova.battery.isPlugged
+            })
+        };
+
+        // Browser Bridge
+        this.bridges.browser = {
+            // Default configuration
+            DEFAULT_CONFIG: {
+                // Basic window features
+                zoom: 'no',
+                hardwareback: 'yes',
+                footer: 'no',
+                location: 'no',
+                hideurlbar: 'yes',
+                hidenavigationbuttons: 'no',
+
+                // Colors and appearance
+                toolbarcolor: '#4a4968',
+                navigationbuttoncolor: '#ffffff',
+                closebuttoncolor: '#1E1E2A',
+
+                // Toolbar options
+                toolbar: 'yes',
+                enableViewportScale: 'yes',
+                mediaPlaybackRequiresUserAction: 'yes',
+                shouldPauseOnSuspend: 'yes',
+
+                // Security features
+                clearcache: 'no',
+                clearsessioncache: 'no',
+
+                // Presentation
+                presentationstyle: 'pagesheet',
+                transitionstyle: 'crossdissolve',
+
+                // Hidden by default, can be enabled
+                lefttoright: 'yes',
+                fullscreen: 'no',
+
+                // User interaction
+                usewkwebview: 'yes',
+                keyboardDisplayRequiresUserAction: 'yes'
+            },
+
+            /**
+             * Opens a URL in the InAppBrowser with custom configuration
+             * @param {string} url - The URL to open
+             * @param {string} target - Target window ('_blank', '_self', '_system')
+             * @param {Object} customConfig - Optional custom configuration
+             * @returns {Promise<InAppBrowserObject>} - Promise resolving to browser instance
+             */
+            _openBrowser: async (url, target = '_blank', customConfig = {}) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Input validation
+                        if (!url || typeof url !== 'string') {
+                            throw new Error('Invalid URL provided');
+                        }
+
+                        if (!['_blank', '_self', '_system'].includes(target)) {
+                            throw new Error('Invalid target. Must be _blank, _self, or _system');
+                        }
+
+                        // Security: reject script-injection / local-file schemes. Allow web
+                        // schemes everywhere; allow tel/mailto/sms/geo only for the system
+                        // handler (_system). Anything else (javascript:, data:, file:,
+                        // vbscript:, content:) is blocked.
+                        const scheme = (url.match(/^\s*([a-z][a-z0-9+.-]*):/i) || [, ''])[1].toLowerCase();
+                        const webSchemes = ['http', 'https'];
+                        const systemSchemes = ['tel', 'mailto', 'sms', 'geo'];
+                        const allowed = scheme === ''
+                            ? true // relative/scheme-less URLs are fine
+                            : webSchemes.includes(scheme) ||
+                              (target === '_system' && systemSchemes.includes(scheme));
+                        if (!allowed) {
+                            throw new Error(`Blocked URL scheme "${scheme}:" for security reasons`);
+                        }
+
+                        // Merge default config with custom config
+                        const config = { ...this.bridges.browser.DEFAULT_CONFIG, ...customConfig };
+
+                        // Convert config object to features string
+                        const features = Object.entries(config)
+                            .map(([key, value]) => `${key}=${value}`)
+                            .join(',');
+
+                        // Create browser instance
+                        const browserInstance = cordova.InAppBrowser.open(url, target, features);
+
+                        if (!browserInstance) {
+                            throw new Error('Failed to create browser instance');
+                        }
+
+                        // Surface load errors to the script console; drop the noisy
+                        // loadstart/loadstop/exit logging that spammed the host console.
+                        browserInstance.addEventListener('loaderror', (event) => {
+                            this.bridges.console._errorPrint('Browser loading error:', event.message);
+                        });
+
+                        resolve(browserInstance);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            /**
+             * Opens a URL with safe defaults for viewing untrusted content
+             * @param {string} url - The URL to open
+             * @returns {Promise<InAppBrowserObject>} - Promise resolving to browser instance
+             */
+            _openSafeMode: async (url) => {
+                const safeConfig = {
+                    clearcache: 'yes',
+                    clearsessioncache: 'yes',
+                    toolbar: 'yes',
+                    enableViewportScale: 'no',
+                    mediaPlaybackRequiresUserAction: 'yes',
+                    shouldPauseOnSuspend: 'yes',
+                    usewkwebview: 'yes'
+                };
+                return this.bridges.browser._openBrowser(url, '_blank', safeConfig);
+            },
+
+            /**
+             * Opens a URL in fullscreen mode
+             * @param {string} url - The URL to open
+             * @returns {Promise<InAppBrowserObject>} - Promise resolving to browser instance
+             */
+            _openFullscreen: async (url) => {
+                const fullscreenConfig = {
+                    fullscreen: 'yes',
+                    footer: 'no',
+                    toolbar: 'no',
+                    location: 'no',
+                    hideurlbar: 'yes',
+                    hidenavigationbuttons: 'yes'
+                };
+                return this.bridges.browser._openBrowser(url, '_blank', fullscreenConfig);
+            },
+
+            /**
+             * Opens a URL in a minimal UI mode (just the content)
+             * @param {string} url - The URL to open
+             * @returns {Promise<InAppBrowserObject>} - Promise resolving to browser instance
+             */
+            _openMinimal: async (url) => {
+                const minimalConfig = {
+                    toolbar: 'no',
+                    footer: 'no',
+                    location: 'no',
+                    hideurlbar: 'yes',
+                    hidenavigationbuttons: 'yes',
+                    presentationstyle: 'fullscreen'
+                };
+                return this.bridges.browser._openBrowser(url, '_blank', minimalConfig);
+            },
+
+            /**
+             * Opens a URL in the system's default browser
+             * @param {string} url - The URL to open
+             * @returns {Promise<InAppBrowserObject>} - Promise resolving to browser instance
+             */
+            _openExternal: async (url) => {
+                return this.bridges.browser._openBrowser(url, '_system');
+            }
+        };
+        // Sleep/Delay Bridge
+        this.bridges.timer = {
+            /**
+             * Creates a promise that resolves after the specified delay
+             * @param {number} ms - Time to sleep in milliseconds
+             * @returns {Promise<void>} - Promise that resolves after the delay
+             */
+            _sleep: async (ms) => {
+                // Validate up front (before creating the promise) and cap the delay so a
+                // typo like sleep(1e12) can't pin a timer for days.
+                if (typeof ms !== 'number' || Number.isNaN(ms) || ms < 0) {
+                    throw new Error('Sleep duration must be a non-negative number of milliseconds');
+                }
+                const MAX_SLEEP_MS = 10 * 60 * 1000; // 10 minutes
+                const delay = Math.min(ms, MAX_SLEEP_MS);
+                return new Promise((resolve) => setTimeout(resolve, delay));
+            }
+        };
+        // Android Permissions Bridge
+        this.bridges.permissions = {
+            // Permission constants
+            ACCESS_COARSE_LOCATION: cordova.plugins.permissions.ACCESS_COARSE_LOCATION,
+            ACCESS_FINE_LOCATION: cordova.plugins.permissions.ACCESS_FINE_LOCATION,
+            CAMERA: cordova.plugins.permissions.CAMERA,
+            READ_CONTACTS: cordova.plugins.permissions.READ_CONTACTS,
+            WRITE_CONTACTS: cordova.plugins.permissions.WRITE_CONTACTS,
+            READ_CALENDAR: cordova.plugins.permissions.READ_CALENDAR,
+            WRITE_CALENDAR: cordova.plugins.permissions.WRITE_CALENDAR,
+            READ_EXTERNAL_STORAGE: cordova.plugins.permissions.READ_EXTERNAL_STORAGE,
+            WRITE_EXTERNAL_STORAGE: cordova.plugins.permissions.WRITE_EXTERNAL_STORAGE,
+            RECORD_AUDIO: cordova.plugins.permissions.RECORD_AUDIO,
+            MODIFY_AUDIO_SETTINGS: cordova.plugins.permissions.MODIFY_AUDIO_SETTINGS,
+            READ_PHONE_STATE: cordova.plugins.permissions.READ_PHONE_STATE,
+            CALL_PHONE: cordova.plugins.permissions.CALL_PHONE,
+            READ_SMS: cordova.plugins.permissions.READ_SMS,
+            SEND_SMS: cordova.plugins.permissions.SEND_SMS,
+            RECEIVE_SMS: cordova.plugins.permissions.RECEIVE_SMS,
+            READ_CALL_LOG: cordova.plugins.permissions.READ_CALL_LOG,
+            WRITE_CALL_LOG: cordova.plugins.permissions.WRITE_CALL_LOG,
+            ADD_VOICEMAIL: cordova.plugins.permissions.ADD_VOICEMAIL,
+            USE_SIP: cordova.plugins.permissions.USE_SIP,
+            PROCESS_OUTGOING_CALLS: cordova.plugins.permissions.PROCESS_OUTGOING_CALLS,
+            BODY_SENSORS: cordova.plugins.permissions.BODY_SENSORS,
+            RECEIVE_WAP_PUSH: cordova.plugins.permissions.RECEIVE_WAP_PUSH,
+            RECEIVE_MMS: cordova.plugins.permissions.RECEIVE_MMS,
+            READ_CELL_BROADCASTS: cordova.plugins.permissions.READ_CELL_BROADCASTS,
+            BLUETOOTH: cordova.plugins.permissions.BLUETOOTH,
+            BLUETOOTH_ADMIN: cordova.plugins.permissions.BLUETOOTH_ADMIN,
+            BLUETOOTH_CONNECT: cordova.plugins.permissions.BLUETOOTH_CONNECT,
+            BLUETOOTH_SCAN: cordova.plugins.permissions.BLUETOOTH_SCAN,
+            BLUETOOTH_ADVERTISE: cordova.plugins.permissions.BLUETOOTH_ADVERTISE,
+            ACCESS_NETWORK_STATE: cordova.plugins.permissions.ACCESS_NETWORK_STATE,
+            ACCESS_WIFI_STATE: cordova.plugins.permissions.ACCESS_WIFI_STATE,
+            CHANGE_WIFI_STATE: cordova.plugins.permissions.CHANGE_WIFI_STATE,
+            CHANGE_NETWORK_STATE: cordova.plugins.permissions.CHANGE_NETWORK_STATE,
+            CHANGE_CONFIGURATION: cordova.plugins.permissions.CHANGE_CONFIGURATION,
+            GET_ACCOUNTS: cordova.plugins.permissions.GET_ACCOUNTS,
+            MANAGE_ACCOUNTS: cordova.plugins.permissions.MANAGE_ACCOUNTS,
+            USE_BIOMETRICS: cordova.plugins.permissions.USE_BIOMETRICS,
+            USE_FINGERPRINT: cordova.plugins.permissions.USE_FINGERPRINT,
+            USE_IRIS: cordova.plugins.permissions.USE_IRIS,
+            USE_FACE: cordova.plugins.permissions.USE_FACE,
+            POST_NOTIFICATIONS: cordova.plugins.permissions.POST_NOTIFICATIONS,
+            READ_MEDIA_IMAGES: cordova.plugins.permissions.READ_MEDIA_IMAGES,
+            READ_MEDIA_VIDEO: cordova.plugins.permissions.READ_MEDIA_VIDEO,
+            READ_MEDIA_AUDIO: cordova.plugins.permissions.READ_MEDIA_AUDIO,
+
+            /**
+             * Checks if a specific permission is granted
+             * @param {string} permission - The permission to check
+             * @returns {Promise<{hasPermission: boolean}>} - Promise resolving to permission status
+             */
+            _checkPermission: async (permission) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        if (!permission || typeof permission !== 'string') {
+                            throw new Error('Invalid permission specified');
+                        }
+
+                        cordova.plugins.permissions.checkPermission(
+                            permission,
+                            (status) => resolve(status),
+                            (error) => resolve(error)
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            /**
+             * Requests a specific permission from the user
+             * @param {string} permission - The permission to request
+             * @returns {Promise<{hasPermission: boolean}>} - Promise resolving to permission status
+             */
+            _requestPermission: async (permission) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        if (!permission || typeof permission !== 'string') {
+                            throw new Error('Invalid permission specified');
+                        }
+
+                        cordova.plugins.permissions.requestPermission(
+                            permission,
+                            (status) => resolve(status),
+                            (error) => reject(error)
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            /**
+             * Requests multiple permissions from the user
+             * @param {string[]} permissions - Array of permissions to request
+             * @returns {Promise<{hasPermission: boolean}>} - Promise resolving to permission status
+             */
+            _requestPermissions: async (permissions) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        if (!Array.isArray(permissions) || permissions.length === 0) {
+                            throw new Error('Invalid permissions array');
+                        }
+
+                        cordova.plugins.permissions.requestPermissions(
+                            permissions,
+                            (status) => resolve(status),
+                            (error) => reject(error)
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            /**
+             * Legacy method to check if a permission is granted (deprecated)
+             * @param {string} permission - The permission to check
+             * @returns {Promise<{hasPermission: boolean}>} - Promise resolving to permission status
+             */
+            _hasPermission: async (permission) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        if (!permission || typeof permission !== 'string') {
+                            throw new Error('Invalid permission specified');
+                        }
+
+                        cordova.plugins.permissions.hasPermission(
+                            permission,
+                            (status) => resolve(status),
+                            (error) => reject(error)
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        };
+        // Utility Bridge
+        this.bridges.utils = {
+            // exit(code) stops the running script immediately. Instead of tearing down its
+            // own iframe mid-execution (a race that destroyed the JS context while code was
+            // still running, and double-removed the iframe vs. the outer cleanup), it throws
+            // a tagged sentinel. executeScript() recognises the tag: a zero code exits
+            // quietly, non-zero prints "Script Terminated". All teardown (iframe removal,
+            // re-enabling the console) is owned solely by evaluate()'s finally block.
+            _exitEval: (exitCode = 0) => {
+                app.hideAlert();
+                const err = new Error(
+                    exitCode === 0 ? 'Script exited.' : `Script Terminated. ExitCode: ${exitCode}`
+                );
+                err.__phonedoExit = true;
+                err.exitCode = exitCode;
+                throw err;
+            }
+        };
+
+        // File System Bridge
+        this.bridges.filesystem = {
+            // Constants for default directories
+            _app_rootpath: APP_ROOT,
+            _applicationDirectory: cordova.file.applicationDirectory,
+            _applicationStorageDirectory: cordova.file.applicationStorageDirectory,
+            _dataDirectory: cordova.file.dataDirectory,
+            _cacheDirectory: cordova.file.cacheDirectory,
+            _externalApplicationStorageDirectory: cordova.file.externalApplicationStorageDirectory,
+            _externalDataDirectory: cordova.file.externalDataDirectory,
+            _externalCacheDirectory: cordova.file.externalCacheDirectory,
+            _externalRootDirectory: cordova.file.externalRootDirectory,
+            // Read text file
+            _readTextFile: async (sPath, sFileName) => {
+                const path = sPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.readTextFile(path, sFileName,
+                        contents => resolve(contents),
+                        err => reject("readTextFile error: " + app.serialize(err))
+                    );
+                });
+            },
+
+            // Write text to a file
+            _writeTextFile: async (sPath, sFileName, sContent) => {
+                const path = sPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.writeTextFile(path, sFileName, sContent,
+                        () => resolve(true),
+                        error => reject("writeTextFile error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            // Append text to a file
+            _appendTextFile: async (sPath, sFileName, sContent) => {
+                const path = sPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.appendTextFile(path, sFileName, sContent,
+                        () => resolve(true),
+                        error => reject("appendTextFile error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            // Create a directory
+            _createDirectory: async (sRootPath, sDirName) => {
+                const rootPath = sRootPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.createDir(rootPath, sDirName,
+                        () => resolve(true),
+                        error => reject("createDirectory error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            // Check if a directory exists
+            _dirExists: async (path) => {
+                const rootPath = path ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.dirExists(rootPath,
+                        result => resolve(result),
+                        error => resolve(error.code == 0 ? true : false)
+                    );
+                });
+            },
+
+            // Check if a file exists
+            _fileExists: async (sPath, sFileName) => {
+                const path = sPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.fileExists(path + sFileName,
+                        result => resolve(result),
+                        error => reject("fileExists error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            // Write content to a file
+            _writeFile: async (sPath, sFileName, sContent) => {
+                return new Promise((resolve, reject) => {
+                    // Resolve the filesystem URL
+                    window.resolveLocalFileSystemURL(sPath, (directoryEntry) => {
+                        // Get or create the file
+                        directoryEntry.getFile(
+                            sFileName, { create: true, exclusive: false },
+                            (fileEntry) => {
+                                // Create a FileWriter object
+                                fileEntry.createWriter((fileWriter) => {
+                                    fileWriter.onwriteend = () => {
+                                        // console.log("File written successfully:", fileEntry.nativeURL);
+                                        resolve(fileEntry.nativeURL); // Return the file's URI
+                                    };
+
+                                    fileWriter.onerror = (error) => {
+                                        // console.error("File writing failed:", error);
+                                        reject(error);
+                                    };
+
+                                    // Convert content to a Blob and write it
+                                    const blob = new Blob([sContent], { type: "text/plain" });
+                                    fileWriter.write(blob);
+                                });
+                            },
+                            (error) => {
+                                // console.error("Error accessing file:", error);
+                                reject(error);
+                            }
+                        );
+                    },
+                        (error) => {
+                            // console.error("Error resolving file system path:", error);
+                            reject(error);
+                        });
+                });
+            },
+
+            // Delete a file
+            _deleteFile: async (sPath, sFileName) => {
+                const path = sPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.removeFile(path, sFileName,
+                        () => resolve(true),
+                        error => reject("removeFile error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            // Remove a directory
+            _removeDirectory: async (sRootPath, sDirName) => {
+                const rootPath = sRootPath ?? DEFAULT_FS_PATH;
+                return new Promise((resolve, reject) => {
+                    app.cordova.file.removeDir(rootPath + sDirName,
+                        () => resolve(true),
+                        error => reject("removeDirectory error: " + app.serialize(error))
+                    );
+                });
+            },
+
+            _resolveLocalFileSystemURL: async (sPath) => {
+                return new Promise((resolve, reject) => {
+                    if (!sPath) {
+                        reject(new Error("Path is required"));
+                        return;
+                    }
+                    // Ensure path starts with file:// if it doesn't already
+                    const fullPath = sPath.startsWith('file://') ? sPath : 'file://' + sPath;
+                    window.resolveLocalFileSystemURL(fullPath, (entry) => {
+                        // Add toNativeURL method if it doesn't exist
+                        if (!entry.toNativeURL && entry.toURL) {
+                            entry.toNativeURL = function () {
+                                // Get the native URL using Cordova's built-in method if available
+                                if (typeof this.getNativeURL === 'function') {
+                                    return this.getNativeURL();
+                                }
+
+                                // Fallback: construct URL based on filesystem type
+                                const url = this.toURL();
+                                const fsRoot = this.filesystem.root.fullPath;
+                                const fsName = this.filesystem.name;
+
+                                // Handle different filesystem types
+                                switch (fsName) {
+                                    case 'temporary':
+                                        return url.replace('file://', 'content://' + cordova.file.cacheDirectory);
+                                    case 'persistent':
+                                        return url.replace('file://', 'content://' + cordova.file.dataDirectory);
+                                    case 'external':
+                                        return url.replace('file://', 'content://' + cordova.file.externalRootDirectory);
+                                    default:
+                                        return url;
+                                }
+                            };
+                        }
+                        resolve(entry);
+                    }, (error) => {
+                        reject(error);
+                    });
+                });
+            }
+        };
+
+        // Network Bridge
+        this.bridges.network = {
+            _connectionType: () => app.cordova.network.getConnectionType(),
+            _getWiFiIPAddress: async () => {
+                return new Promise((resolve, reject) => {
+                    networkinterface.getWiFiIPAddress(ipInfo => resolve(ipInfo), err => reject(err));
+                });
+            },
+            _getCarrierIPAddress: async () => {
+                return new Promise((resolve, reject) => {
+                    networkinterface.getCarrierIPAddress(ipInfo => resolve(ipInfo), err => reject(err));
+                });
+            },
+            _getHttpProxyInformation: async url => {
+                return new Promise((resolve, reject) => {
+                    networkinterface.getHttpProxyInformation(url, info => resolve(info), err => reject(err));
+                });
+            },
+            _ping: async ipList => {
+                return new Promise((resolve, reject) => {
+                    const p = new Ping();
+                    p.ping(ipList, res => resolve(res), err => reject(err));
+                });
+            }
+        };
+        this.bridges.wifi = {
+            // Basic Controls
+            _enableWifi: async () => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.enableWifi().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _disableWifi: async () => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.disableWifi().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _isEnabled: () => {
+                return new Promise(resolve => {
+                    WifiPlugin.isWifiEnabled().then(isEnabled => {
+                        resolve(isEnabled);
+                    }).catch(error => {
+                        resolve(error);
+                    });
+                });
+            },
+            _requestWifiPermission: async () => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.requestPermission().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            // Android 10 (API 29+) Connection Methods
+            _suggestConnection: async (ssid, password, algorithm = "WPA", isHiddenSSID = false) => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.suggestConnection(ssid, password, algorithm, isHiddenSSID).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _specifierConnection: async (ssid, password, algorithm = "WPA", isHiddenSSID = false) => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.specifierConnection(ssid, password, algorithm, isHiddenSSID).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            // Connection Methods
+            _Connectwifi: async (ssid, bindAll, password, algorithm, isHiddenSSID) => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.connect(ssid, bindAll, password, algorithm, isHiddenSSID).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _disconnectWifi: async ssid => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.disconnect(ssid).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            // Network Information
+            _getConnectedSSID: async () => {
+                return new Promise((resolve, reject) => {
+                    if (app.cordova.network.getConnectionType() !== app.cordova.network.connectionTypes.WIFI) {
+                        resolve(-1);
+                        return;
+                    }
+                    WifiWizard2.getConnectedSSID().then(result => resolve(result)).catch(error => resolve(-1));
+                });
+            },
+            _getConnectedNetworkID: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.getConnectedNetworkID().then(result => resolve(result)).catch(error => resolve(-1)); // Return -1 on error, similar to getConnectedSSID
+                });
+            },
+            _getConnectedBSSID: async () => {
+                return new Promise((resolve, reject) => {
+                    WifiWizard2.getConnectedBSSID().then(result => resolve(result)).catch(error => resolve(null));
+                });
+            },
+            // Connection Verification with controlled error handling
+            _isConnectedToInternet: async () => {
+                return new Promise(resolve => {
+                    // A boolean check must not resolve the error object (which is truthy);
+                    // treat any failure as "not connected".
+                    WifiPlugin.isConnectedToInternet().then(isConnected => resolve(isConnected)).catch(() => resolve(false));
+                });
+            },
+            _canConnectToRouter: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.canConnectToRouter().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _canConnectToInternet: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.canConnectToInternet().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            // IP Information
+            _getWifiIP: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.getWifiIP().then(result => resolve(result)).catch(error => resolve(null));
+                });
+            },
+            _getWifiIPInfo: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.getWifiIPInfo().then(result => resolve(result)).catch(error => resolve(null));
+                });
+            },
+            // Scanning
+            _scanwifi: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.scan().then(list => resolve(list)).catch(error => resolve([]));
+                });
+            },
+            // Other methods following same pattern...
+            _listNetworks: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.listNetworks().then(result => resolve(result)).catch(error => resolve([]));
+                });
+            },
+            // Location services
+            _isLocationEnabled: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.isLocationEnabled().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _formatWifiConfig: async (ssid, password, algorithm, isHiddenSSID) => {
+                return new Promise(resolve => {
+                    WifiWizard2.formatWifiConfig(ssid, password, algorithm, isHiddenSSID).then(result => resolve(result)).catch(error => resolve(null));
+                });
+            },
+            _addNetwork: async wifi => {
+                return new Promise(resolve => {
+                    WifiWizard2.add(wifi).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _removeNetwork: async ssid => {
+                return new Promise(resolve => {
+                    WifiWizard2.remove(ssid).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _enableNetwork: async (ssid, bindAll, waitForConnection) => {
+                return new Promise(resolve => {
+                    WifiWizard2.enable(ssid, bindAll, waitForConnection).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _disableNetwork: async ssid => {
+                return new Promise(resolve => {
+                    WifiWizard2.disable(ssid).then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _getWifiRouterIP: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.getWifiRouterIP().then(result => resolve(result)).catch(error => resolve(null));
+                });
+            },
+            _switchToLocationSettings: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.switchToLocationSettings().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _setBindAll: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.setBindAll().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _resetBindAll: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.resetBindAll().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _reconnectWifi: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.reconnect().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _reassociateWifi: async () => {
+                return new Promise(resolve => {
+                    WifiWizard2.reassociate().then(result => resolve(result)).catch(error => resolve(false));
+                });
+            },
+            _getSSIDNetworkID: async ssid => {
+                return new Promise(resolve => {
+                    WifiWizard2.getSSIDNetworkID(ssid).then(result => resolve(result)).catch(error => resolve(-1));
+                });
+            },
+            _timeout: async delay => {
+                return new Promise(resolve => {
+                    WifiWizard2.timeout(delay).then(result => resolve(result)).catch(error => resolve(true)); // Always resolves true after delay
+                });
+            }
+        };
+        // Utter Bridge
+        this.bridges.utter = {
+            _UtterText: async (txt = "", rate_ = .95, pitch_ = 1, id_ = "en-au-x-auc-local") => {
+                return new Promise((resolve, reject) => {
+                    TTS.speak({
+                        text: txt,
+                        rate: rate_,
+                        pitch: pitch_,
+                        identifier: id_,
+                        cancel: true
+                    }).then(resolve, reject);
+                });
+            },
+            _getvoices: async () => TTS.getVoices(),
+            _utterCanRec: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.speechRecognition.isRecognitionAvailable(bRes => resolve(bRes), err => reject(err));
+                });
+            },
+            _utterListen: async options => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.speechRecognition.startListening(oRes => resolve(oRes), err => reject(err), options);
+                });
+            },
+            _utterStopListen: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.speechRecognition.stopListening(res => resolve(res), err => reject(err));
+                });
+            },
+            _utter_requestPermission: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.speechRecognition.requestPermission(ret => resolve(ret), err => reject(err));
+                });
+            },
+            _utter_hasPermission: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.speechRecognition.hasPermission(ret => resolve(ret), err => reject(err));
+                });
+            }
+        };
+        // SIM Bridge
+        this.bridges.sim = {
+            _requestSimPermission: async () => {
+                return new Promise(resolve => {
+                    window.plugins.sim.requestReadPermission(bPerm => resolve(bPerm));
+                });
+            },
+            _checkSimPermission: async () => {
+                return new Promise(resolve => {
+                    window.plugins.sim.hasReadPermission(hasPermission => resolve(hasPermission));
+                });
+            },
+            _getSimInfo: async () => {
+                return new Promise((resolve, reject) => {
+                    window.plugins.sim.getSimInfo(result => resolve(result), err => reject(err));
+                });
+            }
+        };
+        // Bluetooth Bridge
+        this.bridges.ble = {
+            // Scan for devices with timeout
+            // Arrow function so `this` is the SandboxedEnvironment instance (the previous
+            // `function` form left `this` undefined at call time, crashing on _stopBTScan).
+            // onDeviceFound is now optional; discovered devices are also accumulated and
+            // returned as an array when the scan times out (matching WIFI.scan()).
+            _scanBT: async (onDeviceFound, onScanError, timeout = 10) => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const found = [];
+                        const seen = new Set();
+                        // Start scanning
+                        evothings.ble.startScan(
+                            (device) => {
+                                const key = device && (device.address || device.id);
+                                if (key && !seen.has(key)) {
+                                    seen.add(key);
+                                    found.push(device);
+                                }
+                                if (typeof onDeviceFound === 'function') onDeviceFound(device);
+                            },
+                            (error) => {
+                                if (typeof onScanError === 'function') onScanError(error);
+                                reject(error);
+                            }
+                        );
+
+                        app.store.jqconsole.Write(`Scanning for devices. Timeout: ${timeout} seconds\n`, "infoStyle");
+
+                        // Set a timer to stop scanning after the specified timeout
+                        setTimeout(() => {
+                            this.bridges.ble._stopBTScan()
+                                .then(() => {
+                                    app.store.jqconsole.Write('Scanning stopped due to timeout.\n', "infoStyle");
+                                    resolve(found); // Resolve with the collected device list
+                                })
+                                .catch((error) => {
+                                    app.store.jqconsole.Write(`Error stopping scan after timeout: ${error}\n`, "infoStyle");
+                                    reject(error);
+                                });
+                        }, timeout * 1000); // Convert seconds to milliseconds
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Stop scanning for devices
+            _stopBTScan: async function () {
+                return new Promise((resolve, reject) => {
+                    try {
+                        evothings.ble.stopScan();
+                        app.store.jqconsole.Write('Stopped scanning for devices.', "infoStyle");
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Connect to a BLE device
+            _connectBT: async function (device, onConnected, onDisconnected, onConnectError, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        evothings.ble.connectToDevice(
+                            device,
+                            (connectedDevice) => {
+                                onConnected && onConnected(connectedDevice);
+                                resolve(connectedDevice);
+                            },
+                            (disconnectedDevice) => {
+                                onDisconnected && onDisconnected(disconnectedDevice);
+                            },
+                            (error) => {
+                                onConnectError && onConnectError(error);
+                                reject(error);
+                            },
+                            options
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Get a service by UUID
+            _getBTService: async function (device, serviceUUID) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const service = evothings.ble.getService(device, serviceUUID);
+                        resolve(service);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Get a characteristic by UUID
+            _getBTCharacteristic: async function (service, characteristicUUID) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const characteristic = evothings.ble.getCharacteristic(service, characteristicUUID);
+                        resolve(characteristic);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Read a characteristic
+            _readBTCharacteristic: async function (device, characteristic) {
+                return new Promise((resolve, reject) => {
+                    evothings.ble.readCharacteristic(
+                        device,
+                        characteristic,
+                        (data) => resolve(data),
+                        (error) => reject(error)
+                    );
+                });
+            },
+
+            // Write to a characteristic
+            _writeBTCharacteristic: async function (device, characteristic, data) {
+                return new Promise((resolve, reject) => {
+                    evothings.ble.writeCharacteristic(
+                        device,
+                        characteristic,
+                        data,
+                        () => resolve(),
+                        (error) => reject(error)
+                    );
+                });
+            },
+
+            // Enable notifications for a characteristic
+            _enableBTNotification: async function (device, characteristic, onData) {
+                return new Promise((resolve, reject) => {
+                    evothings.ble.enableNotification(
+                        device,
+                        characteristic,
+                        (data) => {
+                            onData && onData(data);
+                        },
+                        (error) => reject(error)
+                    );
+                    resolve();
+                });
+            },
+
+            // Disable notifications for a characteristic
+            _disableBTNotification: async function (device, characteristic) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        evothings.ble.disableNotification(device, characteristic);
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        };
+
+        this.bridges.http = {
+            // Default configurations
+            DEFAULT_TIMEOUT: HTTP_DEFAULT_TIMEOUT, // seconds
+
+            // Initialize plugin settings.
+            // Arrow function + closure constant: the previous `function` form referenced
+            // `this.DEFAULT_TIMEOUT`, but `this` was undefined when called as a detached
+            // global, so Number(undefined) => NaN and it always threw.
+            _initializeSettings: async () => {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Ensure timeout is a valid number
+                        const timeout = Number(HTTP_DEFAULT_TIMEOUT);
+                        if (isNaN(timeout) || timeout <= 0) {
+                            throw new Error(`Invalid timeout value: ${HTTP_DEFAULT_TIMEOUT}`);
+                        }
+
+                        // Set default serializer to 'urlencoded'
+                        cordova.plugin.http.setDataSerializer('urlencoded');
+
+                        // Set default timeout
+                        cordova.plugin.http.setRequestTimeout(timeout);
+
+                        // Set default follow redirect behavior
+                        cordova.plugin.http.setFollowRedirect(true);
+
+                        // Set default trust mode
+                        cordova.plugin.http.setServerTrustMode('default',
+                            () => {
+                                console.log('Trust mode set to default');
+                                resolve();
+                            },
+                            error => {
+                                console.error('Error setting trust mode:', error);
+                                reject(error);
+                            }
+                        );
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+            _sendRequest: async function (url, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Input validation
+                        if (!url || typeof url !== 'string') {
+                            throw new Error("The URL must be a non-empty string.");
+                        }
+
+                        if (!options.method) {
+                            options.method = 'get'; // Default method
+                        }
+
+                        const validMethods = [
+                            'get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'upload', 'download'
+                        ];
+                        if (!validMethods.includes(options.method.toLowerCase())) {
+                            throw new Error(`Invalid HTTP method: ${options.method}`);
+                        }
+
+                        if (options.timeout && (isNaN(Number(options.timeout)) || Number(options.timeout) <= 0)) {
+                            throw new Error("Timeout must be a positive number.");
+                        }
+
+                        // Ensure responseType is valid
+                        const validResponseTypes = ['text', 'json', 'arraybuffer', 'blob'];
+                        if (options.responseType && !validResponseTypes.includes(options.responseType.toLowerCase())) {
+                            throw new Error(`Invalid responseType: ${options.responseType}`);
+                        }
+
+                        // Encode the URL if it contains special characters
+                        const encodedUrl = encodeURI(url);
+
+                        // Execute the request
+                        cordova.plugin.http.sendRequest(
+                            encodedUrl,
+                            options,
+                            function (response) {
+                                resolve(response); // Resolve on success
+                            },
+                            function (errorResponse) {
+                                reject(errorResponse); // Reject on failure
+                            }
+                        );
+                    } catch (error) {
+                        reject(error); // Catch synchronous errors
+                    }
+                });
+            },
+
+            // Upload file(s)
+            _uploadFile: async function (url, params = {}, headers = {}, filePath, name) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.uploadFile(url, params, headers, filePath, name,
+                        response => resolve(response),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Download file
+            _downloadFile: async function (url, params = {}, headers = {}, filePath) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.downloadFile(url, params, headers, filePath,
+                        (entry, response) => resolve({ entry, response }),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Set headers for specific host
+            _setHeader: async function (hostname, header, value) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.setHeader(hostname, header, value);
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Set data serializer
+            _setDataSerializer: async function (serializer) {
+                if (['urlencoded', 'json', 'utf8', 'multipart', 'raw'].includes(serializer)) {
+                    cordova.plugin.http.setDataSerializer(serializer);
+                    return true;
+                }
+                throw new Error('Invalid serializer type');
+            },
+
+            // Set request timeout
+            _setTimeout: async function (timeout) {
+                if (typeof timeout === 'number' && timeout > 0) {
+                    cordova.plugin.http.setRequestTimeout(timeout);
+                    return true;
+                }
+                throw new Error('Invalid timeout value');
+            },
+
+            // Set SSL/TLS settings
+            _setServerTrustMode: async function (mode) {
+                return new Promise((resolve, reject) => {
+                    cordova.plugin.http.setServerTrustMode(mode,
+                        () => resolve(true),
+                        error => reject(error)
+                    );
+                });
+            },
+
+            // Cookie management
+            _getCookieString: async function (url) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const cookieString = cordova.plugin.http.getCookieString(url);
+                        resolve(cookieString);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            _setCookie: async function (url, cookie, options = {}) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.setCookie(url, cookie, options);
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            _clearCookies: async function () {
+                return new Promise((resolve, reject) => {
+                    try {
+                        cordova.plugin.http.clearCookies();
+                        resolve(true);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            },
+
+            // Error codes mapping
+            ERROR_CODES: {
+                PERMISSION_DENIED: -12,
+                NOT_FOUND: -1,
+                SECURITY_ERR: -2,
+                ABORT_ERR: -3,
+                NOT_READABLE_ERR: -4,
+                ENCODING_ERR: -5,
+                NO_MODIFICATION_ALLOWED_ERR: -6,
+                INVALID_STATE_ERR: -7,
+                SYNTAX_ERR: -8,
+                INVALID_MODIFICATION_ERR: -9,
+                QUOTA_EXCEEDED_ERR: -10,
+                TYPE_MISMATCH_ERR: -11
+            }
+        };
+        this.bridges.callNumber = {
+            _callNumber: async (number, bypassAppChooser = true) => new Promise((resolve, reject) => {
+                window.plugins.CallNumber.callNumber(
+                    (result) => resolve(result),
+                    (error) => resolve(error),
+                    number,
+                    bypassAppChooser
+                );
+            }),
+        };
+
+        this.bridges.spinner = {
+            _showSpinner: async (title = null, message = "Please wait...", cancelable = false) => {
+                try {
+                    if (typeof SpinnerDialog !== 'undefined') {
+                        SpinnerDialog.show(title, message, cancelable);
+                    } else {
+                        app.store.jqconsole.ShowSpinner();
+                    }
+                } catch (error) {
+                    console.error('Error showing spinner:', error);
+                }
+            },
+            _hideSpinner: async () => {
+                try {
+                    if (typeof SpinnerDialog !== 'undefined') {
+                        SpinnerDialog.hide();
+                    } else {
+                        app.store.jqconsole.HideSpinner();
+                    }
+                } catch (error) {
+                    console.error('Error hiding spinner:', error);
+                }
+            }
+        };
+    }
+    /**
+     * Initialize the sandbox environment
+     */
+    async initialize() {
+        if (this.isRunning) {
+            throw new Error("Sandbox is already running");
+        }
+        this.iframe = document.createElement("iframe");
+        // Security: allow-same-origin is required for the parent to access the iframe's contentWindow for bridge injection.
+        this.iframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+        this.iframe.style.display = "none";
+        document.body.appendChild(this.iframe);
+        this.idSandBox = this.iframe.contentWindow;
+
+        // Security: Listen for unhandled errors within the sandbox
+        this.idSandBox.addEventListener('error', (event) => {
+            this.bridges.console._errorPrint(`Runtime Error: ${event.message} at ${event.filename}:${event.lineno}`);
+        });
+
+        this.idSandBox.addEventListener('unhandledrejection', (event) => {
+            this.bridges.console._errorPrint(`Unhandled Promise Rejection: ${event.reason}`);
+        });
+
+        this.isRunning = true;
+        // Inject all bridges into sandbox
+        Object.values(this.bridges).forEach(bridge => {
+            Object.entries(bridge).forEach(([key, value]) => {
+                this.idSandBox[key] = value;
+            });
+        });
+
+        // Set the console specifically to our bridge
+        this.idSandBox.console = this.bridges.console;
+    }
+    /**
+     * Clean up sandbox resources
+     */
+    cleanup() {
+        if (this.iframe) {
+            // Idempotent + safe against the iframe already being detached: guard with
+            // parentNode so a second cleanup (or exit()) can't throw NotFoundError.
+            if (this.iframe.parentNode) {
+                this.iframe.parentNode.removeChild(this.iframe);
+            }
+            this.iframe = null;
+            this.idSandBox = null;
+            this.isRunning = false;
+        }
+    }
+    /**
+     * Get the sandbox API configuration with all available features
+     * @returns {string} The sandboxed API configuration
+     */
+    getSandboxAPI() {
+        if (!this._apiTemplate) {
+            this._generateAPITemplate();
+        }
+
+        // Add dynamic parts (like device info) to the template
+        const deviceInfo = this.bridges.deviceInfo.getInfo();
+        return `
+            ${this._apiTemplate}
+            // Device Information & Controls
+            const device = Object.freeze({
+                ...${JSON.stringify(deviceInfo)},
+                vibrate: _vibrate,
+                beep: _beep,
+            });
+        `;
+    }
+
+    /**
+     * Generate the static part of the sandbox API template
+     */
+    _generateAPITemplate() {
+        this._apiTemplate = `
+        // Core Utilities
+        const cout = _Print;
+        const exit = _exitEval;
+        const log = _Print;
+
+        // Android Permissions
+        const permission = Object.freeze({
+            // Permission Constants
+            ACCESS_COARSE_LOCATION: ACCESS_COARSE_LOCATION,
+            ACCESS_FINE_LOCATION: ACCESS_FINE_LOCATION,
+            CAMERA: CAMERA,
+            READ_EXTERNAL_STORAGE: READ_EXTERNAL_STORAGE,
+            WRITE_EXTERNAL_STORAGE: WRITE_EXTERNAL_STORAGE,
+            READ_CONTACTS: READ_CONTACTS,
+            WRITE_CONTACTS: WRITE_CONTACTS,
+            READ_CALENDAR: READ_CALENDAR,
+            WRITE_CALENDAR: WRITE_CALENDAR,
+            READ_PHONE_STATE: READ_PHONE_STATE,
+            CALL_PHONE: CALL_PHONE,
+            READ_CALL_LOG: READ_CALL_LOG,
+            WRITE_CALL_LOG: WRITE_CALL_LOG,
+            ADD_VOICEMAIL: ADD_VOICEMAIL,
+            USE_SIP: USE_SIP,
+            PROCESS_OUTGOING_CALLS: PROCESS_OUTGOING_CALLS,
+            READ_SMS: READ_SMS,
+            SEND_SMS: SEND_SMS,
+            RECEIVE_SMS: RECEIVE_SMS,
+            RECEIVE_WAP_PUSH: RECEIVE_WAP_PUSH,
+            RECEIVE_MMS: RECEIVE_MMS,
+            READ_CELL_BROADCASTS: READ_CELL_BROADCASTS,
+            BLUETOOTH: BLUETOOTH,
+            BLUETOOTH_ADMIN: BLUETOOTH_ADMIN,
+            BLUETOOTH_CONNECT: BLUETOOTH_CONNECT,
+            BLUETOOTH_SCAN: BLUETOOTH_SCAN,
+            BLUETOOTH_ADVERTISE: BLUETOOTH_ADVERTISE,
+            ACCESS_NETWORK_STATE: ACCESS_NETWORK_STATE,
+            ACCESS_WIFI_STATE: ACCESS_WIFI_STATE,
+            CHANGE_WIFI_STATE: CHANGE_WIFI_STATE,
+            CHANGE_NETWORK_STATE: CHANGE_NETWORK_STATE,
+            CHANGE_CONFIGURATION: CHANGE_CONFIGURATION,
+            GET_ACCOUNTS: GET_ACCOUNTS,
+            MANAGE_ACCOUNTS: MANAGE_ACCOUNTS,
+            USE_BIOMETRICS: USE_BIOMETRICS,
+            USE_FINGERPRINT: USE_FINGERPRINT,
+            USE_IRIS: USE_IRIS,
+            USE_FACE: USE_FACE,
+            POST_NOTIFICATIONS: POST_NOTIFICATIONS,
+            READ_MEDIA_IMAGES: READ_MEDIA_IMAGES,
+            READ_MEDIA_VIDEO: READ_MEDIA_VIDEO,
+            READ_MEDIA_AUDIO: READ_MEDIA_AUDIO,
+            RECORD_AUDIO: RECORD_AUDIO,
+            MODIFY_AUDIO_SETTINGS: MODIFY_AUDIO_SETTINGS,
+            BODY_SENSORS: BODY_SENSORS,
+            // Methods
+            checkPermission: _checkPermission,
+            requestPermission: _requestPermission,
+            requestPermissions: _requestPermissions,
+            hasPermission: _hasPermission // Legacy method
+        });
+
+        // Browser Bridge
+        const browser = {
+            open: _openBrowser,
+            openSafe: _openSafeMode,
+            openFullscreen: _openFullscreen,
+            openMinimal: _openMinimal,
+            openExternal: _openExternal
+        };
+        
+        Object.freeze(browser);
+
+        const SMS = Object.freeze({
+            sendSMS: _send,
+            listSMS: _list
+        });
+
+        const ANSI = Object.freeze({
+            RESET: '\\x1b[0m',
+            BLACK: '\\x1b[30m', // Foreground (text) colors
+            RED: '\\x1b[31m',
+            GREEN: '\\x1b[32m',
+            YELLOW: '\\x1b[33m',
+            BLUE: '\\x1b[34m',
+            MAGENTA: '\\x1b[35m',
+            CYAN: '\\x1b[36m',
+            WHITE: '\\x1b[37m',
+            BG_BLACK: '\\x1b[40m', // Background colors
+            BG_RED: '\\x1b[41m',
+            BG_GREEN: '\\x1b[42m',
+            BG_YELLOW: '\\x1b[43m',
+            BG_BLUE: '\\x1b[44m',
+            BG_MAGENTA: '\\x1b[45m',
+            BG_CYAN: '\\x1b[46m',
+            BG_WHITE: '\\x1b[47m',
+            BOLD: '\\x1b[1m', // Additional formatting
+            ITALIC: '\\x1b[3m',
+            UNDERLINE: '\\x1b[4m',
+            BLINK: '\\x1b[5m',
+            INVERSE: '\\x1b[7m',
+            STRIKETHROUGH: '\\x1b[9m'
+        });
+            
+        // Console Interface
+        const console = Object.freeze({
+            prompt : _prompt,
+            log: _infoPrint,
+            info: _infoPrint,
+            warn: _errorPrint,
+            error: _errorPrint,
+            success: _successPrint,
+            clear: _consoleclear,
+            cls: _consoleclear,
+            assert: assert,
+            count: count,
+            debug: debug,
+            dir: dir,
+            dirxml: dirxml,
+            group: group,
+            groupCollapsed: groupCollapsed,
+            groupEnd: groupEnd,
+            memory: memory,
+            profile: profile,
+            profileEnd: profileEnd,
+            table: table,
+            time: time,
+            timeEnd: timeEnd,
+            timeLog: timeLog,
+            trace: trace,
+            warn: warn
+        });
+
+        // Global Dialog Functions
+        const alert = (message, title) => _Alert(message, title);
+        const confirm = (message, title) => _Confirm(message, title);
+
+        // Device Hardware Controls
+        const flashlight = Object.freeze({
+            switchOn: _turnOnFlashlight,
+            switchOff: _turnOffFlashlight,
+            toggleState: _toggleFlashlight
+        });
+
+        // UI Dialogs
+        const dialog = Object.freeze({
+            alert: _Alert,
+            confirm: _Confirm
+        });
+
+        // File System Operations
+        const fs = Object.freeze({
+            APP_ROOT_DIR: _app_rootpath,
+            APP_DIR: _applicationDirectory,
+            APP_STORAGE_DIR: _applicationStorageDirectory,
+            DATA_DIR: _dataDirectory,
+            CACHE_DIR: _cacheDirectory,
+            EX_APP_STORAGE_DIR: _externalApplicationStorageDirectory,
+            EX_DATA_DIR: _externalDataDirectory,
+            EX_CACHE_DIR: _externalCacheDirectory,
+            EX_ROOT_DIR: _externalRootDirectory,
+
+            createDirectory: _createDirectory,
+            dirExists: _dirExists,
+            createFile: _writeFile,
+            writeTextFile: _writeTextFile,
+            appendTextFile: _appendTextFile,
+            readTextFile: _readTextFile,
+            fileExists: _fileExists,
+            deleteFile: _deleteFile,
+            removeDirectory: _removeDirectory,
+            resolveLocalFileSystemURL: _resolveLocalFileSystemURL,
+            fileURLToPath: (fileURL) => fileURL.replace('file://', '')
+        });
+
+        // Network Operations
+        const network = Object.freeze({
+            getConnectionType: _connectionType,
+            getWIFIIPInfo: _getWiFiIPAddress,
+            getCarrierIPInfo: _getCarrierIPAddress,
+            getHTTPProxyInfo: _getHttpProxyInformation,
+            ping: _ping,
+            getIPInfo: _getWifiIPInfo,
+            getRouterIP: _getWifiRouterIP,
+            canConnectToRouter: _canConnectToRouter,
+            canConnectToInternet: _canConnectToInternet
+        });
+
+        // WiFi Operations
+        const WIFI = Object.freeze({
+           // Basic Controls
+           enable: _enableWifi,
+           disable: _disableWifi,
+           isEnabled: _isEnabled,
+           requestPermission: _requestWifiPermission,
+           
+           // API 29+ (Android 10+) Features 
+           suggestConnection: _suggestConnection,     // For internet access across all apps
+           specifierConnection: _specifierConnection, // For internet access in your app only
+           
+           // Scanning & Connection
+           scan: _scanwifi,
+           connect: _Connectwifi,
+           disconnect: _disconnectWifi,
+           reconnect: _reconnectWifi,
+           reassociate: _reassociateWifi,
+           
+           // Network Information
+           getConnectedSSID: _getConnectedSSID,
+           getConnectedBSSID: _getConnectedBSSID,
+           getConnectedNetworkID: _getConnectedNetworkID,
+           listNetworks: _listNetworks,
+           getSSIDNetworkID: _getSSIDNetworkID,
+           
+           // Network Configuration
+           formatConfig: _formatWifiConfig,
+           addNetwork: _addNetwork,
+           removeNetwork: _removeNetwork,
+           enableNetwork: _enableNetwork,
+           disableNetwork: _disableNetwork,
+           
+           // Connection Testing
+           isConnectedToInternet: _isConnectedToInternet,
+           canConnectToRouter: _canConnectToRouter,
+           canConnectToInternet: _canConnectToInternet,
+           
+           // IP Information
+           getIP: _getWifiIP,
+           getIPInfo: _getWifiIPInfo,
+           getRouterIP: _getWifiRouterIP,
+           
+           // Location Services
+           isLocationEnabled: _isLocationEnabled,
+           openLocationSettings: _switchToLocationSettings,
+           
+           // Connection Binding
+           setBindAll: _setBindAll,
+           resetBindAll: _resetBindAll,
+           
+           // Helper Functions
+           timeout: _timeout
+        });
+
+        const bluetooth = Object.freeze({
+            scan: _scanBT,
+            stopScan: _stopBTScan,
+            getService: _getBTService,
+            connect: _connectBT,
+            readCharacteristic: _readBTCharacteristic,
+            writeCharacteristic: _writeBTCharacteristic,
+            getCharacteristic : _getBTCharacteristic
+        });
+
+        // SIM Card Operations
+        const sim = Object.freeze({
+            hasPermission: _checkSimPermission,
+            requestPermission: _requestSimPermission,
+            getInfo: _getSimInfo,
+            callNumber: _callNumber
+        });
+
+        // Speech & Voice Operations
+        const utter = Object.freeze({
+            speak: _UtterText,
+            getVoices: _getvoices,
+            canListen: _utterCanRec,
+            listen: _utterListen,
+            stopListening: _utterStopListen,
+            requestPermission: _utter_requestPermission,
+            hasPermission: _utter_hasPermission
+        });
+
+        const clipboard = Object.freeze({
+            setText: _clipboardSetText
+        });
+
+        const http = Object.freeze({
+            initializeSettings: _initializeSettings,
+            sendRequest: _sendRequest,
+            uploadFile : _uploadFile,
+            downloadFile : _downloadFile,
+            setHeader : _setHeader,
+            setDataSerializer : _setDataSerializer,
+            setTimeout : _setTimeout,
+            setServerTrustMode : _setServerTrustMode,
+            getCookieString : _getCookieString,
+            setCookie : _setCookie,
+            clearCookies : _clearCookies
+        });
+
+        const sleep = _sleep;
+
+        const spinner = Object.freeze({
+            show: _showSpinner,
+            hide: _hideSpinner
+        });
+        `;
+    }
+    /**
+     * Execute script in sandbox
+     */
+    async executeScript(scriptContent) {
+        try {
+            const api = this.getSandboxAPI();
+            const wrappedScript = `
+                (async function() {
+                    "use strict";
+                    try {
+                        ${api}
+                        ${scriptContent}
+                    } catch (innerError) {
+                        // A call to exit() throws a tagged sentinel: swallow a clean exit,
+                        // and print a terse notice for a non-zero exit code.
+                        if (innerError && innerError.__phonedoExit) {
+                            if (innerError.exitCode !== 0) {
+                                _errorPrint(innerError.message);
+                            }
+                        } else {
+                            const msg = innerError instanceof Error ? innerError.message : String(innerError);
+                            _errorPrint(" ❌ Runtime Error: " + msg);
+                        }
+                    }
+                })();
+            `;
+            await this.idSandBox.eval(wrappedScript);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            app.store.jqconsole.Write(" ❌ Evaluation Error: " + errorMessage + "\n", "errorStyle");
+            console.error("Sandbox Execution Failed:", error);
+        }
+    }
+}
+
+/**
+ * Main evaluation function
+ */
+
+async function evaluate(scriptContent) {
+    if (app.store.runningscript) {
+        // Show a confirmation dialog instead of a toast message
+        app.cordova.dialogs.confirm(
+            'A script is currently running. Do you want to stop it and run this script instead?',
+            'Shell Busy',
+            function (id) {
+                switch (id) {
+                    case 1: // User clicked "Stop and Run"
+                        // Clean up the current running script (guard parentNode so a
+                        // stale/detached iframe reference can't throw NotFoundError).
+                        if (app.store.sandboxedIframe && app.store.sandboxedIframe.parentNode) {
+                            app.store.sandboxedIframe.parentNode.removeChild(app.store.sandboxedIframe);
+                        }
+                        app.store.sandboxedIframe = null;
+                        app.store.runningscript = false;
+                        app.store.jqconsole.Enable();
+
+                        // Now run the new script
+                        const sandbox = new SandboxedEnvironment();
+                        app.store.runningscript = true;
+                        sandbox.initialize()
+                            // Track the iframe only after it actually exists.
+                            .then(() => { app.store.sandboxedIframe = sandbox.iframe; })
+                            .then(() => sandbox.executeScript(scriptContent))
+                            .finally(() => {
+                                sandbox.cleanup();
+                                app.store.sandboxedIframe = null;
+                                app.store.runningscript = false;
+                                app.store.jqconsole.Enable();
+                            });
+                        break;
+                    case 2: // User clicked "Cancel"
+                        app.toastMsg("Script execution cancelled.", "short");
+                        break;
+                }
+            },
+            ['Stop and Run', 'Cancel']
+        );
+        return;
+    }
+    const sandbox = new SandboxedEnvironment();
+    app.store.runningscript = true;
+
+    // Stop mechanism. "Stop Run" calls app.stopRunningScript(), which rejects `stopped`.
+    // Racing the script against `stopped` lets us unwind the (awaited) run chain and tear the
+    // iframe down even though the script's own eval promise never settles. Removing the iframe
+    // abandons any async work still queued inside it (timers, pending awaits), so any script
+    // that yields to the event loop (sleep, prompts, awaited bridges) stops. A purely
+    // synchronous loop (while(true){}) cannot be stopped this way - it blocks the main thread
+    // so the Stop click never runs; that needs the Web Worker migration.
+    let stopReject = null;
+    const stopped = new Promise((_resolve, reject) => { stopReject = reject; });
+    app.store.stopScript = () => {
+        if (stopReject) {
+            const e = new Error('__PHONEDO_STOP__');
+            stopReject(e);
+            stopReject = null;
+        }
+    };
+
+    try {
+        await sandbox.initialize();
+        // Assign only AFTER initialize(): the constructor leaves iframe null, so the
+        // previous ordering stored null and left the running-script iframe untracked.
+        app.store.sandboxedIframe = sandbox.iframe;
+        await Promise.race([sandbox.executeScript(scriptContent), stopped]);
+    } catch (err) {
+        if (err && err.message === '__PHONEDO_STOP__') {
+            app.store.jqconsole.Write(" Script stopped.\n", "warningStyle");
+        } else {
+            const msg = err instanceof Error ? err.message : String(err);
+            app.store.jqconsole.Write(" ❌ Setup Error: " + msg + "\n", "errorStyle");
+            console.error("Sandbox Execution Failed:", err);
+        }
+    } finally {
+        sandbox.cleanup();
+        app.store.sandboxedIframe = null;
+        app.store.runningscript = false;
+        app.store.stopScript = null;
+        // If the script was stopped while waiting at a console.prompt(), the console is left in
+        // a prompt/input state; abort it so the shell can re-prompt cleanly. AbortPrompt throws
+        // when already in output state (normal completion), so ignore that.
+        try { app.store.jqconsole.AbortPrompt(); } catch (e) { /* not prompting */ }
+        app.store.jqconsole.Enable();
+    }
+}

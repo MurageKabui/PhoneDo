@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  PhoneDo is an app that bridges standard JavaScript with Android’s native APIs. It allows you to write scripts that interact directly with the device hardware using familiar JavaScript patterns in an Android environment.
+  PhoneDo is an Android app that bridges standard JavaScript with Android’s native APIs. It allows you to write scripts that interact directly with the device hardware using familiar JavaScript patterns in an Android environment.
 </p>
 
 <p align="center">
