@@ -43,6 +43,6 @@
     "coffeescript": "1",
     "cross-spawn": "^6.0.5",
     "fs-extra": "^8.1.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^6.1.3"
   }
 }
